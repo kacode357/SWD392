@@ -1,35 +1,54 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+import { Layout } from 'antd';
+import { Outlet, useLocation } from 'react-router-dom';
+import AppHeader from './layout/header';
+import UserSidebar from './layout/UserSidebar';
 
-function App() {
-  const [count, setCount] = useState(0)
+const { Sider, Content } = Layout;
+
+const App: React.FC = () => {
+  const location = useLocation();
+  const [collapsed, setCollapsed] = useState(false); 
+
+  // Kiểm tra nếu người dùng ở trang "/user"
+  const showUserSidebar = location.pathname === '/user' || location.pathname === '/user-2';
+  // Kiểm tra nếu ở trang login hoặc register để ẩn Header
+  const hideHeader = location.pathname === '/login' || location.pathname === '/register';
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Layout>
+      {!hideHeader && <AppHeader collapsed={collapsed} setCollapsed={setCollapsed} />} 
+      <Layout>
+        {/* Chỉ hiển thị Sidebar bên trái nếu ở trang /user */}
+        {showUserSidebar && (
+          <Sider
+            collapsible
+            collapsed={collapsed}
+            onCollapse={(collapsed) => setCollapsed(collapsed)}
+            width={200}
+            className="site-layout-background"
+            style={{ height: '100vh', zIndex: 1000 }} 
+          >
+            <UserSidebar />
 
-export default App
+          </Sider>
+
+        )}
+        <Layout style={{ padding: '0 24px 24px' }}>
+          <Content
+            style={{
+              padding: 24,
+              margin: 0,
+              minHeight: 280,
+              transition: 'all 0.2s',
+            }}
+          >
+            <Outlet />
+          </Content>
+        </Layout>
+      </Layout>
+    </Layout>
+  );
+};
+
+export default App;
