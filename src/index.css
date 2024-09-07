@@ -24,9 +24,9 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
     position: relative;
     overflow: hidden;
-    width: 1500px;
+    width: 1400px;
     max-width: 100%;
-    min-height: 750px;
+    min-height: 650px;
   }
   
   .container p{

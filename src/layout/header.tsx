@@ -18,6 +18,12 @@ const AppHeader: React.FC<AppHeaderProps> = ({ collapsed, setCollapsed }) => {
   // Kiểm tra token trong localStorage
   const token = localStorage.getItem('token');
 
+  // Handle logout functionality
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // Remove the token from localStorage
+    navigate('/login'); // Redirect to the login page
+  };
+
   // Define the menu items as an array of MenuProps items
   const avatarMenuItems: MenuProps['items'] = [
     {
@@ -28,7 +34,11 @@ const AppHeader: React.FC<AppHeaderProps> = ({ collapsed, setCollapsed }) => {
     {
       key: '2',
       icon: <LogoutOutlined />,
-      label: <Link to="/logout">Logout</Link>,
+      label: (
+        <a onClick={handleLogout} style={{ display: 'flex', alignItems: 'center' }}>
+          Logout
+        </a>
+      ),
     },
   ];
 

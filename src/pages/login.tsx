@@ -1,36 +1,37 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Make sure you have react-router-dom installed
+import { Link, useNavigate } from 'react-router-dom'; // Make sure you have react-router-dom installed
 
 const Login = () => {
-
+ const navigate = useNavigate();
   useEffect(() => {
     const container = document.getElementById('container');
     const registerBtn = document.getElementById('register');
     const loginBtn = document.getElementById('login');
 
     if (registerBtn && loginBtn && container) {
-      registerBtn.addEventListener('click', () => {
+      const handleRegisterClick = () => {
         container.classList.add('active');
-      });
+      };
 
-      loginBtn.addEventListener('click', () => {
+      const handleLoginClick = () => {
         container.classList.remove('active');
-      });
+      };
+
+      registerBtn.addEventListener('click', handleRegisterClick);
+      loginBtn.addEventListener('click', handleLoginClick);
+
+      // Cleanup the event listeners when the component unmounts
+      return () => {
+        registerBtn.removeEventListener('click', handleRegisterClick);
+        loginBtn.removeEventListener('click', handleLoginClick);
+      };
     }
-
-    // Cleanup the event listeners when the component unmounts
-    return () => {
-      if (registerBtn && loginBtn) {
-        registerBtn.removeEventListener('click', () => {
-          container?.classList.add('active');
-        });
-
-        loginBtn.removeEventListener('click', () => {
-          container?.classList.remove('active');
-        });
-      }
-    };
   }, []);
+
+  const handleSignInClick = () => {
+    localStorage.setItem('token', 'test');
+    navigate('/');
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -80,7 +81,7 @@ const Login = () => {
             <input type="email" placeholder="Email" />
             <input type="password" placeholder="Password" />
             <a href="#">Forget Your Password?</a>
-            <button>Sign In</button>
+            <button type="button" onClick={handleSignInClick}>Sign In</button>
             <div className="text-center mt-4">
               <Link to="/" className="text-blue-500 hover:underline">Back to HomePage</Link>
             </div>
