@@ -1,23 +1,33 @@
 import React from 'react';
 import { Menu } from 'antd';
-import { SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { UserOutlined, LogoutOutlined } from '@ant-design/icons'; 
 import { useNavigate } from 'react-router-dom';
 
 const UserSidebar: React.FC = () => {
   const navigate = useNavigate(); 
+  const handleLogout = () => {
+    localStorage.removeItem('token'); 
+    navigate('/login'); 
+  };
 
   const items = [
     {
       key: '1',
       icon: <UserOutlined />,
-      label: 'My Profile',
-      onClick: () => navigate('/my-profile'), 
+      label: 'Manager Account',
+      onClick: () => navigate('/manager-user'),
     },
     {
       key: '2',
-      icon: <SettingOutlined />,
-      label: 'Setting',
-      onClick: () => navigate('/setting'), 
+      icon: <UserOutlined />,
+      label: 'Test',
+      onClick: () => navigate('/test'),
+    },
+    {
+      key: '3',
+      icon: <LogoutOutlined />, 
+      label: 'Logout',
+      onClick: handleLogout, 
     }
   ];
 
