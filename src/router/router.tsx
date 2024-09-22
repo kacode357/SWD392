@@ -9,6 +9,7 @@ import UserPage from '../pages/Admin/ManagerUser';
 import Login from '../pages/login';
 import MyProfile from '../pages/User/MyProfile';
 import SettingUser from '../pages/User/SettingUser';
+import NotFoundPage from '../pages/NotFoundPage'; // Import the NotFoundPage component
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />, 
+  },
+  {
+    path: "*", 
+    element: <NotFoundPage />, 
   }
 ]);
 
