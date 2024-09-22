@@ -41,7 +41,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
   };
 
   return (
-    <div className="form-container sign-up">
+    <div className="form-container sign-up mt-10">
       <Form
         form={form}
         name="register_form"
