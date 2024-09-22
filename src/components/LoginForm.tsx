@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { getCurrentLogin, loginUserApi } from '../util/api';
 import { AuthContext } from '../context/auth.context';
 import todoLogo from '../assets/todoList.png';
+import { GoogleOutlined } from '@ant-design/icons';
 
 interface LoginFormValues {
   email: string;
@@ -54,9 +55,9 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="form-container sign-in">
-      <Form<LoginFormValues> name="login_form" onFinish={onFinish} layout="vertical">
-        <img src={todoLogo} className="w-full" alt="" />
+    <div className="form-container sign-in ">
+      <Form<LoginFormValues> name="login_form " onFinish={onFinish} layout="vertical">
+        <img src={todoLogo} className="w-fullw-40 h-auto mx-auto mt-20" alt=""  />
         <h1 className="font-bold text-2xl ">Sign In</h1>
         <Form.Item
           name="email"
@@ -77,6 +78,15 @@ const LoginForm: React.FC = () => {
         </Form.Item>
         <Button type="primary" htmlType="submit" block>
           Sign In
+        </Button>
+        <Button 
+          type="default" 
+          icon={<GoogleOutlined />} 
+          block 
+          style={{ marginTop: '16px' }} 
+          onClick={() => {/* Gọi hàm đăng nhập Google ở đây */}}
+        >
+          Đăng nhập bằng Google
         </Button>
         <div className="text-center mt-4">
           <button className="text-blue-500 hover:underline" onClick={() => (window.location.href = '/')}>

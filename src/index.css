@@ -23,12 +23,12 @@
     position: relative;
     overflow: hidden;
     width: 1400px;
-    max-width: 100%;
-    min-height: 750px;
+    max-width: 50%;
+    min-height: 650px;
   }
   
   .container button{
-    background-color: #512da8;
+    background-color: #4391cc;
     color: #fff;
     font-size: 12px;
     padding: 10px 45px;
@@ -108,7 +108,7 @@
   .toggle{
     background-color: #512da8;
     height: 100%;
-    background: linear-gradient(to right, #5c6bc0, #512da8);
+    background: linear-gradient(to right, #040405, #040405);
     color: #fff;
     position: relative;
     left: -100%;

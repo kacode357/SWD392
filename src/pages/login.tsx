@@ -34,8 +34,13 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className={`container ${isRegisterActive ? 'active' : ''}`} id="container">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100   ">
+         <img 
+        src="public/giffifa.gif"
+        alt="Background"
+        className="absolute top-0 left-0 w-full h-full object-cover opacity-100 filter blur-sm"
+      />
+      <div className={`container  ${isRegisterActive ? 'active' : ''}`} id="container">
         {isRegisterActive ? (
           <RegisterForm onRegisterSuccess={handleRegisterSuccess} /> 
         ) : (
