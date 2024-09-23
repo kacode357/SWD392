@@ -1,63 +1,53 @@
 import { createContext, useState, ReactNode } from 'react';
 
 interface User {
-    email: string;
-    name: string;
-    role: string;
+  email: string;
+  name: string;
+  role: string;
 }
 
 interface AuthContextType {
-    auth: {
-        isAuthenticated: boolean;
-        user: User;
-    };
-    setAuth: React.Dispatch<React.SetStateAction<{
-        isAuthenticated: boolean;
-        user: User;
-    }>>;
-    appLoading: boolean;
-    setAppLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  auth: {
+    isAuthenticated: boolean;
+    user: User | null; // Ensure that user can be null initially
+  };
+  setAuth: React.Dispatch<React.SetStateAction<{
+    isAuthenticated: boolean;
+    user: User | null;
+  }>>;
+  appLoading: boolean;
+  setAppLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const AuthContext = createContext<AuthContextType>({
-    auth: {
-        isAuthenticated: false,
-        user: {
-            email: '',
-            name: '',
-            role: '',
-        }
-    },
-    setAuth: () => {},
-    appLoading: true,
-    setAppLoading: () => {},
+  auth: {
+    isAuthenticated: false,
+    user: null, // Default is null until a user is authenticated
+  },
+  setAuth: () => {},
+  appLoading: false,
+  setAppLoading: () => {},
 });
 
-// Define props type for the AuthWrapper
 interface AuthWrapperProps {
-    children: ReactNode;
+  children: ReactNode;
 }
 
-// AuthWrapper component
+// Initialize the auth state correctly in AuthWrapper
 export const AuthWrapper = ({ children }: AuthWrapperProps) => {
-    const [auth, setAuth] = useState({
-        isAuthenticated: false,
-        user: {
-            email: '',
-            name: '',
-            role: '',
-        }
-    });
-    const [appLoading, setAppLoading] = useState(true);
+  const [auth, setAuth] = useState<{
+    isAuthenticated: boolean;
+    user: User | null; // Ensure that user can be null initially
+  }>({
+    isAuthenticated: false,
+    user: null, // Default user is null
+  });
 
-    return (
-        <AuthContext.Provider value={{
-            auth,
-            setAuth,
-            appLoading,
-            setAppLoading
-        }}>
-            {children}
-        </AuthContext.Provider>
-    );
+  const [appLoading, setAppLoading] = useState(false);
+
+  return (
+    <AuthContext.Provider value={{ auth, setAuth, appLoading, setAppLoading }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

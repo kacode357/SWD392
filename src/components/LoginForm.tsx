@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Form, Input, Button, notification } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentLogin, loginUserApi } from '../util/api';
-import { AuthContext } from '../context/auth.context';
+
 import todoLogo from '../assets/todoList.png';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
@@ -14,34 +14,27 @@ interface LoginFormValues {
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
-  const { setAuth } = useContext(AuthContext);
+
 
   const onFinish = async (values: LoginFormValues) => {
     const { email, password } = values;
     const data = { email, password };
 
     const resDataToken = await loginUserApi(data);
-    console.log(resDataToken);
+    localStorage.setItem('token', resDataToken.token);
     if (resDataToken) {
-     
-
       const resDataLogin = await getCurrentLogin();
-      console.log(resDataLogin);
+      console.log("Test User Name >>>>>",resDataLogin.userName);
+      console.log("Test User Email >>>>>",resDataLogin.email);
+      console.log("Test User Role >>>>>",resDataLogin.roleName);
 
       notification.success({
         message: 'Successful',
         description: 'You have successfully logged in.',
       });
 
-      setAuth({
-        isAuthenticated: true,
-        user: {
-          email: resDataLogin?.email,
-          name: resDataLogin?.name,
-          role: resDataLogin?.role,
-        },
-      });
-
+     
+      
       // Redirect based on role
       if (resDataLogin?.role === 'admin') {
         navigate('/manager-user');
@@ -65,17 +58,7 @@ const LoginForm: React.FC = () => {
     // const resDataToken = await loginUserApi({ googleToken: token });
     const resDataToken = "await loginUserApi({ googleToken: token })";
     if (resDataToken) {
-      // localStorage.setItem('token', resDataToken.token);
-
-      const resDataLogin = await getCurrentLogin();
-      setAuth({
-        isAuthenticated: true,
-        user: {
-          email: resDataLogin?.email,
-          name: resDataLogin?.name,
-          role: resDataLogin?.role,
-        },
-      });
+     
       navigate('/');
     } else {
       notification.error({

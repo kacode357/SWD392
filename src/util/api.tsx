@@ -18,6 +18,7 @@ const getCurrentLogin = async () => {
   const token = localStorage.getItem('token');
   if (token){
     const response = await axiosWithoutLoading.get(URL_API);
+    console.log(">>>>>>>>>>",response);
     return response.data;
   } 
 };

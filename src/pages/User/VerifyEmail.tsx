@@ -15,7 +15,7 @@ const VerifyEmail = () => {
       if (email) { 
         try {
           const response = await verifyEmailApi(email);
-          console.log(response);
+
           if (response.data.success) {
             setMessage('Your email has been successfully verified!');
             setSuccess(true);

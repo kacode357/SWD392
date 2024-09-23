@@ -35,8 +35,8 @@ const App: React.FC = () => {
             isAuthenticated: true,
             user: {
               email: res?.email,
-              name: res?.name,
-              role: res?.role,
+              name: res?.userName,
+              role: res?.roleName,
             },
           });
         }
