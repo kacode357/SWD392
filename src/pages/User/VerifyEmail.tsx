@@ -12,7 +12,7 @@ const VerifyEmail = () => {
 
   useEffect(() => {
     const verifyEmail = async () => {
-      if (email) {  // Ensure email is not undefined before calling the API
+      if (email) {  
         try {
           const response = await verifyEmailApi(email);
           if (response.success) {
