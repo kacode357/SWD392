@@ -12,7 +12,7 @@ const VerifyEmail = () => {
 
   useEffect(() => {
     const verifyEmail = async () => {
-      if (email) {  
+      if (email) {  //asdasdawww
         try {
           const response = await verifyEmailApi(email);
           if (response.success) {
