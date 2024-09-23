@@ -12,9 +12,10 @@ const VerifyEmail = () => {
 
   useEffect(() => {
     const verifyEmail = async () => {
-      if (email) {  //asdasdawww
+      if (email) { 
         try {
           const response = await verifyEmailApi(email);
+          console.log(response);
           if (response.success) {
             setMessage('Your email has been successfully verified!');
             setSuccess(true);
