@@ -50,7 +50,7 @@ defaultAxiosInstance.interceptors.response.use(
       });
     }
 
-    return response.data;
+    return response;
   },
   (err: AxiosError<ErrorResponse>) => {
     setLoading(false);

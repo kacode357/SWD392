@@ -5,7 +5,7 @@ import { Spin, Result } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 
 const VerifyEmail = () => {
-  const { email } = useParams<{ email: string | undefined }>(); // Allow undefined in case email is missing
+  const { email } = useParams<{ email: string | undefined }>(); 
   const [message, setMessage] = useState<string>('Verifying your email...');
   const [loading, setLoading] = useState<boolean>(true);
   const [success, setSuccess] = useState<boolean | null>(null);
@@ -16,7 +16,7 @@ const VerifyEmail = () => {
         try {
           const response = await verifyEmailApi(email);
           console.log(response);
-          if (response.success) {
+          if (response.data.success) {
             setMessage('Your email has been successfully verified!');
             setSuccess(true);
           } else {

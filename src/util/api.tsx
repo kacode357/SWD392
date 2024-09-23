@@ -56,7 +56,7 @@ const createAdminUserApi = async (data: { name: string, email: string, password:
 const verifyEmailApi = async (email: string) => {
   const URL_API = `/api/user/verifyemail/${email}`;
   const response = await defaultAxiosInstance.post(URL_API);
-  return response.data;
+  return response;
 };
 
 export { createUserApi, loginUserApi, getCurrentLogin, getAllUserApi, changeUserRoleApi, changeUserStatusApi, deleteUserApi, updateAccountApi, createAdminUserApi, verifyEmailApi };
