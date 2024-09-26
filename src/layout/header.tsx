@@ -15,13 +15,13 @@ interface AppHeaderProps {
 }
 
 const AppHeader: React.FC<AppHeaderProps> = ({ collapsed, setCollapsed, loading }) => {
-  const { auth } = useContext(AuthContext);
- 
+  const { auth } = useContext(AuthContext); // Fetch auth context
+  console.log("Testxx >>>>>",auth);
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('token'); // Clear the token on logout
     navigate('/login');
   };
 
@@ -71,7 +71,6 @@ const AppHeader: React.FC<AppHeaderProps> = ({ collapsed, setCollapsed, loading 
               })}
             </div>
 
-            
             <div className="flex-1 flex justify-center">
               <Search 
                 placeholder="Find your favorite team, jersey, or player" 
@@ -81,9 +80,9 @@ const AppHeader: React.FC<AppHeaderProps> = ({ collapsed, setCollapsed, loading 
               />
             </div>
 
-            {/* Right: Avatar or Sign In button */}
+
             <div className="flex-1 flex justify-end">
-              {auth.isAuthenticated ? (
+              {auth.isAuthenticated && auth.user ? (
                 <Dropdown menu={{ items: avatarMenuItems }} trigger={['hover']} placement="bottomRight">
                   <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                     <Avatar icon={<UserOutlined />} />
