@@ -57,7 +57,7 @@ const LoginForm: React.FC = () => {
   return (
     <div className="form-container sign-in ">
       <Form<LoginFormValues> name="login_form " onFinish={onFinish} layout="vertical">
-        <img src={todoLogo} className="w-fullw-40 h-auto mx-auto mt-20" alt=""  />
+        <img src="public/logo.png" className="w-fullw-40 h-auto mx-auto mt-20" alt=""  />
         <h1 className="font-bold text-2xl ">Sign In</h1>
         <Form.Item
           name="email"
@@ -83,7 +83,9 @@ const LoginForm: React.FC = () => {
           type="default" 
           icon={<GoogleOutlined />} 
           block 
-          style={{ marginTop: '16px' }} 
+          style={{ marginTop: '16px' 
+                   
+        }} 
           onClick={() => {/* Gọi hàm đăng nhập Google ở đây */}}
         >
           Đăng nhập bằng Google
