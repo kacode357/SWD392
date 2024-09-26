@@ -19,7 +19,7 @@ interface User {
   email: string;
   avatar: string;
   phone_number: string;
-  role: 'admin' | 'user';
+  role: 'Admin' | 'user';
   status: 'active' | 'inactive';
   is_deleted: boolean;
 }
@@ -112,7 +112,7 @@ const UserPage: React.FC = () => {
       title: 'Role',
       dataIndex: 'role',
       key: 'role',
-      render: (role: 'admin' | 'user', record: User) => (
+      render: (role: 'Admin' | 'user', record: User) => (
         <ChangeRoleComponent userId={record._id} currentRole={role} onSuccess={() => fetchUsers(pagination.pageNum, pagination.pageSize, activeTab === 'allUsers' ? 'active' : 'inactive', activeTab === 'deletedUsers', keyword)} />
       ),
     },

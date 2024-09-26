@@ -20,7 +20,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ element: Component, allowed
         return <Component />;  // Render component thay vì element JSX
     }
 
-    if (userRole === 'admin') {
+    if (userRole === 'Admin') {
         return <Navigate to="/manager-user" replace />;
     }
 

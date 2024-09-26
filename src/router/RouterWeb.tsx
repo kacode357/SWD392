@@ -30,7 +30,7 @@ const router = createBrowserRouter([
       {
         path: "manager-user", 
         element: (
-          <PrivateRoute element={UserPage} allowedRoles={['admin']} />  
+          <PrivateRoute element={UserPage} allowedRoles={['Admin']} />  
         ),
       },
       {

@@ -24,19 +24,18 @@ const LoginForm: React.FC = () => {
     localStorage.setItem('token', resDataToken.token);
     if (resDataToken) {
       const resDataLogin = await getCurrentLogin();
-      console.log("Test User Name >>>>>",resDataLogin.userName);
-      console.log("Test User Email >>>>>",resDataLogin.email);
-      console.log("Test User Role >>>>>",resDataLogin.roleName);
+      
 
       notification.success({
         message: 'Successful',
         description: 'You have successfully logged in.',
       });
 
-     
+     console.log("Test RoleName >>>>>",resDataLogin.roleName);
       
       // Redirect based on role
-      if (resDataLogin?.role === 'admin') {
+      if (resDataLogin?.roleName === 'Admin') {
+        console.log("TXXXXXXXXXXXXXX",resDataLogin.roleName);
         navigate('/manager-user');
       } else {
         navigate('/');
@@ -51,6 +50,7 @@ const LoginForm: React.FC = () => {
 
   const handleGoogleSuccess = async (response: any) => {
     // Xử lý thành công khi nhận được Google token
+    console.log('Google Response:', response);
     const token = response.credential;
     console.log('Google Token:', token);
 

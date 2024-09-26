@@ -6,12 +6,12 @@ const { Option } = Select;
 
 interface ChangeRoleComponentProps {
     userId: string;
-    currentRole: 'admin' | 'user';
+    currentRole: 'Admin' | 'user';
     onSuccess: () => void;
 }
 
 const ChangeRoleComponent: React.FC<ChangeRoleComponentProps> = ({ userId, currentRole, onSuccess }) => {
-    const handleChange = async (newRole: 'admin' | 'user') => {
+    const handleChange = async (newRole: 'Admin' | 'user') => {
 
         // Gọi API để thay đổi vai trò của người dùng
         await changeUserRoleApi({ user_id: userId, role: newRole });
@@ -23,8 +23,8 @@ const ChangeRoleComponent: React.FC<ChangeRoleComponentProps> = ({ userId, curre
     };
 
     return (
-        <Select value={currentRole} onChange={(value) => handleChange(value as 'admin' | 'user')}>
-            <Option value="admin">Admin</Option>
+        <Select value={currentRole} onChange={(value) => handleChange(value as 'Admin' | 'user')}>
+            <Option value="Admin">Admin</Option>
             <Option value="user">User</Option>
         </Select>
     );

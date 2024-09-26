@@ -68,7 +68,7 @@ const App: React.FC = () => {
             style={{ height: '100vh', zIndex: 1000 }}
           >
             {/* Kiểm tra role của user để hiển thị sidebar tương ứng */}
-            {auth?.user?.role === 'admin' ? (
+            {auth?.user?.role === 'Admin' ? (
               <AdminSidebar />
             ) : (
               <UserSidebar />
