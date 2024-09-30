@@ -4,6 +4,7 @@ import { AuthWrapper } from '../context/auth.context';
 import PrivateRoute from './PrivateRoute'; 
 import App from '../App';
 import Loading from '../components/Loading';
+import Euro2024Component from '../components/euro';
 
 // Lazy-load the components
 const HomePage = lazy(() => import('../pages/homepage'));
@@ -26,6 +27,14 @@ const router = createBrowserRouter([
             <HomePage />
           </Suspense>
         ),
+      },
+      {
+        path: "/euro",
+        element: (
+          <Suspense fallback={<Loading isLoading={true} />}>
+            <Euro2024Component></Euro2024Component>
+          </Suspense>
+        ), 
       },
       {
         path: "manager-user", 

@@ -78,9 +78,9 @@ const LoginForm: React.FC = () => {
 
   return (
     <GoogleOAuthProvider clientId="405029644705-pgg82nbc7r3uq9igpnj3vkk1ku524b0o.apps.googleusercontent.com">
-      <div className="form-container sign-in">
+      <div className="form-container sign-in mb-10">
         <Form<LoginFormValues> name="login_form" onFinish={onFinish} layout="vertical">
-          <img src={todoLogo} className="w-fullw-40 h-auto mx-auto mt-20" alt="" />
+          <img src="public/logo.png" className="w-50 h-auto mx-auto " alt="" />
           <h1 className="font-bold text-2xl">Sign In</h1>
           <Form.Item
             name="email"
@@ -104,7 +104,7 @@ const LoginForm: React.FC = () => {
           </Button>
 
           <div style={{ marginTop: '16px' }}>
-            <GoogleLogin
+            <GoogleLogin  
               onSuccess={handleGoogleSuccess}
               onError={handleGoogleFailure}
             />
