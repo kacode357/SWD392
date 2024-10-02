@@ -42,7 +42,7 @@ const LoginForm: React.FC = () => {
       });
 
       // Redirect based on role
-      if (resDataLogin?.role === 'admin') {
+      if (resDataLogin?.role === 'Admin') {
         navigate('/manager-user');
       } else {
         navigate('/');
