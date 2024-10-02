@@ -10,7 +10,6 @@ interface RegisterFormValues {
   email: string;
   phone_number: string;
   password: string;
-  role: string;
   gender: string;
   dob: any; // Keeping 'any' type to accommodate raw ISO string conversion
   address: string;
@@ -64,7 +63,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
         name="register_form"
         onFinish={onFinish}
         layout="vertical"
-        initialValues={{ role: 'user', gender: 'male' }}  // Default values for role and gender
+        initialValues={{ gender: 'male' }}  // Default values for gender
       >
         <h1>Create Account</h1>
 
@@ -111,18 +110,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
 
         {/* Removed confirm_password field */}
 
-        <Form.Item
-          name="role"
-          label="Role"
-          rules={[{ required: true, message: 'Please select your role!' }]}
-        >
-          <Select placeholder="Select a role">
-            <Option value="user">User</Option>
-            <Option value="admin">Admin</Option>
-            <Option value="staff">Staff</Option>
-          </Select>
-        </Form.Item>
-
         {/* Added Gender field */}
         <Form.Item
           name="gender"
@@ -157,7 +144,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
         <Form.Item label="Profile Image">
           {/* Integrating the FileUploader component */}
           <FileUploader
-            onUploadSuccess={(url : string) => setImgUrl(url)} // Save the uploaded image URL
+            onUploadSuccess={(url: string) => setImgUrl(url)} // Save the uploaded image URL
             defaultImage=""  // Optional default image, if needed
           />
         </Form.Item>

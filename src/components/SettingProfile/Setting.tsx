@@ -1,64 +1,87 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../../context/auth.context';
-import { getUserByIdApi, updateUserByIdApi } from '../../util/api'; 
-import { Input, Button, Form, message } from 'antd';
-import FileUploader from '../../util/FileUploader';
-import { FormInstance } from 'antd/lib/form';
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../../context/auth.context";
+import { getUserByIdApi, updateUserByIdApi } from "../../util/api";
+import { Input, Button, Form, message, DatePicker, Select } from "antd";
+import FileUploader from "../../util/FileUploader";
+import { FormInstance } from "antd/lib/form";
+import moment from "moment";
+
+const { Option } = Select;
 
 const Setting: React.FC = () => {
-  const { auth } = useContext(AuthContext); 
+  const { auth } = useContext(AuthContext);
   const [form] = Form.useForm<FormInstance>();
-  const [loading, setLoading] = useState<boolean>(false); 
-  const [imageUrl, setImageUrl] = useState<string>(''); 
- 
+  const [loading, setLoading] = useState<boolean>(false);
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const [imageUploading, setImageUploading] = useState<boolean>(false); // Track image upload state
+
+  // Fetch user data when the component is mounted
   useEffect(() => {
-    // Fetch user data when the component is mounted
     const fetchUserData = async () => {
       try {
         const userData = await getUserByIdApi(auth.user.id);
-        console.log('userData', userData);
-        form.setFieldsValue(userData);
-        setImageUrl(userData.imgUrl); 
+        console.log("userData", userData);
+        form.setFieldsValue({
+          ...userData,
+          dob: userData.dob ? moment(userData.dob) : null,
+        });
+        setImageUrl(userData.imgUrl);
       } catch (error) {
-        message.error('Failed to fetch user data.');
-        console.error('Error fetching user data:', error);
+        message.error("Failed to fetch user data.");
+        console.error("Error fetching user data:", error);
       }
     };
 
     fetchUserData();
   }, [auth.user.id, form]);
 
-  const handleUpdate = async (values: any ) => {
+  const handleUpdate = async (values: any) => {
     setLoading(true);
     try {
-      const updatedUser = { ...values, imgUrl: imageUrl };
+      const updatedUser = {
+        ...values,
+        imgUrl: imageUrl,
+        dob: values.dob ? values.dob.format("YYYY-MM-DD") : null,
+      };
       await updateUserByIdApi(auth.user.id, updatedUser);
-      message.success('User updated successfully');
+      message.success("User updated successfully");
     } catch (error) {
-      message.error('Failed to update user.');
-      console.error('Error updating user:', error);
+      message.error("Failed to update user.");
+      console.error("Error updating user:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleImageUpload = (url: string) => {
-    setImageUrl(url); 
-    message.success('Image uploaded successfully');
+  const handleImageUpload = async (url: string) => {
+    setImageUploading(true); // Start image uploading state
+    try {
+      setImageUrl(url);
+      message.success("Image uploaded successfully");
+    } finally {
+      setImageUploading(false); // End image uploading state
+    }
   };
 
   return (
     <div>
       <h2>Settings</h2>
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={handleUpdate}
-      >
+
+      {/* Center the avatar */}
+      <Form form={form} layout="vertical" onFinish={handleUpdate}>
+        <div style={{ textAlign: "center", marginBottom: 20 }}>
+          <Form.Item label="Profile Picture" style={{ display: "inline-block" }}>
+            <FileUploader
+              onUploadSuccess={handleImageUpload}
+              defaultImage={imageUrl}
+            />
+          </Form.Item>
+        </div>
+
         <Form.Item
           name="userName"
           label="Username"
-          rules={[{ required: true, message: 'Please enter your username' }]}
+          rules={[{ required: true, message: "Please enter your username" }]}
         >
           <Input placeholder="Enter your username" />
         </Form.Item>
@@ -66,38 +89,43 @@ const Setting: React.FC = () => {
         <Form.Item
           name="dob"
           label="Date of Birth"
-          rules={[{ required: true, message: 'Please enter your date of birth' }]}
+          rules={[
+            { required: true, message: "Please enter your date of birth" },
+          ]}
         >
-          <Input placeholder="Enter your date of birth" />
+          <DatePicker
+            style={{ width: "100%" }}
+            placeholder="Select your date of birth"
+          />
         </Form.Item>
 
-        <Form.Item
-          name="address"
-          label="Address"
-        >
+        <Form.Item name="address" label="Address">
           <Input placeholder="Enter your address" />
         </Form.Item>
 
-        <Form.Item
-          name="phoneNumber"
-          label="Phone Number"
-        >
+        <Form.Item name="phoneNumber" label="Phone Number">
           <Input placeholder="Enter your phone number" />
         </Form.Item>
 
         <Form.Item
           name="gender"
           label="Gender"
+          rules={[{ required: true, message: "Please select your gender" }]}
         >
-          <Input placeholder="Enter your gender" />
-        </Form.Item>
-
-        <Form.Item label="Profile Picture">
-          <FileUploader onUploadSuccess={handleImageUpload} defaultImage={imageUrl} />
+          <Select placeholder="Select your gender">
+            <Option value="male">Male</Option>
+            <Option value="female">Female</Option>
+          </Select>
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
+          {/* Disable button while loading or uploading image */}
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+            disabled={imageUploading}
+          >
             Update
           </Button>
         </Form.Item>

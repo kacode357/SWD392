@@ -30,7 +30,7 @@ const App: React.FC = () => {
       try {
         setAppLoading(true);
         const res = await getCurrentLogin();
-        console.log('res', res);
+  
         if (res) {
           setAuth({
             isAuthenticated: true,

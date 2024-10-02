@@ -15,7 +15,7 @@ interface AppHeaderProps {
 
 const AppHeader: React.FC<AppHeaderProps> = ({ collapsed, setCollapsed, loading }) => {
   const { auth } = useContext(AuthContext);
- console.log('auth', auth);
+
   const location = useLocation();
   const navigate = useNavigate();
   

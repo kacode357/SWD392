@@ -19,6 +19,7 @@ export default tseslint.config(
     },
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": "off",
        "no-useless-catch": "off",
        "no-unused-vars": "off",
       ...reactHooks.configs.recommended.rules,
