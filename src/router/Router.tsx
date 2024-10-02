@@ -61,7 +61,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "verify/:id", // New route for account verification using the ID from URL
+        path: ":id", // New route for account verification using the ID from URL
         element: <VerifyAccount />, // Public route to verify account with the given ID
       },
     ],
