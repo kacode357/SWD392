@@ -20,8 +20,8 @@ const UserSidebar: React.FC = () => {
     {
       key: '2',
       icon: <UserOutlined />,
-      label: 'Test',
-      onClick: () => navigate('/test'),
+      label: 'Manager Club',
+      onClick: () => navigate('/manager-club'),
     },
     {
       key: '3',

@@ -1,53 +1,69 @@
 import { createContext, useState, ReactNode } from 'react';
 
 interface User {
-  email: string;
-  name: string;
-  role: string;
+    id: number;  // should be lowercase 'number'
+    imgUrl: string;
+    email: string;
+    name: string;
+    role: string;
 }
 
 interface AuthContextType {
-  auth: {
-    isAuthenticated: boolean;
-    user: User | null; // Ensure that user can be null initially
-  };
-  setAuth: React.Dispatch<React.SetStateAction<{
-    isAuthenticated: boolean;
-    user: User | null;
-  }>>;
-  appLoading: boolean;
-  setAppLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    auth: {
+        isAuthenticated: boolean;
+        user: User;
+    };
+    setAuth: React.Dispatch<React.SetStateAction<{
+        isAuthenticated: boolean;
+        user: User;
+    }>>;
+    appLoading: boolean;
+    setAppLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const AuthContext = createContext<AuthContextType>({
-  auth: {
-    isAuthenticated: false,
-    user: null, // Default is null until a user is authenticated
-  },
-  setAuth: () => {},
-  appLoading: false,
-  setAppLoading: () => {},
+    auth: {
+        isAuthenticated: false,
+        user: {
+            id: 0,  // default value for id
+            imgUrl: '',
+            email: '',
+            name: '',
+            role: '',
+        }
+    },
+    setAuth: () => {},  // dummy function as placeholder
+    appLoading: true,
+    setAppLoading: () => {},  // dummy function as placeholder
 });
 
+// Define props type for the AuthWrapper
 interface AuthWrapperProps {
-  children: ReactNode;
+    children: ReactNode;
 }
 
-// Initialize the auth state correctly in AuthWrapper
+// AuthWrapper component
 export const AuthWrapper = ({ children }: AuthWrapperProps) => {
-  const [auth, setAuth] = useState<{
-    isAuthenticated: boolean;
-    user: User | null; // Ensure that user can be null initially
-  }>({
-    isAuthenticated: false,
-    user: null, // Default user is null
-  });
+    const [auth, setAuth] = useState({
+        isAuthenticated: false,
+        user: {
+            id: 0,  // default value for id
+            imgUrl: '',  // default value for imgUrl
+            email: '',
+            name: '',
+            role: '',
+        }
+    });
+    const [appLoading, setAppLoading] = useState(true);
 
-  const [appLoading, setAppLoading] = useState(false);
-
-  return (
-    <AuthContext.Provider value={{ auth, setAuth, appLoading, setAppLoading }}>
-      {children}
-    </AuthContext.Provider>
-  );
+    return (
+        <AuthContext.Provider value={{
+            auth,
+            setAuth,
+            appLoading,
+            setAppLoading
+        }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };

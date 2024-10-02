@@ -30,16 +30,20 @@ const App: React.FC = () => {
       try {
         setAppLoading(true);
         const res = await getCurrentLogin();
+        console.log('res', res);
         if (res) {
           setAuth({
             isAuthenticated: true,
             user: {
+              id: res?.id,
+              imgUrl: res?.imgUrl,
               email: res?.email,
               name: res?.userName,
               role: res?.roleName,
             },
           });
         }
+        
       } catch (error) {
         console.error('Failed to fetch account', error);
       } finally {

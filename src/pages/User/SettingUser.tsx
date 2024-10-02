@@ -1,5 +1,5 @@
 
-import Setting from '../../components/Setting'
+import Setting from '../../components/SettingProfile/ManagerSetting'
 
 const SettingUser = () => {
   return (

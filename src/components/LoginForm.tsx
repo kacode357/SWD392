@@ -1,11 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Form, Input, Button, notification } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentLogin, loginUserApi } from '../util/api';
-
+import { AuthContext } from '../context/auth.context';
 import todoLogo from '../assets/todoList.png';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-
 
 interface LoginFormValues {
   email: string;
@@ -14,28 +12,37 @@ interface LoginFormValues {
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
-
+  const { setAuth } = useContext(AuthContext);
 
   const onFinish = async (values: LoginFormValues) => {
     const { email, password } = values;
     const data = { email, password };
 
     const resDataToken = await loginUserApi(data);
-    localStorage.setItem('token', resDataToken.token);
     if (resDataToken) {
+      localStorage.setItem('token', resDataToken.token);
+
       const resDataLogin = await getCurrentLogin();
-      
+      console.log(resDataLogin);
 
       notification.success({
         message: 'Successful',
         description: 'You have successfully logged in.',
       });
 
-     console.log("Test RoleName >>>>>",resDataLogin.roleName);
-      
+      setAuth({
+        isAuthenticated: true,
+        user: {
+          id: resDataLogin?.id,
+          imgUrl: resDataLogin?.imgUrl,
+          email: resDataLogin?.email,
+          name: resDataLogin?.name,
+          role: resDataLogin?.role,
+        },
+      });
+
       // Redirect based on role
-      if (resDataLogin?.roleName === 'Admin') {
-        console.log("TXXXXXXXXXXXXXX",resDataLogin.roleName);
+      if (resDataLogin?.role === 'admin') {
         navigate('/manager-user');
       } else {
         navigate('/');
@@ -48,76 +55,38 @@ const LoginForm: React.FC = () => {
     }
   };
 
-  const handleGoogleSuccess = async (response: any) => {
-    // Xử lý thành công khi nhận được Google token
-    console.log('Google Response:', response);
-    const token = response.credential;
-    console.log('Google Token:', token);
-
-    // Gọi API với token từ Google
-    // const resDataToken = await loginUserApi({ googleToken: token });
-    const resDataToken = "await loginUserApi({ googleToken: token })";
-    if (resDataToken) {
-     
-      navigate('/');
-    } else {
-      notification.error({
-        message: 'Error',
-        description: 'Google login failed!',
-      });
-    }
-  };
-
-  const handleGoogleFailure = () => {
-    notification.error({
-      message: 'Error',
-      description: 'Google login failed!',
-    });
-  };
-  
-
   return (
-    <GoogleOAuthProvider clientId="405029644705-pgg82nbc7r3uq9igpnj3vkk1ku524b0o.apps.googleusercontent.com">
-      <div className="form-container sign-in mb-10">
-        <Form<LoginFormValues> name="login_form" onFinish={onFinish} layout="vertical">
-          <img src="public/logo.png" className="w-50 h-auto mx-auto " alt="" />
-          <h1 className="font-bold text-2xl">Sign In</h1>
-          <Form.Item
-            name="email"
-            label="Email"
-            rules={[
-              { required: true, message: 'Please input your email!' },
-              { type: 'email', message: 'Please enter a valid email!' },
-            ]}
-          >
-            <Input placeholder="Email" />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            label="Password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
-          >
-            <Input.Password placeholder="Password" />
-          </Form.Item>
-          <Button type="primary" htmlType="submit" block>
-            Sign In
-          </Button>
-
-          <div style={{ marginTop: '16px' }}>
-            <GoogleLogin  
-              onSuccess={handleGoogleSuccess}
-              onError={handleGoogleFailure}
-            />
-          </div>
-
-          <div className="text-center mt-4">
-            <button className="text-blue-500 hover:underline" onClick={() => (window.location.href = '/')}>
-              Back to HomePage
-            </button>
-          </div>
-        </Form>
-      </div>
-    </GoogleOAuthProvider>
+    <div className="form-container sign-in">
+      <Form<LoginFormValues> name="login_form" onFinish={onFinish} layout="vertical">
+        <img src={todoLogo} className="w-full" alt="" />
+        <h1 className="font-bold text-2xl ">Sign In</h1>
+        <Form.Item
+          name="email"
+          label="Email"
+          rules={[
+            { required: true, message: 'Please input your email!' },
+            { type: 'email', message: 'Please enter a valid email!' },
+          ]}
+        >
+          <Input placeholder="Email" />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          label="Password"
+          rules={[{ required: true, message: 'Please input your password!' }]}
+        >
+          <Input.Password placeholder="Password" />
+        </Form.Item>
+        <Button type="primary" htmlType="submit" block>
+          Sign In
+        </Button>
+        <div className="text-center mt-4">
+          <button className="text-blue-500 hover:underline" onClick={() => (window.location.href = '/')}>
+            Back to HomePage
+          </button>
+        </div>
+      </Form>
+    </div>
   );
 };
 

@@ -1,5 +1,5 @@
-import { notification } from 'antd';
 import axios, { AxiosInstance, AxiosError, AxiosResponse } from 'axios';
+import { notification } from 'antd';
 
 interface ErrorResponse {
   message?: string;
@@ -40,16 +40,6 @@ defaultAxiosInstance.interceptors.request.use(
 defaultAxiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
     setLoading(false);
-
-    // Show success notification if response contains a success message
-    if (response.data?.code === 200 && response.data?.success) {
-      notification.success({
-        message: 'Success',
-        description: response.data.message || 'Operation successful!',
-        duration: 5,
-      });
-    }
-
     return response.data;
   },
   (err: AxiosError<ErrorResponse>) => {

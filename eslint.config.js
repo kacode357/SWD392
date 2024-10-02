@@ -19,11 +19,8 @@ export default tseslint.config(
     },
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
-      "no-useless-catch": "off",
-      "@typescript-eslint/no-explicit-any": "off", 
-      "no-useless-catch": "off", // Already present
-      "@typescript-eslint/no-implicit-any-catch": "error", // Add this rule to enforce proper typing for catch
-      "@typescript-eslint/no-unused-vars": "error", // Already present
+       "no-useless-catch": "off",
+       "no-unused-vars": "off",
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': [
         'warn',

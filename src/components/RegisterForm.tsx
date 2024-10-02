@@ -1,41 +1,50 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Select, notification, DatePicker, Row, Col } from 'antd';
+import { Form, Input, Button, Select, DatePicker, notification } from 'antd'; // DatePicker for DOB
 import { createUserApi } from '../util/api';
-import FileUploader from '../util/FileUploader'; 
+import FileUploader from '../util/FileUploader';  // Import FileUploader component
+
 const { Option } = Select;
 
 interface RegisterFormValues {
+  name: string;
   email: string;
+  phone_number: string;
   password: string;
-  confirmPassword: string;
-  userName: string;
-  dob: string;
-  address: string;
-  phoneNumber: string;
+  role: string;
   gender: string;
-  imgUrl: string;
+  dob: any; // Keeping 'any' type to accommodate raw ISO string conversion
+  address: string;
+  imgUrl?: string;  // Include imgUrl in form values
 }
 
 interface RegisterFormProps {
-  onRegisterSuccess: () => void;
+  onRegisterSuccess: () => void; 
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
   const [form] = Form.useForm();
-  const [imageUrl, setImageUrl] = useState<string>(''); // State to store uploaded image URL
+  const [imgUrl, setImgUrl] = useState<string>(''); // State to hold uploaded image URL
 
   const onFinish = async (values: RegisterFormValues) => {
-    const { email, password, userName, dob, address, phoneNumber, gender } = values;
-
+    const { email, password, name, phone_number, gender, dob, address } = values;
+    console.log('Received values:', values);
     try {
-      console.log('Sending data to API:', { email, password, userName, dob, address, phoneNumber, gender, imgUrl: imageUrl });
-
-      const res = await createUserApi({ email, password, userName, dob, address, phoneNumber, gender, imgUrl: imageUrl });
-     
+      // Pass the uploaded image URL along with other form values
+      const res = await createUserApi({ 
+        email, 
+        password, 
+        userName: name, 
+        phoneNumber: phone_number, 
+        gender, 
+        dob: dob ? dob.toISOString() : '', // Convert to ISO string format
+        address, 
+        imgUrl 
+      });
+      
       if (res) {
         notification.success({
           message: 'Success',
-          description: 'You have verify account logged in.',
+          description: 'Please verify your email to activate your account',
         });
         onRegisterSuccess(); // Trigger callback to switch to login form
       }
@@ -49,123 +58,108 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
   };
 
   return (
-    <div className="form-container sign-up  mt-5 mb-5">
+    <div className="form-container sign-up">
       <Form
         form={form}
         name="register_form"
         onFinish={onFinish}
         layout="vertical"
+        initialValues={{ role: 'user', gender: 'male' }}  // Default values for role and gender
       >
         <h1>Create Account</h1>
 
-        {/* FileUploader at the top, centered */}
-        <Form.Item label="Upload Profile Picture" style={{ textAlign: 'center' }}>
-          <FileUploader
-            type="image"
-            onUploadSuccess={(url: string) => setImageUrl(url)} 
-          />
+        <Form.Item
+          name="name"
+          label="Name"
+          rules={[{ required: true, message: 'Please input your name!' }]}
+        >
+          <Input placeholder="Name" />
         </Form.Item>
 
-        {/* Email and Username on the same row */}
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item
-              name="email"
-              label="Email"
-              rules={[{ required: true, message: 'Please input your email!' }, { type: 'email', message: 'Please enter a valid email!' }]}
-            >
-              <Input placeholder="Email" />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              name="userName"
-              label="Username"
-              rules={[{ required: true, message: 'Please input your username!' }]}
-            >
-              <Input placeholder="Username" />
-            </Form.Item>
-          </Col>
-        </Row>
+        <Form.Item
+          name="email"
+          label="Email"
+          rules={[
+            { required: true, message: 'Please input your email!' },
+            { type: 'email', message: 'Please enter a valid email!' },
+          ]}
+        >
+          <Input placeholder="Email" />
+        </Form.Item>
 
-        {/* Password and Confirm Password on the same row */}
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item
-              name="password"
-              label="Password"
-              rules={[{ required: true, message: 'Please input your password!' }]}
-            >
-              <Input.Password placeholder="Password" />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              name="confirmPassword"
-              label="Confirm Password"
-              dependencies={['password']}
-              rules={[
-                { required: true, message: 'Please confirm your password!' },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || getFieldValue('password') === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(new Error('The two passwords do not match!'));
-                  },
-                }),
-              ]}
-            >
-              <Input.Password placeholder="Confirm Password" />
-            </Form.Item>
-          </Col>
-        </Row>
+        <Form.Item
+          name="phone_number"
+          label="Phone Number"
+          rules={[
+            { required: true, message: 'Please input your phone number!' },
+            { pattern: /^\d{10}$/, message: 'Please enter a valid phone number!' },
+          ]}
+        >
+          <Input placeholder="Phone Number" />
+        </Form.Item>
 
-        {/* Phone Number and Gender on the same row */}
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item
-              name="phoneNumber"
-              label="Phone Number"
-              rules={[
-                { required: true, message: 'Please input your phone number!' },
-                { pattern: /^\d{10}$/, message: 'Please enter a valid phone number!' },
-              ]}
-            >
-              <Input placeholder="Phone Number" />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              name="gender"
-              label="Gender"
-              rules={[{ required: true, message: 'Please select your gender!' }]}
-            >
-              <Select placeholder="Select a gender">
-                <Option value="male">Male</Option>
-                <Option value="female">Female</Option>
-                <Option value="other">Other</Option>
-              </Select>
-            </Form.Item>
-          </Col>
-        </Row>
+        <Form.Item
+          name="password"
+          label="Password"
+          rules={[
+            { required: true, message: 'Please input your password!' },
+            { min: 6, message: 'Password must be at least 6 characters long!' },
+          ]}
+        >
+          <Input.Password placeholder="Password" />
+        </Form.Item>
 
-        {/* Date of Birth (Full Width) */}
+        {/* Removed confirm_password field */}
+
+        <Form.Item
+          name="role"
+          label="Role"
+          rules={[{ required: true, message: 'Please select your role!' }]}
+        >
+          <Select placeholder="Select a role">
+            <Option value="user">User</Option>
+            <Option value="admin">Admin</Option>
+            <Option value="staff">Staff</Option>
+          </Select>
+        </Form.Item>
+
+        {/* Added Gender field */}
+        <Form.Item
+          name="gender"
+          label="Gender"
+          rules={[{ required: true, message: 'Please select your gender!' }]}
+        >
+          <Select placeholder="Select your gender">
+            <Option value="male">Male</Option>
+            <Option value="female">Female</Option>
+            <Option value="other">Other</Option>
+          </Select>
+        </Form.Item>
+
+        {/* Added Date of Birth field */}
         <Form.Item
           name="dob"
           label="Date of Birth"
-          rules={[{ required: true, message: 'Please input your date of birth!' }]}
+          rules={[{ required: true, message: 'Please select your date of birth!' }]}
         >
-          <DatePicker style={{ width: '100%' }} />
+          <DatePicker style={{ width: '100%' }} placeholder="Select Date of Birth" />
         </Form.Item>
 
-        {/* Address (Full Width at the bottom) */}
+        {/* Added Address field */}
         <Form.Item
           name="address"
           label="Address"
           rules={[{ required: true, message: 'Please input your address!' }]}
         >
-          <Input placeholder="Address" />
+          <Input.TextArea placeholder="Address" rows={4} />
+        </Form.Item>
+
+        <Form.Item label="Profile Image">
+          {/* Integrating the FileUploader component */}
+          <FileUploader
+            onUploadSuccess={(url : string) => setImgUrl(url)} // Save the uploaded image URL
+            defaultImage=""  // Optional default image, if needed
+          />
         </Form.Item>
 
         <Button type="primary" htmlType="submit" block>
