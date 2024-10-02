@@ -23,7 +23,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ element: Component, allowed
     }
 
     // Nếu người dùng là admin nhưng truy cập vào trang không được phép, điều hướng về "/manager-user"
-    if (userRole === 'admin') {
+    if (userRole === 'Admin') {
         return <Navigate to="/manager-user" replace />;
     }
 

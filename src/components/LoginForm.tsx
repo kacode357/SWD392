@@ -17,19 +17,19 @@ const LoginForm: React.FC = () => {
   const onFinish = async (values: LoginFormValues) => {
     const { email, password } = values;
     const data = { email, password };
-
+  
     const resDataToken = await loginUserApi(data);
     if (resDataToken) {
       localStorage.setItem('token', resDataToken.token);
-
+  
       const resDataLogin = await getCurrentLogin();
       console.log(resDataLogin);
-
+  
       notification.success({
         message: 'Successful',
         description: 'You have successfully logged in.',
       });
-
+  
       setAuth({
         isAuthenticated: true,
         user: {
@@ -40,12 +40,16 @@ const LoginForm: React.FC = () => {
           role: resDataLogin?.role,
         },
       });
-
+    
       // Redirect based on role
-      if (resDataLogin?.role === 'Admin') {
-        navigate('/manager-user');
+      if (resDataLogin?.roleName === 'Admin') {
+        console.log('Admin');
+        window.location.href = '/manager-user';
+        return; // Ensure navigation stops here
       } else {
+        
         navigate('/');
+        return; // Ensure navigation stops here
       }
     } else {
       notification.error({
@@ -54,7 +58,7 @@ const LoginForm: React.FC = () => {
       });
     }
   };
-
+  
   return (
     <div className="form-container sign-in">
       <Form<LoginFormValues> name="login_form" onFinish={onFinish} layout="vertical">
