@@ -74,7 +74,7 @@ const GoogleLoginButton: React.FC = () => {
   };
 
   return (
-    <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
+    <GoogleOAuthProvider clientId="976712067094-lv2i7i7ln5kul1tjejpti6a85rm3unt7.apps.googleusercontent.com">
       <GoogleLogin
         onSuccess={handleSuccess}
         onError={handleError}
