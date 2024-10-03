@@ -43,6 +43,7 @@ const GoogleLoginButton: React.FC = () => {
         if (token) {
           // Lưu token vào localStorage
           localStorage.setItem('token', token);
+          navigate('/');
         }
 
         notification.success({
@@ -50,8 +51,8 @@ const GoogleLoginButton: React.FC = () => {
           description: 'You have successfully signed up with Google.',
         });
 
-        // Navigate to homepage after successful signup
-        navigate('/');
+       
+      
 
       } catch (signupError) {
         console.error('Signup failed:', signupError);
@@ -61,10 +62,7 @@ const GoogleLoginButton: React.FC = () => {
   };
 
   const handleError = () => {
-    notification.error({
-      message: 'Google Login Failed',
-      description: 'Something went wrong with Google login.',
-    });
+   
   };
 
   return (
