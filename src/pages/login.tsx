@@ -9,7 +9,7 @@ const Login = () => {
     const container = document.getElementById('container');
     const registerBtn = document.getElementById('register');
     const loginBtn = document.getElementById('login');
-
+    console.log(registerBtn, loginBtn, container);
     if (registerBtn && loginBtn && container) {
       const handleRegisterClick = () => {
         setIsRegisterActive(true); 
