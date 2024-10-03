@@ -11,8 +11,9 @@ import Login from '../pages/login';
 import MyProfile from '../pages/User/MyProfile';
 import SettingUser from '../pages/User/SettingUser';
 import ManagerUser from '../pages/Admin/ManagerUser';
-import ManagerClub from '../pages/Admin/ManagerClub'; // Corrected "MangerClub" to "ManagerClub"
-import VerifyAccount from '../pages/User/VerifyAccount'; // Import the VerifyAccount component
+import ManagerClub from '../pages/Admin/ManagerClub'; 
+import VerifyAccount from '../pages/User/VerifyAccount';
+import NotFound from '../pages/NotFound'; 
 
 // Create the router with public and private routes, including the new verify route
 const router = createBrowserRouter([
@@ -61,15 +62,19 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: ":id", // New route for account verification using the ID from URL
+        path: "verifyemail/:id", // New route for account verification using the ID from URL
         element: <VerifyAccount />, // Public route to verify account with the given ID
+      },
+      {
+        path: "*", // Wildcard route to catch non-matching paths
+        element: <NotFound />, // Render the NotFound component for 404 errors
       },
     ],
   },
   {
     path: "/login", // Login path
     element: <Login />, // Public login page
-  }
+  },
 ]);
 
 // The main router component with authentication context
