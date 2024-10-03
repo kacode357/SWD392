@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Form, Input, Button, notification } from 'antd';
+import { Form, Input, notification } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentLogin, loginUserApi } from '../util/api';
 import { AuthContext } from '../context/auth.context';
@@ -84,10 +84,11 @@ const LoginForm: React.FC = () => {
           rules={[{ required: true, message: 'Please input your password!' }]}>
           <Input.Password placeholder="Password" />
         </Form.Item>
-        <Button type="primary" htmlType="submit" block>
+        <button  >
           Sign In
-        </Button>
-        <GoogleLoginButton /> {/* Add the GoogleLoginButton here */}
+        </button>
+        <div className='flex justify-center mt-5'> <GoogleLoginButton  /></div>
+         {/* Add the GoogleLoginButton here */}
         <div className="text-center mt-4">
           <button className="text-blue-500 hover:underline" onClick={() => (window.location.href = '/')}>
             Back to HomePage
