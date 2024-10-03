@@ -1,5 +1,5 @@
-import axios, { AxiosInstance, AxiosError, AxiosResponse } from 'axios';
-import { notification } from 'antd';
+import axios, { AxiosInstance, AxiosError, AxiosResponse } from "axios";
+import { notification } from "antd";
 
 interface ErrorResponse {
   message?: string;
@@ -8,7 +8,9 @@ interface ErrorResponse {
 
 let setLoading: (loading: boolean) => void = () => {};
 
-export const setGlobalLoadingHandler = (loadingHandler: (loading: boolean) => void) => {
+export const setGlobalLoadingHandler = (
+  loadingHandler: (loading: boolean) => void
+) => {
   setLoading = loadingHandler;
 };
 
@@ -16,16 +18,16 @@ export const setGlobalLoadingHandler = (loadingHandler: (loading: boolean) => vo
 const defaultAxiosInstance: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
   headers: {
-    'content-type': 'application/json; charset=UTF-8',
+    "content-type": "application/json; charset=UTF-8",
   },
   timeout: 300000,
-  timeoutErrorMessage: 'Connection timeout exceeded',
+  timeoutErrorMessage: "Connection timeout exceeded",
 });
 
 defaultAxiosInstance.interceptors.request.use(
   (config) => {
     setLoading(true);
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -56,15 +58,15 @@ defaultAxiosInstance.interceptors.response.use(
 const axiosWithoutLoading: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
   headers: {
-    'content-type': 'application/json; charset=UTF-8',
+    "content-type": "application/json; charset=UTF-8",
   },
   timeout: 300000,
-  timeoutErrorMessage: 'Connection timeout exceeded',
+  timeoutErrorMessage: "Connection timeout exceeded",
 });
 
 axiosWithoutLoading.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -91,20 +93,27 @@ axiosWithoutLoading.interceptors.response.use(
 // Error handler
 const handleErrorByNotification = (errors: AxiosError<ErrorResponse>) => {
   const data = errors.response?.data as ErrorResponse | undefined;
-  let message: string | undefined = data?.message ?? errors.message ?? 'An error occurred';
+
+  let message: string | undefined =
+    data?.message ?? errors.message ?? "An error occurred";
 
   if (!data?.message && data?.errors?.length) {
-    const errorMessages = data.errors.map((error) => error.message).filter(Boolean);
+    const errorMessages = data.errors
+      .map((error) => error.message)
+      .filter(Boolean);
     if (errorMessages.length) {
-      message = errorMessages.join(', ');
+      message = errorMessages.join(", ");
     }
   }
 
-  notification.error({
-    message: 'Error',
-    description: message,
-    duration: 5,
-  });
+  // Check if message is present and not null/undefined before showing notification
+  if (message && message !== "Request failed with status code 404") {
+    notification.error({
+      message: "Error",
+      description: message,
+      duration: 5,
+    });
+  }
 
   return Promise.reject(data?.errors ?? { message });
 };

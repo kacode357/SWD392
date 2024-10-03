@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Table, Avatar, Input, Button, Space, Row, Col } from "antd";
+import { Table, Avatar, Input, Button, Space, Row, Col, Tabs } from "antd";
 import { getAllUserApi } from "../../util/api";
 import ToggleStatusButton from "./ToggleStatusButton";
-import EditUserModal from "./EditUserModal"; // Correct Import for EditUserModal
-import AddUserModal from "./AddUserButton"; // Correct Import for AddUserModal
+import EditUserModal from "./EditUserModal";
+import AddUserModal from "./AddUserButton"; 
 
 const { Search } = Input;
+const { TabPane } = Tabs;
 
 interface User {
   id: number;
@@ -24,12 +25,13 @@ const UserComponent: React.FC = () => {
     total: 0,
   });
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false); // State to control AddUserModal visibility
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false); // State to control EditUserModal visibility
-  const [editingUserId, setEditingUserId] = useState<number | null>(null); // State to track which user is being edited
+  const [activeTab, setActiveTab] = useState("activeUsers"); // State to manage active tab
+  const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [editingUserId, setEditingUserId] = useState<number | null>(null);
 
   // Fetch users from API
-  const fetchUsers = async (page = 1, pageSize = 10, keyword = "") => {
+  const fetchUsers = async (page = 1, pageSize = 10, keyword = "", isDeleted = false) => {
     setLoading(true);
     const data = {
       pageNum: page,
@@ -38,11 +40,9 @@ const UserComponent: React.FC = () => {
       role: "all",
       status: true,
       is_Verify: true,
-      is_Delete: false,
+      is_Delete: isDeleted,
     };
     const response = await getAllUserApi(data);
-    console.log("API Response", response);
-
     setUsers(response.pageData);
     setPagination({
       current: response.pageInfor.page,
@@ -52,47 +52,52 @@ const UserComponent: React.FC = () => {
     setLoading(false);
   };
 
-  // Fetch users on component mount and when pagination changes
   useEffect(() => {
     fetchUsers(pagination.current, pagination.pageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Run only once on component mount
+  }, []);
 
   // Handle table pagination changes
   const handleTableChange = (pagination: any) => {
     const { current, pageSize } = pagination;
     setPagination((prev) => ({ ...prev, current, pageSize }));
-    fetchUsers(current, pageSize, searchKeyword);
+    fetchUsers(current, pageSize, searchKeyword, activeTab === "deletedUsers");
   };
 
   // Handle search functionality
   const onSearch = (value: string) => {
     setSearchKeyword(value);
-    fetchUsers(1, pagination.pageSize, value);
+    fetchUsers(1, pagination.pageSize, value, activeTab === "deletedUsers");
   };
 
   // Handle reset functionality
   const handleReset = () => {
     setSearchKeyword("");
-    fetchUsers(1, pagination.pageSize, "");
+    fetchUsers(1, pagination.pageSize, "", activeTab === "deletedUsers");
   };
 
   // Handle Add User button click
   const handleAddUser = () => {
-    setIsAddUserModalVisible(true); // Open the AddUserModal
+    setIsAddUserModalVisible(true);
   };
 
   // Close the modal
   const handleCloseModal = () => {
-    setIsAddUserModalVisible(false); // Close the AddUserModal
-    setIsEditModalVisible(false); // Close the EditUserModal
-    setEditingUserId(null); // Reset the editing user ID
+    setIsAddUserModalVisible(false);
+    setIsEditModalVisible(false);
+    setEditingUserId(null);
   };
 
   // Open EditUserModal
   const handleEditUser = (userId: number) => {
-    setEditingUserId(userId); // Set the ID of the user being edited
-    setIsEditModalVisible(true); // Open the EditUserModal
+    setEditingUserId(userId);
+    setIsEditModalVisible(true);
+  };
+
+  // Handle tab change
+  const handleTabChange = (key: string) => {
+    setActiveTab(key);
+    fetchUsers(1, pagination.pageSize, searchKeyword, key === "deletedUsers");
   };
 
   // Table columns
@@ -109,13 +114,13 @@ const UserComponent: React.FC = () => {
     },
     {
       title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status: boolean, record: User) => (
+      dataIndex: "isDelete", 
+      key: "isDelete",
+      render: (isDelete: boolean, record: User) => (
         <ToggleStatusButton
-          status={status}
+          isDelete={isDelete} 
           userId={record.id}
-          refreshUsers={() => fetchUsers(pagination.current, pagination.pageSize, searchKeyword)}
+          refreshUsers={() => fetchUsers(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedUsers")}
         />
       ),
     },
@@ -138,45 +143,85 @@ const UserComponent: React.FC = () => {
 
   return (
     <div>
-      <Row justify="space-between" style={{ marginBottom: 16 }}>
-        <Col>
-          <Space>
-            <Search
-              placeholder="Search by keyword"
-              onSearch={onSearch}
-              enterButton
-              allowClear
-              value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.target.value)}
-            />
-            <Button onClick={handleReset}>Reset</Button>
-          </Space>
-        </Col>
-        <Col>
-          <Button type="primary" onClick={handleAddUser}>Add User</Button> {/* Add User Button */}
-        </Col>
-      </Row>
-
-      <Table
-        columns={columns}
-        dataSource={users}
-        rowKey="id"
-        pagination={{
-          current: pagination.current,
-          pageSize: pagination.pageSize,
-          total: pagination.total,
-          showSizeChanger: true,
-          showQuickJumper: true,
-        }}
-        loading={loading}
-        onChange={handleTableChange}
-      />
+      {/* Tabs at the top */}
+      <Tabs defaultActiveKey="activeUsers" onChange={handleTabChange}>
+        <TabPane tab="Active Users" key="activeUsers">
+          {/* Content for active users */}
+          <Row justify="space-between" style={{ marginBottom: 16 }}>
+            <Col>
+              <Space>
+                <Search
+                  placeholder="Search by keyword"
+                  onSearch={onSearch}
+                  enterButton
+                  allowClear
+                  value={searchKeyword}
+                  onChange={(e) => setSearchKeyword(e.target.value)}
+                />
+                <Button onClick={handleReset}>Reset</Button>
+              </Space>
+            </Col>
+            <Col>
+              <Button type="primary" onClick={handleAddUser}>Add User</Button>
+            </Col>
+          </Row>
+          <Table
+            columns={columns}
+            dataSource={users}
+            rowKey="id"
+            pagination={{
+              current: pagination.current,
+              pageSize: pagination.pageSize,
+              total: pagination.total,
+              showSizeChanger: true,
+              showQuickJumper: true,
+            }}
+            loading={loading}
+            onChange={handleTableChange}
+          />
+        </TabPane>
+        <TabPane tab="Deleted Users" key="deletedUsers">
+          {/* Content for deleted users */}
+          <Row justify="space-between" style={{ marginBottom: 16 }}>
+            <Col>
+              <Space>
+                <Search
+                  placeholder="Search by keyword"
+                  onSearch={onSearch}
+                  enterButton
+                  allowClear
+                  value={searchKeyword}
+                  onChange={(e) => setSearchKeyword(e.target.value)}
+                />
+                <Button onClick={handleReset}>Reset</Button>
+              </Space>
+            </Col>
+            <Col>
+              <Button type="primary" onClick={handleAddUser}>Add User</Button>
+            </Col>
+          </Row>
+          <Table
+            columns={columns}
+            dataSource={users}
+            rowKey="id"
+            pagination={{
+              current: pagination.current,
+              pageSize: pagination.pageSize,
+              total: pagination.total,
+              showSizeChanger: true,
+              showQuickJumper: true,
+            }}
+            loading={loading}
+            onChange={handleTableChange}
+          />
+        </TabPane>
+      </Tabs>
 
       {/* AddUserModal Component */}
       <AddUserModal
         visible={isAddUserModalVisible}
         onClose={handleCloseModal}
-        refreshUsers={() => fetchUsers(pagination.current, pagination.pageSize, searchKeyword)}
+        refreshUsers={() => fetchUsers(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedUsers")}
       />
 
       {/* EditUserModal Component */}
@@ -185,7 +230,7 @@ const UserComponent: React.FC = () => {
           userId={editingUserId}
           visible={isEditModalVisible}
           onClose={handleCloseModal}
-          refreshUsers={() => fetchUsers(pagination.current, pagination.pageSize, searchKeyword)}
+          refreshUsers={() => fetchUsers(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedUsers")}
         />
       )}
     </div>

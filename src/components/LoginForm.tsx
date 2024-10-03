@@ -5,6 +5,11 @@ import { getCurrentLogin, loginUserApi } from '../util/api';
 import { AuthContext } from '../context/auth.context';
 
 
+
+
+import GoogleLoginButton from './GoogleLoginButton'; // Import the new GoogleLoginButton component
+
+
 interface LoginFormValues {
   email: string;
   password: string;
@@ -45,11 +50,10 @@ const LoginForm: React.FC = () => {
       if (resDataLogin?.roleName === 'Admin') {
         console.log('Admin');
         window.location.href = '/manager-user';
-        return; // Ensure navigation stops here
+        return;
       } else {
-        
         navigate('/');
-        return; // Ensure navigation stops here
+        return;
       }
     } else {
       notification.error({
@@ -77,13 +81,13 @@ const LoginForm: React.FC = () => {
         <Form.Item
           name="password"
           label="Password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
-        >
+          rules={[{ required: true, message: 'Please input your password!' }]}>
           <Input.Password placeholder="Password" />
         </Form.Item>
         <Button type="primary" htmlType="submit" block>
           Sign In
         </Button>
+        <GoogleLoginButton /> {/* Add the GoogleLoginButton here */}
         <div className="text-center mt-4">
           <button className="text-blue-500 hover:underline" onClick={() => (window.location.href = '/')}>
             Back to HomePage

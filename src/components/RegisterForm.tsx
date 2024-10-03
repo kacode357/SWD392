@@ -47,10 +47,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
         onRegisterSuccess();
       }
     } catch (error) {
+
       notification.error({
         message: 'Error',
         description: 'User not created',
       });
+     
+     
     }
   };
 
