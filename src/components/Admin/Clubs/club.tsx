@@ -1,23 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { Table, Avatar, Input, Button, Space, Row, Col, Tabs } from "antd";
-import { getAllUserApi } from "../../util/api";
+import { searchClubApi } from "../../../util/api";
 import ToggleStatusButton from "./ToggleStatusButton";
-import EditUserModal from "./EditUserModal";
-import AddUserModal from "./AddUserButton"; 
+import EditClubModal from "./EditClubModal";
+import AddClubModal from "./AddClubModal";
+import moment from "moment";
 
 const { Search } = Input;
 const { TabPane } = Tabs;
 
-interface User {
+interface Club {
   id: number;
-  email: string;
-  userName: string;
+  name: string;
+  country: string;
+  establishedYear: number;
+  stadiumName: string;
+  clubLogo: string;
   status: boolean;
-  imgUrl: string;
 }
 
-const UserComponent: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
+const ClubComponent: React.FC = () => {
+  const [clubs, setClubs] = useState<Club[]>([]);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
     current: 1,
@@ -25,116 +28,123 @@ const UserComponent: React.FC = () => {
     total: 0,
   });
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [activeTab, setActiveTab] = useState("activeUsers"); // State to manage active tab
-  const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState("activeClubs");
+  const [isAddClubModalVisible, setIsAddClubModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [editingUserId, setEditingUserId] = useState<number | null>(null);
+  const [editingClubId, setEditingClubId] = useState<number | null>(null);
 
-  // Fetch users from API
-  const fetchUsers = async (page = 1, pageSize = 10, keyword = "", isDeleted = false) => {
+  // Fetch clubs from API
+  const fetchClubs = async (page = 1, pageSize = 10, keyword = "", isDeleted = false) => {
     setLoading(true);
     const data = {
       pageNum: page,
       pageSize: pageSize,
       keyWord: keyword,
-      role: "all",
-      status: true,
-      is_Verify: true,
-      is_Delete: isDeleted,
+      status: !isDeleted,
     };
-    const response = await getAllUserApi(data);
-    setUsers(response.pageData);
+    const response = await searchClubApi(data);
+    setClubs(response.pageData);
     setPagination({
-      current: response.pageInfor.page,
-      pageSize: response.pageInfor.size,
-      total: response.pageInfor.totalItem,
+      current: response.pageInfo.page,
+      pageSize: response.pageInfo.size,
+      total: response.pageInfo.totalItem,
     });
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchUsers(pagination.current, pagination.pageSize);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchClubs(pagination.current, pagination.pageSize);
   }, []);
 
   // Handle table pagination changes
   const handleTableChange = (pagination: any) => {
     const { current, pageSize } = pagination;
     setPagination((prev) => ({ ...prev, current, pageSize }));
-    fetchUsers(current, pageSize, searchKeyword, activeTab === "deletedUsers");
+    fetchClubs(current, pageSize, searchKeyword, activeTab === "deletedClubs");
   };
 
   // Handle search functionality
   const onSearch = (value: string) => {
     setSearchKeyword(value);
-    fetchUsers(1, pagination.pageSize, value, activeTab === "deletedUsers");
+    fetchClubs(1, pagination.pageSize, value, activeTab === "deletedClubs");
   };
 
   // Handle reset functionality
   const handleReset = () => {
     setSearchKeyword("");
-    fetchUsers(1, pagination.pageSize, "", activeTab === "deletedUsers");
+    fetchClubs(1, pagination.pageSize, "", activeTab === "deletedClubs");
   };
 
-  // Handle Add User button click
-  const handleAddUser = () => {
-    setIsAddUserModalVisible(true);
+  // Handle Add Club button click
+  const handleAddClub = () => {
+    setIsAddClubModalVisible(true);
   };
 
   // Close the modal
   const handleCloseModal = () => {
-    setIsAddUserModalVisible(false);
+    setIsAddClubModalVisible(false);
     setIsEditModalVisible(false);
-    setEditingUserId(null);
+    setEditingClubId(null);
   };
 
-  // Open EditUserModal
-  const handleEditUser = (userId: number) => {
-    setEditingUserId(userId);
+  // Open EditClubModal
+  const handleEditClub = (clubId: number) => {
+    setEditingClubId(clubId);
     setIsEditModalVisible(true);
   };
 
   // Handle tab change
   const handleTabChange = (key: string) => {
     setActiveTab(key);
-    fetchUsers(1, pagination.pageSize, searchKeyword, key === "deletedUsers");
+    fetchClubs(1, pagination.pageSize, searchKeyword, key === "deletedClubs");
   };
 
   // Table columns
   const columns = [
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
+      title: "Club Name",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: "User Name",
-      dataIndex: "userName",
-      key: "userName",
+      title: "Country",
+      dataIndex: "country",
+      key: "country",
     },
     {
-      title: "Status",
-      dataIndex: "isDelete", 
-      key: "isDelete",
-      render: (isDelete: boolean, record: User) => (
-        <ToggleStatusButton
-          isDelete={isDelete} 
-          userId={record.id}
-          refreshUsers={() => fetchUsers(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedUsers")}
-        />
-      ),
+      title: "Established Year",
+      dataIndex: "establishedYear",
+      render: (establishedYear: number) => moment(establishedYear).format('YYYY'),
     },
     {
-      title: "Avatar",
-      dataIndex: "imgUrl",
-      key: "imgUrl",
-      render: (imgUrl: string) => <Avatar src={imgUrl} />,
+      title: "Stadium Name",
+      dataIndex: "stadiumName",
+      key: "stadiumName",
     },
+    {
+      title: "Club Logo",
+      dataIndex: "clubLogo",
+      key: "clubLogo",
+      render: (clubLogo: string) => <Avatar src={clubLogo} />,
+    },
+    {
+        title: "Status",
+        dataIndex: "status",
+        key: "status",
+        render: (status: boolean, record: Club) => (
+          <ToggleStatusButton
+            isDelete={!status} // Pass whether the club is deactivated (true) or active (false)
+            clubId={record.id}  // Pass the club's ID
+            refreshClubs={() => fetchClubs(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedClubs")} // Refresh clubs after toggling status
+          />
+        ),
+      }
+      ,
     {
       title: "Action",
       key: "action",
-      render: (_: any, record: User) => (
-        <Button type="link" onClick={() => handleEditUser(record.id)}>
+      render: (_: any, record: Club) => (
+        <Button type="link" onClick={() => handleEditClub(record.id)}>
           Edit
         </Button>
       ),
@@ -144,9 +154,8 @@ const UserComponent: React.FC = () => {
   return (
     <div>
       {/* Tabs at the top */}
-      <Tabs defaultActiveKey="activeUsers" onChange={handleTabChange}>
-        <TabPane tab="Active Users" key="activeUsers">
-          {/* Content for active users */}
+      <Tabs defaultActiveKey="activeClubs" onChange={handleTabChange}>
+        <TabPane tab="Active Clubs" key="activeClubs">
           <Row justify="space-between" style={{ marginBottom: 16 }}>
             <Col>
               <Space>
@@ -162,12 +171,12 @@ const UserComponent: React.FC = () => {
               </Space>
             </Col>
             <Col>
-              <Button type="primary" onClick={handleAddUser}>Add User</Button>
+              <Button type="primary" onClick={handleAddClub}>Add Club</Button>
             </Col>
           </Row>
           <Table
             columns={columns}
-            dataSource={users}
+            dataSource={clubs}
             rowKey="id"
             pagination={{
               current: pagination.current,
@@ -180,8 +189,7 @@ const UserComponent: React.FC = () => {
             onChange={handleTableChange}
           />
         </TabPane>
-        <TabPane tab="Deleted Users" key="deletedUsers">
-          {/* Content for deleted users */}
+        <TabPane tab="Deleted Clubs" key="deletedClubs">
           <Row justify="space-between" style={{ marginBottom: 16 }}>
             <Col>
               <Space>
@@ -197,12 +205,12 @@ const UserComponent: React.FC = () => {
               </Space>
             </Col>
             <Col>
-              <Button type="primary" onClick={handleAddUser}>Add User</Button>
+              <Button type="primary" onClick={handleAddClub}>Add Club</Button>
             </Col>
           </Row>
           <Table
             columns={columns}
-            dataSource={users}
+            dataSource={clubs}
             rowKey="id"
             pagination={{
               current: pagination.current,
@@ -217,24 +225,24 @@ const UserComponent: React.FC = () => {
         </TabPane>
       </Tabs>
 
-      {/* AddUserModal Component */}
-      <AddUserModal
-        visible={isAddUserModalVisible}
+      {/* AddClubModal Component */}
+      <AddClubModal
+        visible={isAddClubModalVisible}
         onClose={handleCloseModal}
-        refreshUsers={() => fetchUsers(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedUsers")}
+        refreshClubs={() => fetchClubs(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedClubs")}
       />
 
-      {/* EditUserModal Component */}
-      {editingUserId && (
-        <EditUserModal
-          userId={editingUserId}
+      {/* EditClubModal Component */}
+      {editingClubId && (
+        <EditClubModal
+          clubId={editingClubId}
           visible={isEditModalVisible}
           onClose={handleCloseModal}
-          refreshUsers={() => fetchUsers(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedUsers")}
+          refreshClubs={() => fetchClubs(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedClubs")}
         />
       )}
     </div>
   );
 };
 
-export default UserComponent;
+export default ClubComponent;

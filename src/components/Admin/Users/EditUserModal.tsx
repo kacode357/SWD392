@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, Input, Select, Button, DatePicker, message } from 'antd';
 import moment from 'moment'; // Import moment for date formatting
-import { getUserByIdApi, updateUserByIdApi } from '../../util/api'; // Ensure correct path to the API
-import FileUploader from '../../util/FileUploader'; // Ensure correct path to the FileUploader
+import { getUserByIdApi, updateUserByIdApi } from '../../../util/api'; // Ensure correct path to the API
+import FileUploader from '../../../util/FileUploader'; // Ensure correct path to the FileUploader
 
 const { Option } = Select;
 

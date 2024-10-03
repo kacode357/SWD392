@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, Form, Input, Select, Button, notification } from "antd";
-import { createStaffApi, createManagerApi } from "../../util/api"; // Ensure the path is correct
+import { createStaffApi, createManagerApi } from "../../../util/api"; // Ensure the path is correct
 
 const { Option } = Select;
 

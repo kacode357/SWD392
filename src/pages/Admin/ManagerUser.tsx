@@ -1,4 +1,4 @@
-import UserPage from "../../components/Admin/user"
+import UserPage from "../../components/Admin/Users/user"
 
 const ManagerUser = () => {
   return (

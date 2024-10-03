@@ -1,8 +1,10 @@
 
-
+import Club from "../../components/Admin/Clubs/club"
 const MangerClub = () => {
   return (
-    <div>MangerClub</div>
+    <div>
+      <Club />
+    </div>
   )
 }
 
