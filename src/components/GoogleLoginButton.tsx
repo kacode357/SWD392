@@ -55,10 +55,7 @@ const GoogleLoginButton: React.FC = () => {
 
       } catch (signupError) {
         console.error('Signup failed:', signupError);
-        notification.error({
-          message: 'Google Signup Failed',
-          description: 'Something went wrong with Google signup.',
-        });
+       
       }
     }
   };
