@@ -53,7 +53,7 @@ const GoogleLoginButton: React.FC = () => {
 
         notification.success({
           message: 'Google Signup Successful',
-          description: 'You have successfully signed up with Google.',
+          description: 'Please verify your email to activate your account.',
         });
 
       } catch (signupError) {
