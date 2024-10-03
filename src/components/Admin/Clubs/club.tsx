@@ -5,6 +5,7 @@ import ToggleStatusButton from "./ToggleStatusButton";
 import EditClubModal from "./EditClubModal";
 import AddClubModal from "./AddClubModal";
 import moment from "moment";
+import { EditOutlined } from "@ant-design/icons";
 
 const { Search } = Input;
 const { TabPane } = Tabs;
@@ -144,9 +145,11 @@ const ClubComponent: React.FC = () => {
       title: "Action",
       key: "action",
       render: (_: any, record: Club) => (
-        <Button type="link" onClick={() => handleEditClub(record.id)}>
-          Edit
-        </Button>
+       
+        <EditOutlined 
+        onClick={() => handleEditClub(record.id)} 
+        style={{ color: 'black', cursor: 'pointer' }} 
+      />
       ),
     },
   ];

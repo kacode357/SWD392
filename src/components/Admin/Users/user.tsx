@@ -4,6 +4,7 @@ import { getAllUserApi } from "../../../util/api";
 import ToggleStatusButton from "./ToggleStatusButton";
 import EditUserModal from "./EditUserModal";
 import AddUserModal from "./AddUserButton"; 
+import { EditOutlined } from "@ant-design/icons";
 
 const { Search } = Input;
 const { TabPane } = Tabs;
@@ -135,9 +136,11 @@ const UserComponent: React.FC = () => {
       title: "Action",
       key: "action",
       render: (_: any, record: User) => (
-        <Button type="link" onClick={() => handleEditUser(record.id)}>
-          Edit
-        </Button>
+        
+<EditOutlined 
+  onClick={() => handleEditUser(record.id)} 
+  style={{ color: 'black', cursor: 'pointer' }} 
+/>
       ),
     },
   ];
