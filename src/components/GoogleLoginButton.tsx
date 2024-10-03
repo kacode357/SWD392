@@ -15,11 +15,11 @@ const GoogleLoginButton: React.FC = () => {
       // Try to log in the user first
       const loginResponse = await googleSigInpApi(googleId);
       console.log('Login API Response:', loginResponse);
-      
+
       // Assuming the API response contains a token
       const token = loginResponse.token; 
       if (token) {
-        // Lưu token vào localStorage
+        // Store token in localStorage
         localStorage.setItem('token', token);
       }
 
@@ -31,17 +31,22 @@ const GoogleLoginButton: React.FC = () => {
       // Navigate to homepage after successful login
       navigate('/');
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Login failed, trying signup:', error);
+
+      if (error.response && error.response.data.message === "Email not verified!.") {
+        return; 
+      }
+
       try {
-        // If login fails, try to sign up the user
+        // If login fails and the error is not about unverified email, try to sign up the user
         const signupResponse = await googleSignUpApi(googleId);
         console.log('Signup API Response:', signupResponse);
         
         // Assuming the signup response also contains a token
         const token = signupResponse?.data?.token; 
         if (token) {
-          // Lưu token vào localStorage
+          // Store token in localStorage
           localStorage.setItem('token', token);
           navigate('/');
         }
@@ -51,22 +56,25 @@ const GoogleLoginButton: React.FC = () => {
           description: 'You have successfully signed up with Google.',
         });
 
-       
-      
-
       } catch (signupError) {
         console.error('Signup failed:', signupError);
-       
+        notification.error({
+          message: 'Google Signup Failed',
+          description: 'An error occurred during Google signup. Please try again.',
+        });
       }
     }
   };
 
   const handleError = () => {
-   
+    notification.error({
+      message: 'Google Login Error',
+      description: 'An error occurred while logging in with Google. Please try again.',
+    });
   };
 
   return (
-    <GoogleOAuthProvider clientId="976712067094-lv2i7i7ln5kul1tjejpti6a85rm3unt7.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
       <GoogleLogin
         onSuccess={handleSuccess}
         onError={handleError}
