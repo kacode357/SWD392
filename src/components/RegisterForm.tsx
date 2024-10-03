@@ -48,10 +48,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
         onRegisterSuccess(); // Trigger callback to switch to login form
       }
     } catch (error) {
-      notification.error({
-        message: 'Error',
-        description: 'User not created',
-      });
+     
       console.error('Error creating user:', error);
     }
   };

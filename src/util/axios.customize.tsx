@@ -91,6 +91,7 @@ axiosWithoutLoading.interceptors.response.use(
 // Error handler
 const handleErrorByNotification = (errors: AxiosError<ErrorResponse>) => {
   const data = errors.response?.data as ErrorResponse | undefined;
+  console.log('ErrorXX >>  :', data);
   let message: string | undefined = data?.message ?? errors.message ?? 'An error occurred';
 
   if (!data?.message && data?.errors?.length) {
@@ -100,13 +101,18 @@ const handleErrorByNotification = (errors: AxiosError<ErrorResponse>) => {
     }
   }
 
-  notification.error({
-    message: 'Error',
-    description: message,
-    duration: 5,
-  });
+  // Check if message is present and not null/undefined before showing notification
+  if (message && message !== 'Request failed with status code 404') {
+    console.log('ErrorAAA:', message);
+    notification.error({
+      message: 'Error',
+      description: message,
+      duration: 5,
+    });
+  }
 
   return Promise.reject(data?.errors ?? { message });
 };
+
 
 export { defaultAxiosInstance, axiosWithoutLoading };

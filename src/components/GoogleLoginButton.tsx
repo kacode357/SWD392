@@ -14,7 +14,7 @@ const GoogleLoginButton: React.FC = () => {
     try {
       // Try to log in the user first
       const loginResponse = await googleSigInpApi(googleId);
-      console.log('Login API Response:', loginResponse);
+     
 
       // Assuming the API response contains a token
       const token = loginResponse.token; 
@@ -28,11 +28,10 @@ const GoogleLoginButton: React.FC = () => {
         description: 'You have successfully logged in with Google.',
       });
 
-      // Navigate to homepage after successful login
       navigate('/');
 
     } catch (error: any) {
-      console.error('Login failed, trying signup:', error);
+    
 
       if (error.response && error.response.data.message === "Email not verified!.") {
         return; 
@@ -58,19 +57,13 @@ const GoogleLoginButton: React.FC = () => {
 
       } catch (signupError) {
         console.error('Signup failed:', signupError);
-        notification.error({
-          message: 'Google Signup Failed',
-          description: 'An error occurred during Google signup. Please try again.',
-        });
+      
       }
     }
   };
 
   const handleError = () => {
-    notification.error({
-      message: 'Google Login Error',
-      description: 'An error occurred while logging in with Google. Please try again.',
-    });
+  
   };
 
   return (
