@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
-import background from '../assets/background.gif';
+
 const Login = () => {
   const [isRegisterActive, setIsRegisterActive] = useState(false); 
 
