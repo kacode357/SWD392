@@ -87,9 +87,14 @@ const LoginForm: React.FC = () => {
         <button  >
           Sign In
         </button>
-        <div className='flex justify-center mt-5'> <GoogleLoginButton  /></div>
+        <div className="separator flex items-center py-2">
+          <hr className="flex-grow border-gray-300" />
+          <span className=" text-gray-500">OR</span>
+          <hr className="flex-grow border-gray-300" />
+        </div>
+        <div className='flex justify-center '> <GoogleLoginButton  /></div>
          {/* Add the GoogleLoginButton here */}
-        <div className="text-center mt-4">
+        <div className="text-center mt-2">
           <button className="text-blue-500 hover:underline" onClick={() => (window.location.href = '/')}>
             Back to HomePage
           </button>
