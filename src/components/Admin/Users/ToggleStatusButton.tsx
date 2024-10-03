@@ -1,6 +1,6 @@
 import { Switch, message } from "antd";
 import React from "react";
-import { changeUserStatusApi } from "../../util/api"; // Sửa tên API phù hợp
+import { changeUserStatusApi } from "../../../util/api"; // Sửa tên API phù hợp
 
 interface ToggleStatusButtonProps {
   isDelete: boolean; // Thay đổi từ status sang isDelete
