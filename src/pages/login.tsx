@@ -34,7 +34,9 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="relative flex items-center justify-center min-h-screen bg-cover bg-center" 
+         style={{ backgroundImage: "url('src/assets/backgrould.gif')" }}>
+    
       <div className={`container ${isRegisterActive ? 'active' : ''}`} id="container">
         {isRegisterActive ? (
           <RegisterForm onRegisterSuccess={handleRegisterSuccess} /> 

@@ -3,7 +3,7 @@ import { Form, Input, Button, notification } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentLogin, loginUserApi } from '../util/api';
 import { AuthContext } from '../context/auth.context';
-import todoLogo from '../assets/todoList.png';
+
 
 interface LoginFormValues {
   email: string;
@@ -62,7 +62,7 @@ const LoginForm: React.FC = () => {
   return (
     <div className="form-container sign-in">
       <Form<LoginFormValues> name="login_form" onFinish={onFinish} layout="vertical">
-        <img src={todoLogo} className="w-full" alt="" />
+        <img src="src/assets/logo1.jfif" className="w-full" alt="" />
         <h1 className="font-bold text-2xl ">Sign In</h1>
         <Form.Item
           name="email"
