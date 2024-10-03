@@ -1,34 +1,30 @@
 import { Switch, message } from "antd";
 import React from "react";
-import { changeUserStatusApi } from "../../util/api"; // Import API to change status
+import { changeUserStatusApi } from "../../util/api"; // Sửa tên API phù hợp
 
 interface ToggleStatusButtonProps {
-  status: boolean;
+  isDelete: boolean; // Thay đổi từ status sang isDelete
   userId: number;
   refreshUsers: () => void;
 }
 
 const ToggleStatusButton: React.FC<ToggleStatusButtonProps> = ({
-  status,
+  isDelete,
   userId,
   refreshUsers,
 }) => {
-  const handleToggle = async () => {
+  const handleToggle = async (checked: boolean) => {
     try {
-      // Toggle the status value
-      const newStatus = !status;
-      
-      // Call the API with true/false values for the status
-      console.log("newStatus", userId);
-      await changeUserStatusApi(userId, newStatus);
-      
-      // Show success message
-      message.success(`User status updated to ${newStatus ? "Active" : "Inactive"}`);
-      
-      // Refresh the users list after the status change
+      // Gọi API để thay đổi trạng thái isDelete
+      await changeUserStatusApi(userId, !checked);
+
+      // Hiển thị thông báo thành công
+      message.success(`User status updated to ${checked ? "Active" : "Deleted"}`);
+
+      // Refresh lại danh sách người dùng sau khi thay đổi trạng thái
       refreshUsers();
     } catch (error) {
-      // Show error message if the API call fails
+      // Hiển thị lỗi nếu API thất bại
       message.error("Failed to update user status.");
       console.error("Error updating user status:", error);
     }
@@ -36,10 +32,10 @@ const ToggleStatusButton: React.FC<ToggleStatusButtonProps> = ({
 
   return (
     <Switch
-      checked={status}
+      checked={!isDelete} // Hiển thị nút bật tắt theo trạng thái isDelete
       onChange={handleToggle}
       checkedChildren="Active"
-      unCheckedChildren="Inactive"
+      unCheckedChildren="Deleted"
     />
   );
 };
