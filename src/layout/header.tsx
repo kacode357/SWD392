@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Layout, Avatar, Dropdown, MenuProps, Skeleton } from 'antd';
 import { UserOutlined, LogoutOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-
+import logo from '../assets/log 111-02.png'
 import { AuthContext } from '../context/auth.context';
 
 const { Header } = Layout;
@@ -18,7 +18,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ collapsed, setCollapsed, loading 
 
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');
@@ -61,7 +61,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ collapsed, setCollapsed, loading 
             {/* Center: Logo */}
             <div className="flex-1 flex justify-center">
               <Link to="/">
-                <img src="/src/assets/log 111-02.png" alt="logo" className="h-20 w-auto" />
+                <img src={logo} alt="logo" className="h-20 w-auto" />
               </Link>
             </div>
 
@@ -76,14 +76,14 @@ const AppHeader: React.FC<AppHeaderProps> = ({ collapsed, setCollapsed, loading 
                 </Dropdown>
               ) : (
                 <button className='bg-white text-gray-900 py-2 px-4 rounded-md max-w-xs w-auto mr-4 hover:bg-gray-100 transition-colors duration-200' onClick={() => navigate('/login')}
-                style={{
-                  padding: '6px 12px',
-                  fontSize: '14px',
-                  lineHeight: '20px',
-                  fontWeight: '500',
-                  borderRadius: '6px',
-                  marginRight: '10px'
-                }}>
+                  style={{
+                    padding: '6px 12px',
+                    fontSize: '14px',
+                    lineHeight: '20px',
+                    fontWeight: '500',
+                    borderRadius: '6px',
+                    marginRight: '10px'
+                  }}>
                   Sign In
                 </button>
               )}

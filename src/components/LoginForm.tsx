@@ -22,19 +22,19 @@ const LoginForm: React.FC = () => {
   const onFinish = async (values: LoginFormValues) => {
     const { email, password } = values;
     const data = { email, password };
-  
+
     const resDataToken = await loginUserApi(data);
     if (resDataToken) {
       localStorage.setItem('token', resDataToken.token);
-  
+
       const resDataLogin = await getCurrentLogin();
       console.log(resDataLogin);
-  
+
       notification.success({
         message: 'Successful',
         description: 'You have successfully logged in.',
       });
-  
+
       setAuth({
         isAuthenticated: true,
         user: {
@@ -45,7 +45,7 @@ const LoginForm: React.FC = () => {
           role: resDataLogin?.role,
         },
       });
-    
+
       // Redirect based on role
       if (resDataLogin?.roleName === 'Admin') {
         console.log('Admin');
@@ -62,7 +62,7 @@ const LoginForm: React.FC = () => {
       });
     }
   };
-  
+
   return (
     <div className="form-container sign-in">
       <Form<LoginFormValues> name="login_form" onFinish={onFinish} layout="vertical">
@@ -92,8 +92,8 @@ const LoginForm: React.FC = () => {
           <span className=" text-gray-500">OR</span>
           <hr className="flex-grow border-gray-300" />
         </div>
-        <div className='flex justify-center '> <GoogleLoginButton  /></div>
-         {/* Add the GoogleLoginButton here */}
+        <div className='flex justify-center '> <GoogleLoginButton /></div>
+        {/* Add the GoogleLoginButton here */}
         <div className="text-center mt-2">
           <button className="text-blue-500 hover:underline" onClick={() => (window.location.href = '/')}>
             Back to HomePage
