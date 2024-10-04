@@ -45,7 +45,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ collapsed, setCollapsed, loading 
 
   return (
     <Layout>
-      <Header className="header flex justify-between items-center bg-gray-900" style={{ zIndex: 1001, position: 'fixed', width: '100%' }}>
+      <Header className="header flex justify-between items-center bg-#0000" style={{ zIndex: 1001, position: 'fixed', width: '100%' }}>
         {loading ? (
           <Skeleton active title={false} paragraph={{ rows: 0 }} avatar={true} />
         ) : (

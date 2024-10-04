@@ -11,7 +11,7 @@
   }
   
   body{
-    background-color: #c9d6ff;
+    background-color: #000000;
     background: linear-gradient(to right, #e2e2e2, #c9d6ff);
     height: 100vh;
   }
@@ -152,8 +152,4 @@
   
   .container.active .toggle-right{
     transform: translateX(200%);
-  }
-  
-  .ant-switch {
-    background-color: #28a745 !important; /* Red for inactive */
   }

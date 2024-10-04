@@ -5,7 +5,7 @@ import ToggleStatusButton from "./ToggleStatusButton";
 import EditClubModal from "./EditClubModal";
 import AddClubModal from "./AddClubModal";
 import moment from "moment";
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, ReloadOutlined } from "@ant-design/icons";
 
 const { Search } = Input;
 const { TabPane } = Tabs;
@@ -129,27 +129,27 @@ const ClubComponent: React.FC = () => {
       render: (clubLogo: string) => <Avatar src={clubLogo} />,
     },
     {
-        title: "Status",
-        dataIndex: "status",
-        key: "status",
-        render: (status: boolean, record: Club) => (
-          <ToggleStatusButton
-            isDelete={!status} // Pass whether the club is deactivated (true) or active (false)
-            clubId={record.id}  // Pass the club's ID
-            refreshClubs={() => fetchClubs(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedClubs")} // Refresh clubs after toggling status
-          />
-        ),
-      }
-      ,
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status: boolean, record: Club) => (
+        <ToggleStatusButton
+          isDelete={!status} // Pass whether the club is deactivated (true) or active (false)
+          clubId={record.id}  // Pass the club's ID
+          refreshClubs={() => fetchClubs(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedClubs")} // Refresh clubs after toggling status
+        />
+      ),
+    }
+    ,
     {
       title: "Action",
       key: "action",
       render: (_: any, record: Club) => (
-       
-        <EditOutlined 
-        onClick={() => handleEditClub(record.id)} 
-        style={{ color: 'black', cursor: 'pointer' }} 
-      />
+
+        <EditOutlined
+          onClick={() => handleEditClub(record.id)}
+          style={{ color: 'black', cursor: 'pointer' }}
+        />
       ),
     },
   ];
@@ -170,7 +170,7 @@ const ClubComponent: React.FC = () => {
                   value={searchKeyword}
                   onChange={(e) => setSearchKeyword(e.target.value)}
                 />
-                <Button onClick={handleReset}>Reset</Button>
+                <ReloadOutlined onClick={handleReset} style={{ fontSize: '24px', cursor: 'pointer' }} />
               </Space>
             </Col>
             <Col>
