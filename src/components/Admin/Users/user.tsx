@@ -3,7 +3,8 @@ import { Table, Avatar, Input, Button, Space, Row, Col, Tabs } from "antd";
 import { getAllUserApi } from "../../../util/api";
 import ToggleStatusButton from "./ToggleStatusButton";
 import EditUserModal from "./EditUserModal";
-import AddUserModal from "./AddUserButton"; 
+import AddUserModal from "./AddUserButton";
+import { EditOutlined, ReloadOutlined } from "@ant-design/icons";
 
 const { Search } = Input;
 const { TabPane } = Tabs;
@@ -43,7 +44,7 @@ const UserComponent: React.FC = () => {
       is_Delete: isDeleted,
     };
     const response = await getAllUserApi(data);
- 
+
     setUsers(response.pageData);
     setPagination({
       current: response.pageInfo.page,
@@ -115,11 +116,11 @@ const UserComponent: React.FC = () => {
     },
     {
       title: "Status",
-      dataIndex: "isDelete", 
+      dataIndex: "isDelete",
       key: "isDelete",
       render: (isDelete: boolean, record: User) => (
         <ToggleStatusButton
-          isDelete={isDelete} 
+          isDelete={isDelete}
           userId={record.id}
           refreshUsers={() => fetchUsers(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedUsers")}
         />
@@ -135,9 +136,11 @@ const UserComponent: React.FC = () => {
       title: "Action",
       key: "action",
       render: (_: any, record: User) => (
-        <Button type="link" onClick={() => handleEditUser(record.id)}>
-          Edit
-        </Button>
+
+        <EditOutlined
+          onClick={() => handleEditUser(record.id)}
+          style={{ color: 'black', cursor: 'pointer' }}
+        />
       ),
     },
   ];
@@ -159,7 +162,7 @@ const UserComponent: React.FC = () => {
                   value={searchKeyword}
                   onChange={(e) => setSearchKeyword(e.target.value)}
                 />
-                <Button onClick={handleReset}>Reset</Button>
+                <ReloadOutlined onClick={handleReset} style={{ fontSize: '24px', cursor: 'pointer' }} />
               </Space>
             </Col>
             <Col>

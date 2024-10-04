@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
 import backgroundImage from "../assets/backgrould.gif";
+import ball from '../assets/soccer-9133_256.gif'
 const Login = () => {
   const [isRegisterActive, setIsRegisterActive] = useState(false);
 
@@ -50,16 +51,13 @@ const Login = () => {
         <div className="toggle-container">
           <div className="toggle">
             <div className="toggle-panel toggle-left">
-              <h1>Welcome Back!</h1>
-              <p>Enter your personal details to use all of the site features</p>
+              <img src={ball} />
+              <p className="py-5">Log in to access features</p>
               <button id="login">Sign In</button>
             </div>
             <div className="toggle-panel toggle-right">
-              <h1>Hello, Friend!</h1>
-              <p>
-                Register with your personal details to use all of the site
-                features
-              </p>
+              <img src={ball} />
+              <p className="py-5">Sign up to access features</p>
               <button id="register">Sign Up</button>
             </div>
           </div>
