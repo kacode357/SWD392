@@ -16,6 +16,7 @@ const App: React.FC = () => {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [userLoaded, setUserLoaded] = useState(false); // Thêm trạng thái để theo dõi việc tải dữ liệu người dùng
   const { setAuth, appLoading, setAppLoading, auth } = useContext(AuthContext);
 
   // Kiểm tra nếu đường dẫn hiện tại nằm trong các đường dẫn yêu cầu sidebar
@@ -42,6 +43,7 @@ const App: React.FC = () => {
               role: res?.roleName,
             },
           });
+          setUserLoaded(true); // Chỉ set trạng thái userLoaded sau khi đã lấy được dữ liệu người dùng
         }
         
       } catch (error) {
@@ -61,8 +63,8 @@ const App: React.FC = () => {
       )}
 
       <Layout>
-        {/* Hiển thị Sidebar nếu đường dẫn hiện tại nằm trong sidebarPaths */}
-        {showSidebar && (
+        {/* Chỉ hiển thị Sidebar nếu đã lấy được thông tin người dùng và đường dẫn nằm trong sidebarPaths */}
+        {showSidebar && userLoaded && (
           <Sider
             collapsible
             collapsed={collapsed}
@@ -71,7 +73,7 @@ const App: React.FC = () => {
             className="site-layout-background"
             style={{ height: '100vh', zIndex: 1000 }}
           >
-            {/* Kiểm tra role của user để hiển thị sidebar tương ứng */}
+            {/* Chỉ hiển thị AdminSidebar nếu role của người dùng là Admin, ngược lại hiển thị UserSidebar */}
             {auth?.user?.role === 'Admin' ? (
               <AdminSidebar />
             ) : (
