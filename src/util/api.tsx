@@ -100,5 +100,30 @@ const changeClubStatusApi = async (id: number, status: boolean) => {
   const response = await defaultAxiosInstance.post(URL_API);
   return response.data;
 };
-export { createUserApi, loginUserApi, getCurrentLogin, getAllUserApi, changeUserStatusApi, getUserByIdApi, updateUserByIdApi, verifyUserByIdApi, createStaffApi, createManagerApi, googleSignUpApi, googleSigInpApi, searchClubApi, createClubApi, editClubApi, getClubByIdApi, changeClubStatusApi };
+const searchSessionApi = async (data: { pageNum: number; pageSize: number; keyWord: string; status: boolean }) => {
+  const URL_API = '/api/session/search';
+  const response = await defaultAxiosInstance.post(URL_API, data);
+  return response.data;
+};
+const changeSessionStatusApi = async (id: number, status: boolean) => {
+  const URL_API = `/api/session/change-status/${id}?status=${status}`;
+  const response = await defaultAxiosInstance.delete(URL_API);
+  return response.data;
+};
+const createSessionApi = async (data: { name: string; startDdate: string; endDdate: string; description: string; }) => {
+  const URL_API = '/api/session';
+  const response = await defaultAxiosInstance.post(URL_API, data);
+  return response.data;
+};
+const getSessionByIdApi = async (id: number) => {
+  const URL_API = `/api/session/${id}`;
+  const response = await axiosWithoutLoading.get(URL_API);
+  return response.data;
+};
+const editSessionApi = async (id: number, data: { name: string; startDdate: string; endDdate: string; description: string; }) => {
+  const URL_API = `/api/session?id=${id}`;
+  const response = await defaultAxiosInstance.put(URL_API, data);
+  return response.data;
+};
+export { editSessionApi,getSessionByIdApi,createSessionApi,changeSessionStatusApi,searchSessionApi, createUserApi, loginUserApi, getCurrentLogin, getAllUserApi, changeUserStatusApi, getUserByIdApi, updateUserByIdApi, verifyUserByIdApi, createStaffApi, createManagerApi, googleSignUpApi, googleSigInpApi, searchClubApi, createClubApi, editClubApi, getClubByIdApi, changeClubStatusApi };
 

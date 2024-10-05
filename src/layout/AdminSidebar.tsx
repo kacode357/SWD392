@@ -25,6 +25,7 @@ const UserSidebar: React.FC = () => {
       label: 'Manager Club',
       onClick: () => navigate('/manager-club'),
     },
+
     {
       key: 'logout',
       icon: <LogoutOutlined />,
