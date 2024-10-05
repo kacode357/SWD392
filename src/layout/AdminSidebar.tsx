@@ -25,9 +25,15 @@ const UserSidebar: React.FC = () => {
     },
     {
       key: '3',
-      icon: <LogoutOutlined />, 
+      icon: <UserOutlined />,
+      label: 'Manager Session',
+      onClick: () => navigate('/manager-session'),
+    },
+    {
+      key: '4',
+      icon: <LogoutOutlined />,
       label: 'Logout',
-      onClick: handleLogout, 
+      onClick: handleLogout,
     }
   ];
 
