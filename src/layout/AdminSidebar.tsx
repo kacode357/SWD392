@@ -1,40 +1,42 @@
 import React from 'react';
 import { Menu } from 'antd';
-import { UserOutlined, LogoutOutlined } from '@ant-design/icons'; 
-import { useNavigate } from 'react-router-dom';
+import { UserOutlined, LogoutOutlined } from '@ant-design/icons';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const UserSidebar: React.FC = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleLogout = () => {
-    localStorage.removeItem('token'); 
-    navigate('/login'); 
+    localStorage.removeItem('token');
+    navigate('/login');
   };
 
   const items = [
     {
-      key: '1',
+      key: '/manager-user',
       icon: <UserOutlined />,
       label: 'Manager Account',
       onClick: () => navigate('/manager-user'),
     },
     {
-      key: '2',
+      key: '/manager-club',
       icon: <UserOutlined />,
       label: 'Manager Club',
       onClick: () => navigate('/manager-club'),
     },
     {
-      key: '3',
-      icon: <LogoutOutlined />, 
+      key: 'logout',
+      icon: <LogoutOutlined />,
       label: 'Logout',
-      onClick: handleLogout, 
+      onClick: handleLogout,
     }
   ];
 
   return (
     <Menu
       mode="inline"
-      defaultSelectedKeys={['1']}
+      selectedKeys={[location.pathname]}
       style={{ height: '100%', borderRight: 0, marginTop: '64px' }}
       items={items}
     />

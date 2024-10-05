@@ -7,23 +7,46 @@ const { TabPane } = Tabs;              // Destructure TabPane from Tabs
 
 const ManagerSetting = () => {
   // State to track the active tab
-  const [activeTab, setActiveTab] = useState('setting');
+  const [activeTab, setActiveTab] = useState('activeUsers');  // Default tab key
 
   return (
     <div className="manager-setting">
       {/* Use Tabs from antd */}
-      <Tabs 
-        activeKey={activeTab} 
-        onChange={(key) => setActiveTab(key)} 
-        centered
-        type="card"
+      <Tabs
+        activeKey={activeTab}
+        onChange={(key) => setActiveTab(key)}
+        tabBarStyle={{ borderBottom: '1px solid #e8e8e8', textAlign: 'left' }} // Căn trái cho tab bar
       >
         {/* Tab navigation */}
-        <TabPane tab="Setting" key="setting">
-          <Setting />  {/* Render Setting component */}
+        <TabPane
+          tab={
+            <span
+              className={`${activeTab === 'activeUsers'
+                ? 'text-green-500'
+                : 'text-black'
+                } hover:text-green-500`}
+            >
+              Active Users
+            </span>
+          }
+          key="activeUsers"
+        >
+          <Setting />  {/* Render Active Users component */}
         </TabPane>
-        <TabPane tab="Change Password" key="changePassword">
-          <ChangePassword /> {/* Render ChangePassword component */}
+        <TabPane
+          tab={
+            <span
+              className={`${activeTab === 'deletedUsers'
+                ? 'text-green-500'
+                : 'text-black'
+                } hover:text-green-500`}
+            >
+              Deleted Users
+            </span>
+          }
+          key="deletedUsers"
+        >
+          <ChangePassword />  {/* Render Deleted Users component */}
         </TabPane>
       </Tabs>
     </div>
