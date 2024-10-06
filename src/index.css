@@ -178,3 +178,47 @@ body {
 .ant-menu-item:hover .anticon, .ant-menu-item-active .anticon, .ant-menu-item-selected .anticon {
   color: white !important; /* Icon color when hovered/selected */
 }
+/* Custom CSS for Ant Design Tab styling */
+.custom-tabs .ant-tabs-tab {
+  color: black;
+}
+
+.custom-tabs .ant-tabs-tab:hover {
+  color: gray;
+}
+
+.custom-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: black;
+}
+
+.custom-tabs .ant-tabs-ink-bar {
+  background-color: black;
+}
+.custom-search .ant-input-search-button {
+  background-color: black !important; /* Nền đen cho nút tìm kiếm */
+  border-color: black !important; /* Đảm bảo viền cũng đen */
+}
+
+.custom-search .ant-input-search-button:hover {
+  background-color: gray !important; /* Thay đổi màu khi hover nếu cần */
+  border-color: gray !important;
+}
+
+.custom-button {
+  background-color: transparent;
+  color: black;
+  font-size: 12px;
+  padding: 3px 13px;
+  border: 2px solid black;
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.custom-button:hover {
+  background-color: black;
+  color: white;
+}

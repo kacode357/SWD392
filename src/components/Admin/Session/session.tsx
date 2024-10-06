@@ -24,7 +24,7 @@ const SessionComponent: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
     current: 1,
-    pageSize: 6,
+    pageSize: 5,
     total: 0,
   });
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -147,11 +147,11 @@ const SessionComponent: React.FC = () => {
 
   return (
     <div>
-      <Tabs defaultActiveKey="activeSessions" onChange={handleTabChange}>
+      <Tabs className="custom-tabs" defaultActiveKey="activeUsers" onChange={handleTabChange}>
         <TabPane tab="Active Sessions" key="activeSessions">
           <Row justify="space-between" style={{ marginBottom: 16 }}>
             <Col>
-              <Space>
+            <Space className="custom-search">
                 <Search
                   placeholder="Search by keyword"
                   onSearch={onSearch}
@@ -164,7 +164,7 @@ const SessionComponent: React.FC = () => {
               </Space>
             </Col>
             <Col>
-              <Button type="primary" onClick={handleAddSession}>Add Session</Button>
+              <button className="custom-button" onClick={handleAddSession}>Add Season</button>
             </Col>
           </Row>
           <Table
@@ -198,7 +198,8 @@ const SessionComponent: React.FC = () => {
               </Space>
             </Col>
             <Col>
-              <Button type="primary" onClick={handleAddSession}>Add Session</Button>
+          
+              <button className="custom-button" onClick={handleAddSession}>Add Season</button>
             </Col>
           </Row>
           <Table

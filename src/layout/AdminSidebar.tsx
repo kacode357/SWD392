@@ -20,12 +20,24 @@ const AdminSidebar: React.FC = () => {
       onClick: () => navigate('/manager-user'),
     },
     {
+      key: '/manager-session',
+      icon: <UserOutlined />,
+      label: 'Manager Session',
+      onClick: () => navigate('/manager-session'),
+    },
+    {
       key: '/manager-club',
       icon: <UserOutlined />,
       label: 'Manager Club',
       onClick: () => navigate('/manager-club'),
     },
-
+   
+    {
+      key: '/manager-player',
+      icon: <UserOutlined />,
+      label: 'Manager Player',
+      onClick: () => navigate('/manager-player'),
+    },
     {
       key: 'logout',
       icon: <LogoutOutlined />,

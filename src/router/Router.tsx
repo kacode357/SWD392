@@ -15,6 +15,7 @@ import ManagerClub from '../pages/Admin/ManagerClub';
 import VerifyAccount from '../pages/User/VerifyAccount';
 import NotFound from '../pages/NotFound'; 
 import ManagerSession from '../pages/Admin/ManagerSession';
+import ManagerPlayer from '../pages/Admin/ManagerPlayer';
 
 // Create the router with public and private routes, including the new verify route
 // Create the router with public and private routes, including the new verify route
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
     { path: "setting", element: <PrivateRoute element={SettingUser} allowedRoles={[ROLES.USER]} /> }, // User settings
     { path: "manager-club", element: <PrivateRoute element={ManagerClub} allowedRoles={[ROLES.ADMIN]} /> }, // Club management
     { path: "manager-session", element: <PrivateRoute element={ManagerSession} allowedRoles={[ROLES.ADMIN]} /> }, // Session management
+    { path: "manager-player", element: <PrivateRoute element={ManagerPlayer} allowedRoles={[ROLES.ADMIN]} /> }, // Session management
     { path: "verifyemail/:id", element: <VerifyAccount /> }, // Account verification
     { path: "*", element: <NotFound /> }, // 404 Not Found
   ]},

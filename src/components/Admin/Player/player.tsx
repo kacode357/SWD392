@@ -1,27 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { Table, Avatar, Input, Button, Space, Row, Col, Tabs } from "antd";
-import { searchClubApi } from "../../../util/api";
-import ToggleStatusButton from "./ToggleStatusButton";
-import EditClubModal from "./EditClubModal";
-import AddClubModal from "./AddClubModal";
+import { Table, Input, Button, Space, Row, Col, Tabs } from "antd";
+import { searchPlayerApi } from "../../../util/api"; // Import the API for players
+import ToggleStatusButton from "./ToggleStatusButton.tsx";
+import EditPlayerModal from "./EditPlayerModal.tsx";
+import AddPlayerModal from "./AddPlayerModal.tsx";
 import moment from "moment";
 import { EditOutlined, ReloadOutlined } from "@ant-design/icons";
 
 const { Search } = Input;
 const { TabPane } = Tabs;
 
-interface Club {
+interface Player {
   id: number;
   name: string;
-  country: string;
-  establishedYear: number;
-  stadiumName: string;
-  clubLogo: string;
+  position: string;
+  nationality: string;
+  birthDate: string;
+  clubName: string;
+  playerPhoto: string;
   status: boolean;
 }
 
-const ClubComponent: React.FC = () => {
-  const [clubs, setClubs] = useState<Club[]>([]);
+const PlayerComponent: React.FC = () => {
+  const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
     current: 1,
@@ -29,13 +30,18 @@ const ClubComponent: React.FC = () => {
     total: 0,
   });
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [activeTab, setActiveTab] = useState("activeClubs");
-  const [isAddClubModalVisible, setIsAddClubModalVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState("activePlayers");
+  const [isAddPlayerModalVisible, setIsAddPlayerModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [editingClubId, setEditingClubId] = useState<number | null>(null);
+  const [editingPlayerId, setEditingPlayerId] = useState<number | null>(null);
 
-  // Fetch clubs from API
-  const fetchClubs = async (page = 1, pageSize = 10, keyword = "", isDeleted = false) => {
+  // Fetch players from API
+  const fetchPlayers = async (
+    page = 1,
+    pageSize = 10,
+    keyword = "",
+    isDeleted = false
+  ) => {
     setLoading(true);
     const data = {
       pageNum: page,
@@ -43,8 +49,8 @@ const ClubComponent: React.FC = () => {
       keyWord: keyword,
       status: !isDeleted,
     };
-    const response = await searchClubApi(data);
-    setClubs(response.pageData);
+    const response = await searchPlayerApi(data);
+    setPlayers(response.pageData);
     setPagination({
       current: response.pageInfo.page,
       pageSize: response.pageInfo.size,
@@ -54,101 +60,115 @@ const ClubComponent: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchClubs(pagination.current, pagination.pageSize);
+    fetchPlayers(pagination.current, pagination.pageSize);
   }, []);
 
   // Handle table pagination changes
   const handleTableChange = (pagination: any) => {
     const { current, pageSize } = pagination;
     setPagination((prev) => ({ ...prev, current, pageSize }));
-    fetchClubs(current, pageSize, searchKeyword, activeTab === "deletedClubs");
+    fetchPlayers(
+      current,
+      pageSize,
+      searchKeyword,
+      activeTab === "deletedPlayers"
+    );
   };
 
   // Handle search functionality
   const onSearch = (value: string) => {
     setSearchKeyword(value);
-    fetchClubs(1, pagination.pageSize, value, activeTab === "deletedClubs");
+    fetchPlayers(1, pagination.pageSize, value, activeTab === "deletedPlayers");
   };
 
   // Handle reset functionality
   const handleReset = () => {
     setSearchKeyword("");
-    fetchClubs(1, pagination.pageSize, "", activeTab === "deletedClubs");
+    fetchPlayers(1, pagination.pageSize, "", activeTab === "deletedPlayers");
   };
 
-  // Handle Add Club button click
-  const handleAddClub = () => {
-    setIsAddClubModalVisible(true);
+  // Handle Add Player button click
+  const handleAddPlayer = () => {
+    setIsAddPlayerModalVisible(true);
   };
 
   // Close the modal
   const handleCloseModal = () => {
-    setIsAddClubModalVisible(false);
+    setIsAddPlayerModalVisible(false);
     setIsEditModalVisible(false);
-    setEditingClubId(null);
+    setEditingPlayerId(null);
   };
 
-  // Open EditClubModal
-  const handleEditClub = (clubId: number) => {
-    setEditingClubId(clubId);
+  // Open EditPlayerModal
+  const handleEditPlayer = (playerId: number) => {
+    setEditingPlayerId(playerId);
     setIsEditModalVisible(true);
   };
 
   // Handle tab change
   const handleTabChange = (key: string) => {
     setActiveTab(key);
-    fetchClubs(1, pagination.pageSize, searchKeyword, key === "deletedClubs");
+    fetchPlayers(
+      1,
+      pagination.pageSize,
+      searchKeyword,
+      key === "deletedPlayers"
+    );
   };
 
   // Table columns
   const columns = [
     {
-      title: "Club Name",
-      dataIndex: "name",
+      title: "Full Name",
+      dataIndex: "fullName",
       key: "name",
     },
     {
-      title: "Country",
-      dataIndex: "country",
-      key: "country",
+      title: "Height",
+      dataIndex: "height",
+      key: "height",
     },
     {
-      title: "Established Year",
-      dataIndex: "establishedYear",
-      render: (establishedYear: number) => moment(establishedYear).format('YYYY'),
+      title: "Weight",
+      dataIndex: "weight",
+      key: "weight",
     },
     {
-      title: "Stadium Name",
-      dataIndex: "stadiumName",
-      key: "stadiumName",
+      title: "Birth Date",
+      dataIndex: "birthDate",
+      render: (birthDate: string) => moment(birthDate).format("YYYY-MM-DD"),
     },
     {
-      title: "Club Logo",
-      dataIndex: "clubLogo",
-      key: "clubLogo",
-      render: (clubLogo: string) => <Avatar src={clubLogo} />,
+      title: "Nationality",
+      dataIndex: "nationality",
+      key: "nationality",
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (status: boolean, record: Club) => (
+      render: (status: boolean, record: Player) => (
         <ToggleStatusButton
-          isDelete={!status} // Pass whether the club is deactivated (true) or active (false)
-          clubId={record.id}  // Pass the club's ID
-          refreshClubs={() => fetchClubs(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedClubs")} // Refresh clubs after toggling status
+          isDelete={!status}
+          playerId={record.id}
+          refreshPlayers={() =>
+            fetchPlayers(
+              pagination.current,
+              pagination.pageSize,
+              searchKeyword,
+              activeTab === "deletedPlayers"
+            )
+          }
         />
       ),
-    }
-    ,
+    },
     {
       title: "Action",
       key: "action",
-      render: (_: any, record: Club) => (
-
+      render: (_: any, record: Player) => (
         <EditOutlined
-          onClick={() => handleEditClub(record.id)}
-          style={{ color: 'black', cursor: 'pointer' }}
+          onClick={() => handleEditPlayer(record.id)}
+          style={{ color: "black", cursor: "pointer" }}
         />
       ),
     },
@@ -156,9 +176,8 @@ const ClubComponent: React.FC = () => {
 
   return (
     <div>
-      {/* Tabs at the top */}
-      <Tabs className="custom-tabs" defaultActiveKey="activeUsers" onChange={handleTabChange}>
-        <TabPane tab="Active Clubs" key="activeClubs">
+  <Tabs className="custom-tabs" defaultActiveKey="activeUsers" onChange={handleTabChange}>
+        <TabPane tab="Active Players" key="activePlayers">
           <Row justify="space-between" style={{ marginBottom: 16 }}>
             <Col>
             <Space className="custom-search">
@@ -170,16 +189,19 @@ const ClubComponent: React.FC = () => {
                   value={searchKeyword}
                   onChange={(e) => setSearchKeyword(e.target.value)}
                 />
-                <ReloadOutlined onClick={handleReset} style={{ fontSize: '24px', cursor: 'pointer' }} />
+                <ReloadOutlined
+                  onClick={handleReset}
+                  style={{ fontSize: "24px", cursor: "pointer" }}
+                />
               </Space>
             </Col>
             <Col>
-              <button className="custom-button" onClick={handleAddClub}>Add Club</button>
+            <button className="custom-button" onClick={handleAddPlayer}>Add Player</button>
             </Col>
           </Row>
           <Table
             columns={columns}
-            dataSource={clubs}
+            dataSource={players}
             rowKey="id"
             pagination={{
               current: pagination.current,
@@ -192,7 +214,7 @@ const ClubComponent: React.FC = () => {
             onChange={handleTableChange}
           />
         </TabPane>
-        <TabPane tab="Deleted Clubs" key="deletedClubs">
+        <TabPane tab="Deleted Players" key="deletedPlayers">
           <Row justify="space-between" style={{ marginBottom: 16 }}>
             <Col>
               <Space>
@@ -208,12 +230,14 @@ const ClubComponent: React.FC = () => {
               </Space>
             </Col>
             <Col>
-              <Button type="primary" onClick={handleAddClub}>Add Club</Button>
+              <Button type="primary" onClick={handleAddPlayer}>
+                Add Player
+              </Button>
             </Col>
           </Row>
           <Table
             columns={columns}
-            dataSource={clubs}
+            dataSource={players}
             rowKey="id"
             pagination={{
               current: pagination.current,
@@ -228,24 +252,38 @@ const ClubComponent: React.FC = () => {
         </TabPane>
       </Tabs>
 
-      {/* AddClubModal Component */}
-      <AddClubModal
-        visible={isAddClubModalVisible}
+      {/* AddPlayerModal Component */}
+      <AddPlayerModal
+        visible={isAddPlayerModalVisible}
         onClose={handleCloseModal}
-        refreshClubs={() => fetchClubs(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedClubs")}
+        refreshPlayers={() =>
+          fetchPlayers(
+            pagination.current,
+            pagination.pageSize,
+            searchKeyword,
+            activeTab === "deletedPlayers"
+          )
+        }
       />
 
-      {/* EditClubModal Component */}
-      {editingClubId && (
-        <EditClubModal
-          clubId={editingClubId}
+      {/* EditPlayerModal Component */}
+      {editingPlayerId && (
+        <EditPlayerModal
+          playerId={editingPlayerId}
           visible={isEditModalVisible}
           onClose={handleCloseModal}
-          refreshClubs={() => fetchClubs(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedClubs")}
+          refreshPlayers={() =>
+            fetchPlayers(
+              pagination.current,
+              pagination.pageSize,
+              searchKeyword,
+              activeTab === "deletedPlayers"
+            )
+          }
         />
       )}
     </div>
   );
 };
 
-export default ClubComponent;
+export default PlayerComponent;

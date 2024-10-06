@@ -1,56 +1,30 @@
 import { useState } from 'react';
-import { Tabs } from 'antd';           // Import Tabs from antd
-import Setting from './Setting';       // Import the Setting component
-import ChangePassword from './ChangePassword'; // Import the ChangePassword component
+import { Tabs } from 'antd';
+import Setting from './Setting';
+import ChangePassword from './ChangePassword';
 
-const { TabPane } = Tabs;              // Destructure TabPane from Tabs
+const { TabPane } = Tabs;
 
 const ManagerSetting = () => {
-  // State to track the active tab
-  const [activeTab, setActiveTab] = useState('activeUsers');  // Default tab key
+  const [activeTab, setActiveTab] = useState('setting');
 
   return (
     <div className="manager-setting">
-      {/* Use Tabs from antd */}
       <Tabs
         activeKey={activeTab}
-        onChange={(key) => setActiveTab(key)}
-        tabBarStyle={{ borderBottom: '1px solid #e8e8e8', textAlign: 'left' }} // Căn trái cho tab bar
+        onChange={setActiveTab}
+        className="custom-tabs"
+        tabBarStyle={{ borderBottom: '1px solid #e8e8e8', textAlign: 'left' }}
       >
-        {/* Tab navigation */}
-        <TabPane
-          tab={
-            <span
-              className={`${activeTab === 'activeUsers'
-                ? 'text-green-500'
-                : 'text-black'
-                } hover:text-green-500`}
-            >
-              Active Users
-            </span>
-          }
-          key="activeUsers"
-        >
-          <Setting />  {/* Render Active Users component */}
+        <TabPane tab="Setting" key="setting">
+          <Setting />
         </TabPane>
-        <TabPane
-          tab={
-            <span
-              className={`${activeTab === 'deletedUsers'
-                ? 'text-green-500'
-                : 'text-black'
-                } hover:text-green-500`}
-            >
-              Deleted Users
-            </span>
-          }
-          key="deletedUsers"
-        >
-          <ChangePassword />  {/* Render Deleted Users component */}
+        <TabPane tab="Change Password" key="changePassword">
+          <ChangePassword />
         </TabPane>
       </Tabs>
     </div>
   );
-}
+};
 
 export default ManagerSetting;
