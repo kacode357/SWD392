@@ -3,7 +3,7 @@ import { Menu } from 'antd';
 import { UserOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const UserSidebar: React.FC = () => {
+const AdminSidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -44,4 +44,4 @@ const UserSidebar: React.FC = () => {
   );
 };
 
-export default UserSidebar;
+export default AdminSidebar;
