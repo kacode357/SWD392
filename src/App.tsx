@@ -3,12 +3,15 @@ import { Layout } from 'antd';
 import { Outlet, useLocation } from 'react-router-dom';
 import AppHeader from './layout/header';
 import UserSidebar from './layout/UserSidebar';
-import AdminSidebar from './layout/AdminSidebar'; // Import AdminSidebar
+import AdminSidebar from './layout/AdminSidebar';
+import ManagerSidebar from './layout/ManagerSidebar'; 
+import StaffSidebar from './layout/StaffSidebar'; 
 import { AuthContext } from './context/auth.context';
 import { getCurrentLogin } from './util/api';
 import { setGlobalLoadingHandler } from './util/axios.customize';
 import Loading from './components/Loading';
-import { sidebarPaths, hiddenHeaderPaths } from './constants/routesSidebar'; // Import routes constants
+import { sidebarPaths, hiddenHeaderPaths } from './constants/routesSidebar';
+import { ROLES } from './constants/index'; // Import ROLES
 
 const { Sider, Content } = Layout;
 
@@ -16,14 +19,15 @@ const App: React.FC = () => {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [userLoaded, setUserLoaded] = useState(false); // Thêm trạng thái để theo dõi việc tải dữ liệu người dùng
+  const [userLoaded, setUserLoaded] = useState(false);
   const { setAuth, appLoading, setAppLoading, auth } = useContext(AuthContext);
 
-  // Kiểm tra nếu đường dẫn hiện tại nằm trong các đường dẫn yêu cầu sidebar
-  const showSidebar = sidebarPaths.some((path) => location.pathname.startsWith(path));
+ // Check if the current path requires a sidebar (exact match)
+const showSidebar = sidebarPaths.includes(location.pathname);
 
-  // Kiểm tra nếu đường dẫn hiện tại cần ẩn header
-  const hideHeader = hiddenHeaderPaths.includes(location.pathname);
+// Check if the current path requires hiding the header (exact match)
+const hideHeader = hiddenHeaderPaths.includes(location.pathname);
+
 
   useEffect(() => {
     setGlobalLoadingHandler(setIsLoading);
@@ -31,7 +35,7 @@ const App: React.FC = () => {
       try {
         setAppLoading(true);
         const res = await getCurrentLogin();
-  
+
         if (res) {
           setAuth({
             isAuthenticated: true,
@@ -43,9 +47,9 @@ const App: React.FC = () => {
               role: res?.roleName,
             },
           });
-          setUserLoaded(true); // Chỉ set trạng thái userLoaded sau khi đã lấy được dữ liệu người dùng
+          setUserLoaded(true);
         }
-        
+
       } catch (error) {
         console.error('Failed to fetch account', error);
       } finally {
@@ -57,13 +61,13 @@ const App: React.FC = () => {
 
   return (
     <Layout>
-      {/* Header sẽ luôn hiện trừ khi đường dẫn thuộc hiddenHeaderPaths */}
+      {/* Header will show unless path is in hiddenHeaderPaths */}
       {!hideHeader && (
         <AppHeader collapsed={collapsed} setCollapsed={setCollapsed} loading={appLoading} />
       )}
 
       <Layout>
-        {/* Chỉ hiển thị Sidebar nếu đã lấy được thông tin người dùng và đường dẫn nằm trong sidebarPaths */}
+        {/* Show Sidebar only if user info is loaded and path is in sidebarPaths */}
         {showSidebar && userLoaded && (
           <Sider
             collapsible
@@ -73,9 +77,13 @@ const App: React.FC = () => {
             className="site-layout-background"
             style={{ height: '100vh', zIndex: 1000 }}
           >
-            {/* Chỉ hiển thị AdminSidebar nếu role của người dùng là Admin, ngược lại hiển thị UserSidebar */}
-            {auth?.user?.role === 'Admin' ? (
+            {/* Render different sidebars based on user role */}
+            {auth?.user?.role === ROLES.ADMIN ? (
               <AdminSidebar />
+            ) : auth?.user?.role === ROLES.MANAGER ? (
+              <ManagerSidebar />
+            ) : auth?.user?.role === ROLES.STAFF ? (
+              <StaffSidebar />
             ) : (
               <UserSidebar />
             )}
@@ -83,7 +91,7 @@ const App: React.FC = () => {
         )}
 
         <Layout style={{ padding: '0 24px 24px' }}>
-          {/* Loading component kiểm tra isLoading */}
+          {/* Loading component based on isLoading */}
           <Loading isLoading={isLoading}>
             <Content
               style={{

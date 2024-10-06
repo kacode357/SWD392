@@ -22,14 +22,14 @@ import ManagerPlayer from '../pages/Admin/ManagerPlayer';
 const router = createBrowserRouter([
   { path: "/", element: <App />, children: [
     { index: true, element: <HomePage /> }, // Root "/"
-    { path: "manager-user", element: <PrivateRoute element={ManagerUser} allowedRoles={[ROLES.ADMIN]} /> }, // User management
-    { path: "my-profile", element: <PrivateRoute element={MyProfile} allowedRoles={[ROLES.USER]} /> }, // User profile
-    { path: "setting", element: <PrivateRoute element={SettingUser} allowedRoles={[ROLES.USER]} /> }, // User settings
-    { path: "manager-club", element: <PrivateRoute element={ManagerClub} allowedRoles={[ROLES.ADMIN]} /> }, // Club management
-    { path: "manager-session", element: <PrivateRoute element={ManagerSession} allowedRoles={[ROLES.ADMIN]} /> }, // Session management
-    { path: "manager-player", element: <PrivateRoute element={ManagerPlayer} allowedRoles={[ROLES.ADMIN]} /> }, // Session management
-    { path: "verifyemail/:id", element: <VerifyAccount /> }, // Account verification
-    { path: "*", element: <NotFound /> }, // 404 Not Found
+    { path: "manager-user", element: <PrivateRoute element={ManagerUser} allowedRoles={[ROLES.ADMIN]} /> }, 
+    { path: "my-profile", element: <PrivateRoute element={MyProfile} allowedRoles={[ROLES.USER]} /> }, 
+    { path: "setting", element: <PrivateRoute element={SettingUser} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> }, 
+    { path: "manager-club", element: <PrivateRoute element={ManagerClub} allowedRoles={[ROLES.ADMIN]} /> },
+    { path: "manager-session", element: <PrivateRoute element={ManagerSession} allowedRoles={[ROLES.ADMIN]} /> }, 
+    { path: "manager-player", element: <PrivateRoute element={ManagerPlayer} allowedRoles={[ROLES.ADMIN]} /> }, 
+    { path: "verifyemail/:id", element: <VerifyAccount /> }, 
+    { path: "*", element: <NotFound /> },
   ]},
   { path: "/login", element: <Login /> }, // Login page
 ]);
