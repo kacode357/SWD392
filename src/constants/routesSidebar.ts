@@ -1,3 +1,18 @@
 // constants/routes.ts
-export const sidebarPaths: string[] = ['/user', '/manager-user', '/my-profile', '/setting', '/manager-club', '/manager-session', '/manager-player'];
-export const hiddenHeaderPaths: string[] = ['/login', '/register'];
+export const hiddenHeaderPaths: string[] = [
+    '/login', 
+    '/register'
+];
+
+export const sidebarPaths: string[] = [
+    '/user', 
+    '/my-profile', 
+    '/setting', 
+    '/manager-user', 
+    '/manager-club', 
+    '/manager-session', 
+    '/manager-player',
+    '/manager-type-shirt',
+    '/manager-shirt'
+
+];

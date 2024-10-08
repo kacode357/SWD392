@@ -39,6 +39,18 @@ const AdminSidebar: React.FC = () => {
       onClick: () => navigate('/manager-player'),
     },
     {
+      key: '/manager-type-shirt',
+      icon: <UserOutlined />,
+      label: 'Manager Type Shirt',
+      onClick: () => navigate('/manager-type-shirt'),
+    },
+    {
+      key: '/manager-shirt',
+      icon: <UserOutlined />,
+      label: 'Manager Shirt',
+      onClick: () => navigate('/manager-shirt'),
+    },
+    {
       key: 'logout',
       icon: <LogoutOutlined />,
       label: 'Logout',

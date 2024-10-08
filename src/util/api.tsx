@@ -163,8 +163,74 @@ const updatePlayerApi = async (id: number, data: { clubId: number; fullName: str
   const response = await defaultAxiosInstance.put(URL_API, data);
   return response.data;
 };
+const searchTypeShirtApi = async (data: { pageNum: number; pageSize: number; keyWord: string; status: boolean }) => {
+  const URL_API = '/api/typeshirt/search';
+  const response = await defaultAxiosInstance.post(URL_API, data);
+  return response.data;
+};
+const changeTypeShirtStatusApi = async (id: number, status: boolean) => {
+  const URL_API = `/api/typeshirt/change-status/${id}?status=${status}`;
+  const response = await defaultAxiosInstance.delete(URL_API);
+  return response.data;
+};
+const getTypeShirtByIdApi = async (id: number) => {
+  const URL_API = `/api/typeshirt/${id}`;
+  const response = await axiosWithoutLoading.get(URL_API);
+  return response.data;
+};
+const updateTypeShirtApi = async (id: number, data: { sessionId: number; clubId: number; name: string; description: string; status: boolean }) => {
+  const URL_API = `/api/typeshirt?id=${id}`;
+  const response = await defaultAxiosInstance.put(URL_API, data);
+  return response.data;
+};
+const createTypeShirtApi = async (data: { sessionId: number; clubId: number; name: string; description: string; status: boolean }) => {
+  const URL_API = '/api/typeshirt';
+  const response = await defaultAxiosInstance.post(URL_API, data);
+  return response.data;
+};
+const createShirtApi = async (data: { typeShirtId: number; playerId: number; name: string; number: number; price: number; date: string; description: string; urlImg: string; status: number }) => {
+  const URL_API = '/api/shirt';
+  const response = await defaultAxiosInstance.post(URL_API, data);
+  return response.data;
+};
+const searchShirtApi = async (data: { pageNum: number; pageSize: number; keyWord: string; status: boolean }) => {
+  const URL_API = '/api/shirt/search';
+  const response = await defaultAxiosInstance.post(URL_API, data);
+  return response.data;
+};
+const getShirtByIdApi = async (id: number) => {
+  const URL_API = `/api/shirt/${id}`;
+  const response = await axiosWithoutLoading.get(URL_API);
+  return response.data;
+};
+const changeShirtStatusApi = async (id: number, status: number) => {
+  const URL_API = `/api/shirt/${id}?status=${status}`;
+  const response = await defaultAxiosInstance.delete(URL_API);
+  return response.data;
+};
+const deleteShirtApi = async (id: number, status: number) => {
+  const URL_API = `/api/shirt/${id}?status=${status}`;
+  const response = await defaultAxiosInstance.delete(URL_API);
+  return response.data;
+};
+const updateShirtApi = async (id: number, data: { typeShirtId: number; playerId: number; name: string; number: number; price: number; date: string; description: string; urlImg: string; status: number }) => {
+  const URL_API = `/api/shirt/${id}`;
+  const response = await defaultAxiosInstance.put(URL_API, data);
+  return response.data;
+};
+
 export { 
-  
+  updateShirtApi,
+  deleteShirtApi,
+  changeShirtStatusApi,
+  getShirtByIdApi,
+  searchShirtApi,
+  createShirtApi,
+  createTypeShirtApi,
+  updateTypeShirtApi,
+  getTypeShirtByIdApi,
+  changeTypeShirtStatusApi,
+  searchTypeShirtApi,
   updatePlayerApi,
   changePlayerStatusApi,
   searchPlayerApi,
