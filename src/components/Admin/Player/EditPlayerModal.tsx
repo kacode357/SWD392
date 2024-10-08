@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Form, Input, Button, message } from "antd";
+import { Modal, Form, Input, Button, DatePicker, message } from "antd";
+import moment from "moment";
 import { getPlayerByIdApi, updatePlayerApi } from "../../../util/api"; // Import the API for player details and update
 
 interface EditPlayerModalProps {
@@ -27,7 +28,7 @@ const EditPlayerModal: React.FC<EditPlayerModalProps> = ({ visible, playerId, on
           fullName: response.fullName,
           height: response.height,
           weight: response.weight,
-          birthday: response.birthday,
+          birthday: moment(response.birthday), // Chuyển đổi sang Moment để DatePicker có thể xử lý
           nationality: response.nationality,
           clubId: response.clubId,
         });
@@ -42,7 +43,11 @@ const EditPlayerModal: React.FC<EditPlayerModalProps> = ({ visible, playerId, on
   const handleUpdatePlayer = async (values: any) => {
     setLoading(true);
     try {
-      const response = await updatePlayerApi(playerId, values);
+      const formattedValues = {
+        ...values,
+        birthday: values.birthday.format("YYYY-MM-DD"), // Chuyển đổi Moment thành chuỗi trước khi gửi API
+      };
+      const response = await updatePlayerApi(playerId, formattedValues);
       setLoading(false);
       if (response) {
         message.success("Player updated successfully");
@@ -87,7 +92,7 @@ const EditPlayerModal: React.FC<EditPlayerModalProps> = ({ visible, playerId, on
           <Input type="number" />
         </Form.Item>
         <Form.Item name="birthday" label="Birth Date" rules={[{ required: true, message: "Please enter birth date" }]}>
-          <Input type="date" />
+          <DatePicker format="YYYY-MM-DD" /> {/* Sử dụng DatePicker từ Ant Design */}
         </Form.Item>
         <Form.Item name="nationality" label="Nationality" rules={[{ required: true, message: "Please enter nationality" }]}>
           <Input />

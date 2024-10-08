@@ -91,7 +91,7 @@ const createClubApi = async (data: { name: string; country: string; establishedY
   return response.data;
 };
 
-const editClubApi = async (id: number, data: { name: string; country: string; establishedYear: string; stadiumName: string; clubLogo: string; description: string; }) => {
+const editClubApi = async (id: number, data: { name: string; country: string; establishedYear: string; stadiumName: string; clubLogo: string; description: string; status : boolean }) => {
   const URL_API = `/api/club?id=${id}`;
   const response = await defaultAxiosInstance.put(URL_API, data);
   return response.data;

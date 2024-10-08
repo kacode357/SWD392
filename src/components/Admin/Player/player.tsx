@@ -50,6 +50,7 @@ const PlayerComponent: React.FC = () => {
       status: !isDeleted,
     };
     const response = await searchPlayerApi(data);
+    console.log("check res : ",response);
     setPlayers(response.pageData);
     setPagination({
       current: response.pageInfo.page,
@@ -149,9 +150,9 @@ const PlayerComponent: React.FC = () => {
       key: "status",
       render: (status: boolean, record: Player) => (
         <ToggleStatusButton
-          isDelete={!status}
-          playerId={record.id}
-          refreshPlayers={() =>
+          isDelete={!status} // Trạng thái ban đầu: true nếu đang vô hiệu hóa
+          clubId={record.id} // Giả sử bạn đang áp dụng cho đối tượng Player
+          refreshClubs={() =>
             fetchPlayers(
               pagination.current,
               pagination.pageSize,
@@ -162,6 +163,7 @@ const PlayerComponent: React.FC = () => {
         />
       ),
     },
+    
     {
       title: "Action",
       key: "action",
@@ -176,11 +178,15 @@ const PlayerComponent: React.FC = () => {
 
   return (
     <div>
-  <Tabs className="custom-tabs" defaultActiveKey="activeUsers" onChange={handleTabChange}>
+      <Tabs
+        className="custom-tabs"
+        defaultActiveKey="activeUsers"
+        onChange={handleTabChange}
+      >
         <TabPane tab="Active Players" key="activePlayers">
           <Row justify="space-between" style={{ marginBottom: 16 }}>
             <Col>
-            <Space className="custom-search">
+              <Space className="custom-search">
                 <Search
                   placeholder="Search by keyword"
                   onSearch={onSearch}
@@ -196,7 +202,9 @@ const PlayerComponent: React.FC = () => {
               </Space>
             </Col>
             <Col>
-            <button className="custom-button" onClick={handleAddPlayer}>Add Player</button>
+              <button className="custom-button" onClick={handleAddPlayer}>
+                Add Player
+              </button>
             </Col>
           </Row>
           <Table
