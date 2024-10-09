@@ -49,7 +49,7 @@ const LoginForm: React.FC = () => {
       // Redirect based on role
       if (resDataLogin?.roleName === 'Admin') {
         console.log('Admin');
-        window.location.href = '/manager-user';
+        window.location.href = '/admin/manager-user';
         return;
       } else {
         navigate('/');

@@ -14,41 +14,41 @@ const AdminSidebar: React.FC = () => {
 
   const items = [
     {
-      key: '/manager-user',
+      key: '/admin/manager-user',
       icon: <UserOutlined />,
       label: 'Manager Account',
-      onClick: () => navigate('/manager-user'),
+      onClick: () => navigate('/admin/manager-user'),
     },
     {
-      key: '/manager-session',
+      key: '/admin/manager-session',
       icon: <UserOutlined />,
       label: 'Manager Session',
-      onClick: () => navigate('/manager-session'),
+      onClick: () => navigate('/admin/manager-session'),
     },
     {
-      key: '/manager-club',
+      key: '/admin/manager-club',
       icon: <UserOutlined />,
       label: 'Manager Club',
-      onClick: () => navigate('/manager-club'),
+      onClick: () => navigate('/admin/manager-club'),
     },
    
     {
-      key: '/manager-player',
+      key: '/admin/manager-player',
       icon: <UserOutlined />,
       label: 'Manager Player',
-      onClick: () => navigate('/manager-player'),
+      onClick: () => navigate('/admin/manager-player'),
     },
     {
-      key: '/manager-type-shirt',
+      key: '/admin/manager-type-shirt',
       icon: <UserOutlined />,
       label: 'Manager Type Shirt',
-      onClick: () => navigate('/manager-type-shirt'),
+      onClick: () => navigate('/admin/manager-type-shirt'),
     },
     {
-      key: '/manager-shirt',
+      key: '/admin/manager-shirt',
       icon: <UserOutlined />,
       label: 'Manager Shirt',
-      onClick: () => navigate('/manager-shirt'),
+      onClick: () => navigate('/admin/manager-shirt'),
     },
     {
       key: 'logout',

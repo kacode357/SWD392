@@ -11,7 +11,7 @@ import { getCurrentLogin } from './util/api';
 import { setGlobalLoadingHandler } from './util/axios.customize';
 import Loading from './components/Loading';
 import { sidebarPaths, hiddenHeaderPaths } from './constants/routesSidebar';
-import { ROLES } from './constants/index'; // Import ROLES
+import { ROLES } from './constants/index';
 import AppFooter from './layout/Footer';
 
 const { Sider, Content } = Layout;
@@ -29,6 +29,8 @@ const App: React.FC = () => {
   // Check if the current path requires hiding the header (exact match)
   const hideHeader = hiddenHeaderPaths.includes(location.pathname);
 
+  // Check if the path starts with "admin" to hide the footer
+  const isAdminPath = location.pathname.startsWith("/admin");
 
   useEffect(() => {
     setGlobalLoadingHandler(setIsLoading);
@@ -50,7 +52,6 @@ const App: React.FC = () => {
           });
           setUserLoaded(true);
         }
-
       } catch (error) {
         console.error('Failed to fetch account', error);
       } finally {
@@ -61,11 +62,10 @@ const App: React.FC = () => {
   }, [setAuth, setAppLoading]);
 
   return (
-    <Layout>
+    <Layout style={{ minHeight: '100vh' }}>
       {/* Header will show unless path is in hiddenHeaderPaths */}
       {!hideHeader && (
         <AppHeader collapsed={collapsed} setCollapsed={setCollapsed} loading={appLoading} />
-
       )}
 
       <Layout>
@@ -92,26 +92,25 @@ const App: React.FC = () => {
           </Sider>
         )}
 
-        <Layout style={{ padding: '0 24px 24px' }}>
-          {/* Loading component based on isLoading */}
+        <Layout>
           <Loading isLoading={isLoading}>
             <Content
               style={{
                 padding: 24,
                 margin: 0,
                 marginTop: 50,
-                minHeight: 280,
+                minHeight: 'calc(100vh - 200px)', 
                 transition: 'all 0.2s',
               }}
             >
               <Outlet />
             </Content>
           </Loading>
+          {/* Footer will be hidden if path starts with /admin */}
+          {!isAdminPath && <AppFooter />}
         </Layout>
-        <AppFooter />
       </Layout>
     </Layout>
-
   );
 };
 

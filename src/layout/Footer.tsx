@@ -5,7 +5,7 @@ const { Footer } = Layout;
 const AppFooter: React.FC = () => {
     return (
         <Layout>
-            <Footer className="bg-gray-800 text-white py-6">
+            <Footer className="bg-gray-800 text-white ">
                 <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {/* Contact Us */}
                     <div>

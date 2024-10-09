@@ -8,11 +8,11 @@ export const sidebarPaths: string[] = [
     '/user', 
     '/my-profile', 
     '/setting', 
-    '/manager-user', 
-    '/manager-club', 
-    '/manager-session', 
-    '/manager-player',
-    '/manager-type-shirt',
-    '/manager-shirt'
+    '/admin/manager-user', 
+    '/admin/manager-club', 
+    '/admin/manager-session', 
+    '/admin/manager-player',
+    '/admin/manager-type-shirt',
+    '/admin/manager-shirt'
 
 ];
