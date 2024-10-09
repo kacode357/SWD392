@@ -4,14 +4,15 @@ import { Outlet, useLocation } from 'react-router-dom';
 import AppHeader from './layout/header';
 import UserSidebar from './layout/UserSidebar';
 import AdminSidebar from './layout/AdminSidebar';
-import ManagerSidebar from './layout/ManagerSidebar'; 
-import StaffSidebar from './layout/StaffSidebar'; 
+import ManagerSidebar from './layout/ManagerSidebar';
+import StaffSidebar from './layout/StaffSidebar';
 import { AuthContext } from './context/auth.context';
 import { getCurrentLogin } from './util/api';
 import { setGlobalLoadingHandler } from './util/axios.customize';
 import Loading from './components/Loading';
 import { sidebarPaths, hiddenHeaderPaths } from './constants/routesSidebar';
 import { ROLES } from './constants/index'; // Import ROLES
+import AppFooter from './layout/Footer';
 
 const { Sider, Content } = Layout;
 
@@ -22,11 +23,11 @@ const App: React.FC = () => {
   const [userLoaded, setUserLoaded] = useState(false);
   const { setAuth, appLoading, setAppLoading, auth } = useContext(AuthContext);
 
- // Check if the current path requires a sidebar (exact match)
-const showSidebar = sidebarPaths.includes(location.pathname);
+  // Check if the current path requires a sidebar (exact match)
+  const showSidebar = sidebarPaths.includes(location.pathname);
 
-// Check if the current path requires hiding the header (exact match)
-const hideHeader = hiddenHeaderPaths.includes(location.pathname);
+  // Check if the current path requires hiding the header (exact match)
+  const hideHeader = hiddenHeaderPaths.includes(location.pathname);
 
 
   useEffect(() => {
@@ -64,6 +65,7 @@ const hideHeader = hiddenHeaderPaths.includes(location.pathname);
       {/* Header will show unless path is in hiddenHeaderPaths */}
       {!hideHeader && (
         <AppHeader collapsed={collapsed} setCollapsed={setCollapsed} loading={appLoading} />
+
       )}
 
       <Layout>
@@ -106,8 +108,10 @@ const hideHeader = hiddenHeaderPaths.includes(location.pathname);
             </Content>
           </Loading>
         </Layout>
+        <AppFooter />
       </Layout>
     </Layout>
+
   );
 };
 
