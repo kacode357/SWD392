@@ -193,13 +193,13 @@ const createShirtApi = async (data: { typeShirtId: number; playerId: number; nam
   const response = await defaultAxiosInstance.post(URL_API, data);
   return response.data;
 };
-const searchShirtApi = async (data: { pageNum: number; pageSize: number; keyWord: string; status: boolean }) => {
+const searchShirtApi = async (data: { pageNum: number; pageSize: number; keyWord: string; status: number }) => {
   const URL_API = '/api/shirt/search';
   const response = await defaultAxiosInstance.post(URL_API, data);
   return response.data;
 };
-const getShirtByIdApi = async (id: number) => {
-  const URL_API = `/api/shirt/${id}`;
+const getShirtByIdApi = async (id: number, shirtId: number) => {
+  const URL_API = `/api/shirt/${id}?shirtId=${shirtId}`;
   const response = await axiosWithoutLoading.get(URL_API);
   return response.data;
 };

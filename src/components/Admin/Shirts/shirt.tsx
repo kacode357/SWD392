@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Table, Input, Button, Space, Row, Col, Tabs, Select, message, Avatar } from "antd";
-import { searchShirtApi, changeShirtStatusApi } from "../../../util/api"; // Giả sử có API tương ứng cho áo
+import { Table, Input, Button, Space, Row, Col, Tabs, message, Avatar } from "antd";
+import { searchShirtApi } from "../../../util/api"; // Giả sử có API tương ứng cho áo
 import EditShirtModal from "./EditShirtModal";
 import AddShirtModal from "./AddShirtModal";
 import { EditOutlined, ReloadOutlined } from "@ant-design/icons";
 import moment from "moment";
+import SelectStatusButton from "./ToggleStatusButton";
 
 const { Search } = Input;
 const { TabPane } = Tabs;
-const { Option } = Select;
+
 
 interface Shirt {
   id: number;
@@ -37,22 +38,27 @@ const ShirtComponent: React.FC = () => {
   const [editingShirtId, setEditingShirtId] = useState<number | null>(null);
 
   // Fetch shirts from API
-  const fetchShirts = async (page = 1, pageSize = 10, keyword = "", isDeleted = false) => {
+  const fetchShirts = async (page = 1, pageSize = 10, keyword = "", status = 1) => {
     setLoading(true);
     const data = {
       pageNum: page,
       pageSize: pageSize,
       keyWord: keyword,
-      status: !isDeleted,
+      status: status,
     };
-    const response = await searchShirtApi(data);
-    setShirts(response.pageData);
-    setPagination({
-      current: response.pageInfo.page,
-      pageSize: response.pageInfo.size,
-      total: response.pageInfo.totalItem,
-    });
-    setLoading(false);
+    try {
+      const response = await searchShirtApi(data);
+      setShirts(response.pageData);
+      setPagination({
+        current: response.pageInfo.page,
+        pageSize: response.pageInfo.size,
+        total: response.pageInfo.totalItem,
+      });
+    } catch (error) {
+      message.error("Failed to fetch shirts");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -62,17 +68,17 @@ const ShirtComponent: React.FC = () => {
   const handleTableChange = (pagination: any) => {
     const { current, pageSize } = pagination;
     setPagination((prev) => ({ ...prev, current, pageSize }));
-    fetchShirts(current, pageSize, searchKeyword, activeTab === "deletedShirts");
+    fetchShirts(current, pageSize, searchKeyword, activeTab === "deletedShirts" ? 0 : 1);
   };
 
   const onSearch = (value: string) => {
     setSearchKeyword(value);
-    fetchShirts(1, pagination.pageSize, value, activeTab === "deletedShirts");
+    fetchShirts(1, pagination.pageSize, value, activeTab === "deletedShirts" ? 0 : 1);
   };
 
   const handleReset = () => {
     setSearchKeyword("");
-    fetchShirts(1, pagination.pageSize, "", activeTab === "deletedShirts");
+    fetchShirts(1, pagination.pageSize, "", activeTab === "deletedShirts" ? 0 : 1);
   };
 
   const handleAddShirt = () => {
@@ -92,18 +98,7 @@ const ShirtComponent: React.FC = () => {
 
   const handleTabChange = (key: string) => {
     setActiveTab(key);
-    fetchShirts(1, pagination.pageSize, searchKeyword, key === "deletedShirts");
-  };
-
-  // Handle status change
-  const handleStatusChange = async (shirtId: number, status: number) => {
-    try {
-      await changeShirtStatusApi(shirtId, status);
-      message.success("Shirt status updated successfully");
-      fetchShirts(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedShirts");
-    } catch (error) {
-      message.error("Failed to update shirt status");
-    }
+    fetchShirts(1, pagination.pageSize, searchKeyword, key === "deletedShirts" ? 0 : 1);
   };
 
   // Table columns
@@ -124,14 +119,19 @@ const ShirtComponent: React.FC = () => {
       key: "number",
     },
     {
-      title: "Type Shirt ID",
-      dataIndex: "typeShirtId",
+      title: "Type Shirt",
+      dataIndex: "typeShirtName",
       key: "typeShirtId",
     },
     {
-      title: "Player ID",
-      dataIndex: "playerId",
+      title: "Player",
+      dataIndex: "playerName",
       key: "playerId",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
     },
     {
       title: "Date",
@@ -150,15 +150,11 @@ const ShirtComponent: React.FC = () => {
       dataIndex: "status",
       key: "status",
       render: (status: number, record: Shirt) => (
-        <Select
-          value={status} // Set the value of the select to the current status
-          style={{ width: 160 }}
-          onChange={(newStatus) => handleStatusChange(record.id, newStatus)}
-        >
-          <Option value={1}>Active</Option>
-          <Option value={2}>Inactive</Option>
-          <Option value={3}>Archived</Option>
-        </Select>
+        <SelectStatusButton
+          currentStatus={status}
+          shirtId={record.id}
+          refreshShirts={() => fetchShirts(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedShirts" ? 0 : 1)}
+        />
       ),
     },
     {
@@ -172,6 +168,7 @@ const ShirtComponent: React.FC = () => {
       ),
     },
   ];
+  
 
   return (
     <div>
@@ -245,7 +242,7 @@ const ShirtComponent: React.FC = () => {
       <AddShirtModal
         visible={isAddShirtModalVisible}
         onClose={handleCloseModal}
-        refreshShirts={() => fetchShirts(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedShirts")}
+        refreshShirts={() => fetchShirts(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedShirts" ? 0 : 1)}
       />
 
       {editingShirtId && (
@@ -253,7 +250,7 @@ const ShirtComponent: React.FC = () => {
           shirtId={editingShirtId}
           visible={isEditModalVisible}
           onClose={handleCloseModal}
-          refreshShirts={() => fetchShirts(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedShirts")}
+          refreshShirts={() => fetchShirts(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedShirts" ? 0 : 1)}
         />
       )}
     </div>

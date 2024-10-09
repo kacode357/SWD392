@@ -46,14 +46,14 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
   useEffect(() => {
     if (shirtId && visible) {
       // Lấy thông tin áo để chỉnh sửa khi mở modal
-      getShirtByIdApi(shirtId).then((shirt) => {
+      getShirtByIdApi(shirtId, shirtId).then((shirt) => {
         form.setFieldsValue({
           name: shirt.name,
           description: shirt.description,
           sessionId: shirt.sessionId,
           clubId: shirt.clubId,
         });
-        setImageUrl(shirt.urlImg); // Set the existing image URL for preview
+        setImageUrl(shirt.urlImg || null); // Lấy ảnh nếu có và set URL ảnh
       });
       fetchTypeShirts(); // Fetch type shirts on modal open
       fetchPlayers();    // Fetch players on modal open
@@ -161,7 +161,7 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
           name="urlImg"
           label="Image"
         >
-          <FileUploader onUploadSuccess={handleImageUploadSuccess}  />
+          <FileUploader onUploadSuccess={handleImageUploadSuccess} defaultImage={imageUrl || undefined} />
         </Form.Item>
       </Form>
     </Modal>

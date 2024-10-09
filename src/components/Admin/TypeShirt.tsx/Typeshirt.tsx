@@ -42,6 +42,7 @@ const Typeshirt: React.FC = () => {
       status: !isDeleted,
     };
     const response = await searchTypeShirtApi(data);
+    console.log(response);
     setShirts(response.pageData);
     setPagination({
       current: response.pageInfo.page,
@@ -104,13 +105,13 @@ const Typeshirt: React.FC = () => {
       key: "description",
     },
     {
-      title: "Session ID",
-      dataIndex: "sessionId",
+      title: "Session Name",
+      dataIndex: "sessionName",
       key: "sessionId",
     },
     {
-      title: "Club ID",
-      dataIndex: "clubId",
+      title: "Club Name",
+      dataIndex: "clubName",
       key: "clubId",
     },
     {
