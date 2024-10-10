@@ -2,12 +2,12 @@ import React from 'react';
 
 const Shirtnew: React.FC = () => {
     return (
-        <div className="flex justify-center items-center ">
-            <div className="grid grid-cols-3 gap-4 w-full max-w-6xl">
+        <div className="px-20 py-5">
+            <div className="grid grid-cols-3 gap-4 ">
                 {/* Main Image Section */}
                 <div className="col-span-2 relative">
                     <img
-                        src="https://i.pinimg.com/564x/18/64/c0/1864c0de39d6fdfdefbe639dc716718b.jpg"
+                        src="https://static1.cdn-subsidesports.com/2/media/resized/860_500/m/a/mag2-homeslide_newseason2425_3.jpg"
                         alt="New Season Kits"
                         className="w-full h-[400px] object-cover" // Set fixed height
                     />
@@ -20,7 +20,7 @@ const Shirtnew: React.FC = () => {
                 <div className="flex flex-col justify-between">
                     <div className="relative">
                         <img
-                            src="https://i.pinimg.com/564x/18/64/c0/1864c0de39d6fdfdefbe639dc716718b.jpg"
+                            src="https://static1.cdn-subsidesports.com/2/media/pixiemedia/featureblocks/fblock/image//h/o/hompage500x500_latest011024.jpg"
                             alt="Latest Additions"
                             className="w-full h-[190px] object-cover" // Set fixed height
                         />
@@ -31,7 +31,7 @@ const Shirtnew: React.FC = () => {
 
                     <div className="relative mt-4">
                         <img
-                            src="https://i.pinimg.com/564x/18/64/c0/1864c0de39d6fdfdefbe639dc716718b.jpg"
+                            src="https://static1.cdn-subsidesports.com/2/media/pixiemedia/featureblocks/fblock/image//h/o/hompage500x500_eng-away35off_copy_2.jpg"
                             alt="Special Offers"
                             className="w-full h-[190px] object-cover" // Set fixed height
                         />

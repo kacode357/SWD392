@@ -36,7 +36,7 @@ const Login = () => {
 
   return (
     <div
-      className="relative flex items-center justify-center min-h-screen bg-cover bg-center"
+      className="relative flex items-center justify-center min-h-screen bg-cover bg-center "
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div
@@ -52,7 +52,7 @@ const Login = () => {
 
           <div className="toggle">
 
-            <div className="toggle-panel toggle-left">
+            <div className="toggle-panel toggle-left ">
               <img className="w-40" src='src/assets/ronaldo.png' />
               <p className="py-5">Log in to access features</p>
               <button id="login">Sign In</button>
