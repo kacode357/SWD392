@@ -49,9 +49,11 @@ const Login = () => {
           <LoginForm /> // Show login form
         )}
         <div className="toggle-container">
+
           <div className="toggle">
+
             <div className="toggle-panel toggle-left">
-              <img src={ball} />
+              <img className="w-40" src='src/assets/ronaldo.png' />
               <p className="py-5">Log in to access features</p>
               <button id="login">Sign In</button>
             </div>
