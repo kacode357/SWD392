@@ -4,22 +4,23 @@ const Shirtclub: React.FC = () => {
     const clubs = [
         {
             name: "Arsenal",
-            imageUrl: "https://i.pinimg.com/564x/18/64/c0/1864c0de39d6fdfdefbe639dc716718b.jpg"
+            imageUrl: "https://i.pinimg.com/564x/18/64/c0/1864c0de39d6fdfdefbe639dc716718b.jpg" // Replace with actual URL
         },
         {
             name: "Bayern Munich",
-            imageUrl: "https://i.pinimg.com/564x/18/64/c0/1864c0de39d6fdfdefbe639dc716718b.jpg"
+            imageUrl: "https://i.pinimg.com/564x/18/64/c0/1864c0de39d6fdfdefbe639dc716718b.jpg" // Replace with actual URL
         },
         {
             name: "Liverpool",
-            imageUrl: "https://i.pinimg.com/564x/18/64/c0/1864c0de39d6fdfdefbe639dc716718b.jpg"
+            imageUrl: "https://i.pinimg.com/564x/18/64/c0/1864c0de39d6fdfdefbe639dc716718b.jpg" // Replace with actual URL
         },
         {
             name: "Barcelona",
-            imageUrl: "https://i.pinimg.com/564x/18/64/c0/1864c0de39d6fdfdefbe639dc716718b.jpg" 
+            imageUrl: "https://i.pinimg.com/564x/18/64/c0/1864c0de39d6fdfdefbe639dc716718b.jpg" // Replace with actual URL
+        },
         {
             name: "Real Madrid",
-            imageUrl: "https://i.pinimg.com/564x/18/64/c0/1864c0de39d6fdfdefbe639dc716718b.jpg"
+            imageUrl: "https://i.pinimg.com/564x/18/64/c0/1864c0de39d6fdfdefbe639dc716718b.jpg" // Replace with actual URL
         }
     ];
 
