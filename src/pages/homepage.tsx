@@ -1,9 +1,14 @@
+import React from 'react';
+import Shirtnew from '../components/homepage/Shirtnew';
+import Shirtclub from '../components/homepage/Shirtclub';
 
-
-const homepage = () => {
+const HomePage: React.FC = () => {
   return (
-    <div>homepage</div>
-  )
-}
+    <div className=" p-4">
+      < Shirtnew />
+      <Shirtclub />
+    </div>
+  );
+};
 
-export default homepage
+export default HomePage;

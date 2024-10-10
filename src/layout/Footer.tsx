@@ -5,7 +5,7 @@ const { Footer } = Layout;
 const AppFooter: React.FC = () => {
     return (
         <Layout>
-            <Footer className="bg-gray-800 text-white ">
+            <Footer className="bg-black text-white ">
                 <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {/* Contact Us */}
                     <div>
@@ -56,13 +56,7 @@ const AppFooter: React.FC = () => {
                             Cheque / Bank Transfer<br />
                             Paypal
                         </p>
-                        <div className="flex  ">
-                            <img src="/path-to-logo/visa.png" alt="Visa" className="h-6" />
-                            <img src="/path-to-logo/mastercard.png" alt="Mastercard" className="h-6" />
-                            <img src="/path-to-logo/paypal.png" alt="Paypal" className="h-6" />
-                            <img src="/path-to-logo/maestro.png" alt="Maestro" className="h-6" />
-                            <img src="/path-to-logo/alipay.png" alt="Alipay" className="h-6" />
-                        </div>
+
                     </div>
                 </div>
                 <div className="mt-6 border-t border-gray-600 pt-4 text-center text-sm">
