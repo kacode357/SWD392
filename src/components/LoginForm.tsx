@@ -64,7 +64,7 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="form-container sign-in">
+    <div className="form-container sign-in px-5">
       <Form<LoginFormValues> name="login_form" onFinish={onFinish} layout="vertical">
         <img src={logo} className="w-full" alt="" />
         <h1 className="font-bold text-2xl ">Sign In</h1>
