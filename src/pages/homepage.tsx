@@ -5,7 +5,7 @@ import Shirtseason from '../components/homepage/Shirtseason';
 
 const HomePage: React.FC = () => {
   return (
-    <div>
+    <div className='px-60'>
 
       <Shirtnew />
 
