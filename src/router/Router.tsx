@@ -19,6 +19,7 @@ import ManagerPlayer from '../pages/Admin/ManagerPlayer';
 import ManagerTypeShirt from '../pages/Admin/ManagerTypeShirt';
 import ManagerShirt from '../pages/Admin/ManagerShirt';
 import Shirtdetail from '../pages/User/Shirtdetail';
+import Listshirt from '../pages/User/Listshirt';
 
 // Create the router with public and private routes, including the new verify route
 // Create the router with public and private routes, including the new verify route
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
       { path: "setting", element: <PrivateRoute element={SettingUser} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "verifyemail/:id", element: <VerifyAccount /> },
       { path: "shirtdetail", element: <Shirtdetail /> },
+      { path: "listshirt", element: <Listshirt /> },
       { path: "*", element: <NotFound /> },
     ]
   },

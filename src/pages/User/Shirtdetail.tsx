@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Breadcrumb } from 'antd';
-import { HomeOutlined, UserOutlined } from '@ant-design/icons';
+import { HomeOutlined, } from '@ant-design/icons';
 
 const Shirtdetail: React.FC = () => {
     const thumbnails = [
