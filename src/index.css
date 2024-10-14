@@ -40,7 +40,19 @@ body {
   margin-top: 10px;
   cursor: pointer;
 }
-
+.container button:hover {
+  background-color: #272424 !important;
+  color: #fff;
+  font-size: 12px;
+  padding: 10px 45px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-top: 10px;
+  cursor: pointer;
+}
 
 .container form {
   background-color: #fff;

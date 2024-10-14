@@ -1,14 +1,11 @@
-import React, { useContext } from 'react';
-import { Form, Input, notification } from 'antd';
+import React, { useContext, useState } from 'react';
+import { Form, Input, Button, notification } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentLogin, loginUserApi } from '../util/api';
 import { AuthContext } from '../context/auth.context';
 import logo from '../assets/logo1.jfif';
 
-
-
 import GoogleLoginButton from './GoogleLoginButton'; // Import the new GoogleLoginButton component
-
 
 interface LoginFormValues {
   email: string;
@@ -18,8 +15,10 @@ interface LoginFormValues {
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const { setAuth } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false); // Trạng thái loading cho nút Sign In
 
   const onFinish = async (values: LoginFormValues) => {
+    setLoading(true); // Bật loading khi bắt đầu gọi API
     const { email, password } = values;
     const data = { email, password };
 
@@ -61,6 +60,8 @@ const LoginForm: React.FC = () => {
         description: resDataToken.EM || 'Something went wrong!',
       });
     }
+
+    setLoading(false); // Tắt loading sau khi API hoàn thành
   };
 
   return (
@@ -81,19 +82,27 @@ const LoginForm: React.FC = () => {
         <Form.Item
           name="password"
           label="Password"
-          rules={[{ required: true, message: 'Please input your password!' }]}>
+          rules={[{ required: true, message: 'Please input your password!' }]}
+        >
           <Input.Password placeholder="Password" />
         </Form.Item>
-        <button  >
+        <Button
+        className='button'
+          type="primary"
+          htmlType="submit"
+          loading={loading} // Sử dụng trạng thái loading cho nút Sign In
+          block
+        >
           Sign In
-        </button>
+        </Button>
         <div className="separator flex items-center py-2">
           <hr className="flex-grow border-gray-300" />
           <span className=" text-gray-500">OR</span>
           <hr className="flex-grow border-gray-300" />
         </div>
-        <div className='flex justify-center '> <GoogleLoginButton /></div>
-        {/* Add the GoogleLoginButton here */}
+        <div className='flex justify-center '>
+          <GoogleLoginButton />
+        </div>
         <div className="text-center mt-2">
           <button className="text-blue-500 hover:underline" onClick={() => (window.location.href = '/')}>
             Back to HomePage

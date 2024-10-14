@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Input,  Select, DatePicker, Row, Col, notification } from 'antd'; 
+import { Form, Input, Select, DatePicker, Row, Col, notification, Button } from 'antd'; 
 import { createUserApi } from '../util/api';
 import FileUploader from '../util/FileUploader';
 
@@ -24,8 +24,10 @@ interface RegisterFormProps {
 const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
   const [form] = Form.useForm();
   const [imgUrl, setImgUrl] = useState<string>(''); 
+  const [loading, setLoading] = useState<boolean>(false); // Thêm trạng thái loading
 
   const onFinish = async (values: RegisterFormValues) => {
+    setLoading(true); // Bật trạng thái loading khi bắt đầu gọi API
     const { email, password, name, phone_number, gender, dob, address } = values;
     try {
       const res = await createUserApi({
@@ -47,19 +49,17 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
         onRegisterSuccess();
       }
     } catch (error) {
-
       notification.error({
         message: 'Error',
         description: 'User not created',
       });
-     
-     
+    } finally {
+      setLoading(false); // Tắt trạng thái loading sau khi API hoàn thành
     }
   };
 
   return (
     <div className="form-container sign-up mt-5">
-      
       <Form
         form={form}
         name="register_form"
@@ -67,7 +67,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
         layout="vertical"
         initialValues={{ gender: 'male' }}
       >
-            <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">Sign Up</h1>
+        <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">Sign Up</h1>
 
         {/* Avatar Field (Centered) */}
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
@@ -197,9 +197,15 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
           </Col>
         </Row>
 
-       <button>  Sign Up</button>
-        
-       
+        {/* Nút Sign Up */}
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={loading} // Sử dụng trạng thái loading cho nút Sign Up
+          block
+        >
+          Sign Up
+        </Button>
       </Form>
     </div>
   );
