@@ -54,6 +54,7 @@ const App: React.FC = () => {
         }
       } catch (error) {
         console.error('Failed to fetch account', error);
+        localStorage.clear();
       } finally {
         setAppLoading(false);
       }
