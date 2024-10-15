@@ -18,8 +18,10 @@ import ManagerSession from '../pages/Admin/ManagerSession';
 import ManagerPlayer from '../pages/Admin/ManagerPlayer';
 import ManagerTypeShirt from '../pages/Admin/ManagerTypeShirt';
 import ManagerShirt from '../pages/Admin/ManagerShirt';
-import Shirtdetail from '../pages/User/Shirtdetail';
+import Shirtdetail from '../components/homepage/Shirtdetail';
 import Listshirt from '../pages/User/Listshirt';
+import ManagerSize from '../pages/Admin/ManagerSize';
+import ManagerShirtSize from '../pages/Admin/ManagerShirtSize';
 
 // Create the router with public and private routes, including the new verify route
 // Create the router with public and private routes, including the new verify route
@@ -31,12 +33,14 @@ const router = createBrowserRouter([
       { path: "admin/manager-club", element: <PrivateRoute element={ManagerClub} allowedRoles={[ROLES.ADMIN]} /> },
       { path: "admin/manager-session", element: <PrivateRoute element={ManagerSession} allowedRoles={[ROLES.ADMIN]} /> },
       { path: "admin/manager-player", element: <PrivateRoute element={ManagerPlayer} allowedRoles={[ROLES.ADMIN]} /> },
+      { path: "admin/manager-size", element: <PrivateRoute element={ManagerSize} allowedRoles={[ROLES.ADMIN]} /> },
       { path: "admin/manager-type-shirt", element: <PrivateRoute element={ManagerTypeShirt} allowedRoles={[ROLES.ADMIN]} />, },
       { path: "admin/manager-shirt", element: <PrivateRoute element={ManagerShirt} allowedRoles={[ROLES.ADMIN]} />, },
+      { path: "admin/manager-shirt-size", element: <PrivateRoute element={ManagerShirtSize} allowedRoles={[ROLES.ADMIN]} />, },
       { path: "my-profile", element: <PrivateRoute element={MyProfile} allowedRoles={[ROLES.USER]} /> },
       { path: "setting", element: <PrivateRoute element={SettingUser} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "verifyemail/:id", element: <VerifyAccount /> },
-      { path: "shirtdetail", element: <Shirtdetail /> },
+      { path: "shirt-details/:id", element: <Shirtdetail /> },
       { path: "listshirt", element: <Listshirt /> },
       { path: "*", element: <NotFound /> },
     ]

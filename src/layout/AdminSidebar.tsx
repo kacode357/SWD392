@@ -31,7 +31,12 @@ const AdminSidebar: React.FC = () => {
       label: 'Manager Club',
       onClick: () => navigate('/admin/manager-club'),
     },
-   
+    {
+      key: '/admin/manager-size',
+      icon: <UserOutlined />,
+      label: 'Manager Size',
+      onClick: () => navigate('/admin/manager-size'),
+    },
     {
       key: '/admin/manager-player',
       icon: <UserOutlined />,
@@ -49,6 +54,12 @@ const AdminSidebar: React.FC = () => {
       icon: <UserOutlined />,
       label: 'Manager Shirt',
       onClick: () => navigate('/admin/manager-shirt'),
+    },
+    {
+      key: '/admin/manager-shirt-size',
+      icon: <UserOutlined />,
+      label: 'Manager Shirt Size',
+      onClick: () => navigate('/admin/manager-shirt-size'),
     },
     {
       key: 'logout',
