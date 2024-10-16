@@ -1,47 +1,68 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { searchShirtApi } from '../../util/api';
 
 const Shirtclub: React.FC = () => {
-    const clubs = [
-        {
-            name: "Arsenal",
-            imageUrl: "https://static1.cdn-subsidesports.com/2/media/pixiemedia/featureblocks/fblock/image//a/r/arsenal_calafiori_shirt_2.jpg"
-        },
-        {
-            name: "Bayern Munich",
-            imageUrl: "https://static1.cdn-subsidesports.com/2/media/pixiemedia/featureblocks/fblock/image//b/a/bayern_munich_neuer_goalkeeper_jersey.jpg"
-        },
-        {
-            name: "Liverpool",
-            imageUrl: "https://static1.cdn-subsidesports.com/2/media/pixiemedia/featureblocks/fblock/image//l/i/liverpool_away_szoboszlai_shirt_5.jpg"
-        },
-        {
-            name: "Barcelona",
-            imageUrl: "https://static1.cdn-subsidesports.com/2/media/pixiemedia/featureblocks/fblock/image//b/a/barcelona_lamine_yamal_kit_9.jpg"
-        },
-        {
-            name: "Real Madrid",
-            imageUrl: "https://static1.cdn-subsidesports.com/2/media/pixiemedia/featureblocks/fblock/image//r/e/real_madrid_mbappe_champions_league_kit_4.jpg"
+    const [shirts, setShirts] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    const defaultImageUrl = 'https://images-cdn.ubuy.com.sa/65e14cc2c9e589405149a28b-error-404-costume-not-found-t-shirt.jpg'; // URL ảnh mặc định
+
+    const fetchShirts = async () => {
+        setLoading(true);
+        const data = {
+            pageNum: 1,
+            pageSize: 5, // Lấy tối đa 5 áo
+            keyWord: "",
+            status: 1, // Chỉ lấy áo đang active
+        };
+
+        try {
+            const response = await searchShirtApi(data);
+
+            if (response?.pageData) {
+                const formattedShirts = response.pageData
+                    .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sắp xếp theo ngày tạo giảm dần
+                    .slice(0, 5) // Chỉ lấy 5 áo đầu tiên
+                    .map((shirt: any) => ({
+                        name: shirt.playerName,
+                        imageUrl: shirt.urlImg && shirt.urlImg.startsWith('http') ? shirt.urlImg : defaultImageUrl, // Kiểm tra và sử dụng ảnh mặc định nếu thiếu
+                    }));
+
+                setShirts(formattedShirts);
+            }
+        } catch (error) {
+            console.error("Failed to fetch shirts:", error);
+        } finally {
+            setLoading(false);
         }
-    ];
+    };
+
+    useEffect(() => {
+        fetchShirts();
+    }, []);
 
     return (
         <div className="px-20 py-10">
-            <div className="grid grid-cols-5 gap-6"> {/* Increased gap for larger images */}
-                {clubs.map((club, index) => (
-                    <div key={index} className="text-center">
-                        <div className="relative w-full h-80 overflow-hidden"> {/* Increased height */}
-                            <img
-                                src={club.imageUrl}
-                                alt={club.name}
-                                className="w-full h-full object-cover transition duration-300 hover:scale-110"
-                            />
-                            <div className="absolute bottom-0 w-full bg-black bg-opacity-40 text-white text-lg p-2">
-                                {club.name}
+            {loading ? (
+                <div>Loading...</div>
+            ) : (
+                <div className="grid grid-cols-5 gap-6">
+                    {shirts.map((shirt, index) => (
+                        <div key={index} className="text-center">
+                            <div className="relative w-full h-80 overflow-hidden">
+                                <img
+                                    src={shirt.imageUrl}
+                                    alt={shirt.name}
+                                    className="w-full h-full object-cover transition duration-300 hover:scale-110"
+                                />
+                                <div className="absolute bottom-0 w-full bg-black bg-opacity-40 text-white text-lg p-2">
+                                    {shirt.name}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

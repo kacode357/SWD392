@@ -87,7 +87,7 @@ const LoginForm: React.FC = () => {
           <Input.Password placeholder="Password" />
         </Form.Item>
         <Button
-        className='button'
+          className='button'
           type="primary"
           htmlType="submit"
           loading={loading} // Sử dụng trạng thái loading cho nút Sign In
