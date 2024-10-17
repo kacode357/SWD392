@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../context/auth.context'; 
-
+import { ROLES } from '../constants/index';
 interface PrivateRouteProps {
     element: React.ComponentType;
     allowedRoles: string[];
@@ -21,9 +21,11 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ element: Component, allowed
     if (userRole && allowedRoles.includes(userRole)) {
         return <Component />;
     }
-
+    if (auth.user?.role === ROLES.ADMIN && !allowedRoles.includes(ROLES.ADMIN)) {
+        return <Navigate to="/admin/manager-user" />; // Chuyển hướng admin về trang admin hợp lệ
+      }
     // Nếu người dùng là admin nhưng truy cập vào trang không được phép, điều hướng về "/admin/manager-user"
-    if (userRole === 'Admin') {
+    if (userRole === ROLES.ADMIN) {
         return <Navigate to="/admin/manager-user" replace />;
     }
 

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "antd";
 import { Outlet, useLocation } from "react-router-dom";
 import AppHeader from "./layout/header";
+import HeaderAdmin from "./layout/AdminHeader"; // Import header dành cho admin
 import UserSidebar from "./layout/UserSidebar";
 import AdminSidebar from "./layout/AdminSidebar";
 import ManagerSidebar from "./layout/ManagerSidebar";
@@ -66,13 +67,13 @@ const App: React.FC = () => {
   return (
     <CartProvider>
       <Layout style={{ minHeight: "100vh" }}>
-        {/* Header will show unless path is in hiddenHeaderPaths */}
+        {/* Header: Show HeaderAdmin if role is ADMIN */}
         {!hideHeader && (
-          <AppHeader
-            collapsed={collapsed}
-            setCollapsed={setCollapsed}
-            loading={appLoading}
-          />
+          auth?.user?.role === ROLES.ADMIN ? (
+            <HeaderAdmin collapsed={collapsed} setCollapsed={setCollapsed} loading={appLoading} />
+          ) : (
+            <AppHeader collapsed={collapsed} setCollapsed={setCollapsed} loading={appLoading} />
+          )
         )}
 
         <Layout>

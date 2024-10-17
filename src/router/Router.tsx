@@ -24,12 +24,10 @@ import ManagerSize from '../pages/Admin/ManagerSize';
 import ManagerShirtSize from '../pages/Admin/ManagerShirtSize';
 import Cartdetail from '../components/homepage/Cartdetail';
 
-// Create the router with public and private routes, including the new verify route
-// Create the router with public and private routes, including the new verify route
 const router = createBrowserRouter([
   {
     path: "/", element: <App />, children: [
-      { index: true, element: <HomePage /> }, // Root "/"
+      // Root "/"
       { path: "admin/manager-user", element: <PrivateRoute element={ManagerUser} allowedRoles={[ROLES.ADMIN]} /> },
       { path: "admin/manager-club", element: <PrivateRoute element={ManagerClub} allowedRoles={[ROLES.ADMIN]} /> },
       { path: "admin/manager-session", element: <PrivateRoute element={ManagerSession} allowedRoles={[ROLES.ADMIN]} /> },
@@ -40,14 +38,15 @@ const router = createBrowserRouter([
       { path: "admin/manager-shirt-size", element: <PrivateRoute element={ManagerShirtSize} allowedRoles={[ROLES.ADMIN]} />, },
       { path: "my-profile", element: <PrivateRoute element={MyProfile} allowedRoles={[ROLES.USER]} /> },
       { path: "setting", element: <PrivateRoute element={SettingUser} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
-      { path: "verifyemail/:id", element: <VerifyAccount /> },
-      { path: "shirt-details/:id", element: <Shirtdetail /> },
-      { path: "cart", element: <Cartdetail /> },
-      { path: "listshirt", element: <Listshirt /> },
+      { path: "verifyemail/:id", element: <PrivateRoute element={VerifyAccount} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
+      { path: "shirt-details/:id", element: <PrivateRoute element={Shirtdetail} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
+      { path: "cart", element: <PrivateRoute element={Cartdetail} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
+      { path: "listshirt", element: <PrivateRoute element={Listshirt} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
+      { path: "", element: <PrivateRoute element={HomePage} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "*", element: <NotFound /> },
-    ]
-  },
-  { path: "/login", element: <Login /> }, // Login page
+      ]
+      },
+      { path: "/login", element: <Login /> }, // Login page
 ]);
 
 
