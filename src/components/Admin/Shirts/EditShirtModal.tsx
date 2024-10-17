@@ -46,7 +46,7 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
   useEffect(() => {
     if (shirtId && visible) {
       // Lấy thông tin áo để chỉnh sửa khi mở modal
-      getShirtByIdApi(shirtId, shirtId).then((shirt) => {
+      getShirtByIdApi(shirtId).then((shirt) => {
         form.setFieldsValue({
           name: shirt.name,
           description: shirt.description,

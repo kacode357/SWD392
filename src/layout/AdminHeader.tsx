@@ -62,7 +62,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ collapsed, setCollapsed, loading 
               </Link>
             </div>
 
-            {/* Right side: Avatar, Cart Icon or Sign In button */}
+            
             <div className="flex-1 flex justify-end items-center">
              
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Form, Input, Button, message, Switch } from "antd";
+import { Modal, Form, Input, Button, message } from "antd";
 import { createSizeApi } from "../../../util/api"; // Giả sử bạn có API tạo size mới
 
 interface AddSizeModalProps {
