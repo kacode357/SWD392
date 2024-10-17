@@ -263,7 +263,19 @@ const getCartApi = async () => {
   const response = await axiosWithoutLoading.get(URL_API);
   return response.data;
 };
+const searchShirtSizeApi = async (data: {   pageNum: number;   pageSize: number;   keyWord?: string;   status?: boolean; }) => {
+  const URL_API = `/api/shirtsize/search`;
+  const response = await defaultAxiosInstance.post(URL_API, data);
+  return response.data;
+};
+const createShirtSizeApi = async (data: { shirtId: number; sizeId: number; quantity: number; description: string; status: boolean; }) => {
+  const URL_API = `/api/shirtsize`;
+  const response = await defaultAxiosInstance.post(URL_API, data);
+  return response.data;
+};
 export { 
+  createShirtSizeApi,
+  searchShirtSizeApi,
   getCartApi,
   searchOrderApi,
   addToCartApi,
