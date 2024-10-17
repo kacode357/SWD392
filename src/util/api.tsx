@@ -249,7 +249,7 @@ const changeSizeStatusApi = async (id: number, status: boolean) => {
   return response.data;
 };
 const addToCartApi = async (data: { shirtId: number; quantity: number }) => {
-  const URL_API = `/api/order/order/addtocart`;
+  const URL_API = `/api/order/addtocart`;
   const response = await defaultAxiosInstance.post(URL_API, data);
   return response.data;
 };
@@ -258,8 +258,13 @@ const searchOrderApi = async (data: {   pageNum: number;   pageSize: number;   s
   const response = await defaultAxiosInstance.post(URL_API, data);
   return response.data;
 };
-
+const getCartApi = async () => {
+  const URL_API = '/api/order/cart';
+  const response = await axiosWithoutLoading.get(URL_API);
+  return response.data;
+};
 export { 
+  getCartApi,
   searchOrderApi,
   addToCartApi,
   changeSizeStatusApi,

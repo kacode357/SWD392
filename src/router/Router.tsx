@@ -22,6 +22,7 @@ import Shirtdetail from '../components/homepage/Shirtdetail';
 import Listshirt from '../pages/User/Listshirt';
 import ManagerSize from '../pages/Admin/ManagerSize';
 import ManagerShirtSize from '../pages/Admin/ManagerShirtSize';
+import Cartdetail from '../components/homepage/Cartdetail';
 
 // Create the router with public and private routes, including the new verify route
 // Create the router with public and private routes, including the new verify route
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
       { path: "setting", element: <PrivateRoute element={SettingUser} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "verifyemail/:id", element: <VerifyAccount /> },
       { path: "shirt-details/:id", element: <Shirtdetail /> },
+      { path: "cart", element: <Cartdetail /> },
       { path: "listshirt", element: <Listshirt /> },
       { path: "*", element: <NotFound /> },
     ]

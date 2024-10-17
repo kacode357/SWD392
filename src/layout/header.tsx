@@ -1,10 +1,10 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Layout, Avatar, Dropdown, MenuProps, Skeleton, Badge } from 'antd';
+import React, { useContext } from 'react';
+import { Layout, Avatar, Dropdown, Skeleton, Badge } from 'antd';
 import { UserOutlined, LogoutOutlined, MenuUnfoldOutlined, MenuFoldOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../assets/log 111-02.png';
 import { AuthContext } from '../context/auth.context';
-import { searchOrderApi } from '../util/api'; // Import API để lấy giỏ hàng
+import { CartContext } from '../context/cart.context'; // Import CartContext
 
 const { Header } = Layout;
 
@@ -16,43 +16,16 @@ interface AppHeaderProps {
 
 const AppHeader: React.FC<AppHeaderProps> = ({ collapsed, setCollapsed, loading }) => {
   const { auth } = useContext(AuthContext);
-  const [cartItemCount, setCartItemCount] = useState<number>(0); // State để lưu số lượng sản phẩm trong giỏ hàng
+  const { cartItemCount } = useContext(CartContext); // Lấy số lượng sản phẩm từ CartContext
   const location = useLocation();
   const navigate = useNavigate();
-
-  // Gọi API lấy giỏ hàng
-  useEffect(() => {
-    const fetchCartData = async () => {
-      try {
-        // Gọi API với pageSize mặc định là 999
-        const data = {
-          pageNum: 1, // Trang đầu tiên
-          pageSize: 10, // Lấy tối đa 999 sản phẩm trong giỏ hàng
-          status: 1, // Status có thể là giá trị bạn cần
-          date: '2024-10-15T09:28:43.145Z', // Nếu có giá trị date
-        };
-
-        const response = await searchOrderApi(data); // Gọi API
-        console.log('Cart Data:', response); // Log dữ liệu ra console
-        const totalItems = response.pageInfo.totalItem; // Lấy totalItem từ dữ liệu API
-        console.log('totalItems:', totalItems); // Log dữ liệu ra console
-        setCartItemCount(totalItems); // Đặt giá trị totalItem vào state
-      } catch (error) {
-        console.error("Error fetching cart data:", error);
-      }
-    };
-
-    if (auth.isAuthenticated) {
-      fetchCartData(); // Chỉ gọi API khi người dùng đã đăng nhập
-    }
-  }, [auth.isAuthenticated]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');
   };
 
-  const avatarMenuItems: MenuProps['items'] = [
+  const avatarMenuItems = [
     {
       key: '1',
       icon: <UserOutlined />,
