@@ -52,9 +52,7 @@ const Listshirt: React.FC = () => {
                         <p className="text-xl font-semibold text-red-600">{shirt.salePrice}</p>
                         <p className="text-sm text-gray-700 mt-2">{shirt.name}</p>
                     </div>
-                    <Button type="primary" className="mt-4 w-full">
-                        Add to Cart
-                    </Button>
+
                 </Card>
             ))}
         </div>

@@ -71,11 +71,11 @@ const Shirtdetail: React.FC = () => {
       <div className="flex flex-col lg:flex-row items-start p-4 max-w-6xl mx-auto">
         {/* Ảnh chính */}
         <div className="w-full lg:w-1/2 p-4">
-          <div className="relative w-full">
+          <div className="relative w-full h-80"> {/* Thay đổi h-64 thành chiều cao mong muốn */}
             <img
               src={mainImage}
               alt={shirtData.name}
-              className="w-full h-auto object-contain"
+              className="w-full h-full object-cover" // Dùng object-cover để ảnh chiếm toàn bộ khung
             />
           </div>
         </div>
