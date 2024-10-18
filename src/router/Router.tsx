@@ -36,9 +36,8 @@ const router = createBrowserRouter([
       { path: "admin/manager-type-shirt", element: <PrivateRoute element={ManagerTypeShirt} allowedRoles={[ROLES.ADMIN]} />, },
       { path: "admin/manager-shirt", element: <PrivateRoute element={ManagerShirt} allowedRoles={[ROLES.ADMIN]} />, },
       { path: "admin/manager-shirt-size", element: <PrivateRoute element={ManagerShirtSize} allowedRoles={[ROLES.ADMIN]} />, },
-      { path: "my-profile", element: <PrivateRoute element={MyProfile} allowedRoles={[ROLES.USER]} /> },
-      { path: "setting", element: <PrivateRoute element={SettingUser} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
-      { path: "verifyemail/:id", element: <VerifyAccount /> },
+      { path: "user/my-profile", element: <PrivateRoute element={MyProfile} allowedRoles={[ROLES.USER]} /> },
+      { path: "user/setting", element: <PrivateRoute element={SettingUser} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "shirt-details/:id", element: <Shirtdetail /> },
       { path: "cart", element: <Cartdetail /> },
       { path: "listshirt", element: <Listshirt /> },
@@ -46,6 +45,7 @@ const router = createBrowserRouter([
       { path: "*", element: <NotFound /> },
       ]
       },
+      { path: "verifyemail/:id", element: <VerifyAccount /> },
       { path: "/login", element: <Login /> }, // Login page
 ]);
 

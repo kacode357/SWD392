@@ -3,28 +3,28 @@ import { Menu } from 'antd';
 import { SettingOutlined, TeamOutlined, FileOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const ManagerSidebar: React.FC = () => {
+const StaffSidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const items = [
     {
-      key: '/manage-users',
-      icon: <TeamOutlined />,
-      label: 'Manage Users',
-      onClick: () => navigate('/manage-users'),
-    },
-    {
-      key: '/reports',
+      key: '/my-tasks',
       icon: <FileOutlined />,
-      label: 'Reports',
-      onClick: () => navigate('/reports'),
+      label: 'My Tasks',
+      onClick: () => navigate('/my-tasks'),
     },
     {
-      key: '/setting',
+      key: '/team',
+      icon: <TeamOutlined />,
+      label: 'Team',
+      onClick: () => navigate('/team'),
+    },
+    {
+      key: '/user/setting',
       icon: <SettingOutlined />,
       label: 'Setting',
-      onClick: () => navigate('/setting'),
+      onClick: () => navigate('/user/setting'),
     },
   ];
 
@@ -38,4 +38,4 @@ const ManagerSidebar: React.FC = () => {
   );
 };
 
-export default ManagerSidebar;
+export default StaffSidebar;

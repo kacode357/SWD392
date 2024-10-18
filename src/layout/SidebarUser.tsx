@@ -7,19 +7,9 @@ const UserSidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const items = [
-    {
-      key: '/my-profile',
-      icon: <UserOutlined />,
-      label: 'My Profile',
-      onClick: () => navigate('/my-profile'),
-    },
-    {
-      key: '/setting',
-      icon: <SettingOutlined />,
-      label: 'Setting',
-      onClick: () => navigate('/setting'),
-    }
+  const menuItems = [
+    { key: '/user/my-profile', icon: <UserOutlined />, label: 'My Profile' },
+    { key: '/user/setting', icon: <SettingOutlined />, label: 'Setting' },
   ];
 
   return (
@@ -27,7 +17,10 @@ const UserSidebar: React.FC = () => {
       mode="inline"
       selectedKeys={[location.pathname]}
       style={{ height: '100%', borderRight: 0, marginTop: '64px' }}
-      items={items}
+      items={menuItems.map((item) => ({
+        ...item,
+        onClick: () => navigate(item.key),
+      }))}
     />
   );
 };

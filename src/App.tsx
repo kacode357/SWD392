@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "antd";
 import { Outlet, useLocation } from "react-router-dom";
-import AppHeader from "./layout/header";
-import HeaderAdmin from "./layout/AdminHeader"; // Import header dành cho admin
-import UserSidebar from "./layout/UserSidebar";
-import AdminSidebar from "./layout/AdminSidebar";
-import ManagerSidebar from "./layout/ManagerSidebar";
-import StaffSidebar from "./layout/StaffSidebar";
+import AppHeader from "./layout/HeaderHomepage";
+import HeaderAdmin from "./layout/HeaderAdmin";
+import HeaderHomepage from "./layout/HeaderUser"; 
+import UserSidebar from "./layout/SidebarUser";
+import AdminSidebar from "./layout/SidebarAdmin";
+import ManagerSidebar from "./layout/SidebarManager";
+import StaffSidebar from "./layout/SidebarStaff";
 import { AuthContext } from "./context/auth.context";
 import { getCurrentLogin } from "./util/api";
 import { setGlobalLoadingHandler } from "./util/axios.customize";
@@ -25,14 +26,10 @@ const App: React.FC = () => {
   const [userLoaded, setUserLoaded] = useState(false);
   const { setAuth, appLoading, setAppLoading, auth } = useContext(AuthContext);
 
-  // Check if the current path requires a sidebar (exact match)
   const showSidebar = sidebarPaths.includes(location.pathname);
-
-  // Check if the current path requires hiding the header (exact match)
   const hideHeader = hiddenHeaderPaths.includes(location.pathname);
-
-  // Check if the path starts with "admin" to hide the footer
   const isAdminPath = location.pathname.startsWith("/admin");
+  const isUserPath = location.pathname.startsWith("/user");
 
   useEffect(() => {
     setGlobalLoadingHandler(setIsLoading);
@@ -64,21 +61,59 @@ const App: React.FC = () => {
     fetchAccount();
   }, [setAuth, setAppLoading]);
 
+  const renderSidebar = () => {
+    if (!userLoaded || !auth?.user?.role) return null;
+    switch (auth?.user?.role) {
+      case ROLES.ADMIN:
+        return <AdminSidebar />;
+      case ROLES.MANAGER:
+        return <ManagerSidebar />;
+      case ROLES.STAFF:
+        return <StaffSidebar />;
+      default:
+        return <UserSidebar />;
+    }
+  };
+
+  const renderHeader = () => {
+    if (hideHeader) return null;
+
+    // Use HeaderHomepage if the path starts with /admin or /user
+    if (isAdminPath || isUserPath) {
+      return (
+        <HeaderHomepage
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+          loading={appLoading}
+        />
+      );
+    }
+
+    if (auth?.user?.role === ROLES.ADMIN) {
+      return (
+        <HeaderAdmin
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+          loading={appLoading}
+        />
+      );
+    }
+
+    return (
+      <AppHeader
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+        loading={appLoading}
+      />
+    );
+  };
+
   return (
     <CartProvider>
       <Layout style={{ minHeight: "100vh" }}>
-        {/* Header: Show HeaderAdmin if role is ADMIN */}
-        {!hideHeader && (
-          auth?.user?.role === ROLES.ADMIN ? (
-            <HeaderAdmin collapsed={collapsed} setCollapsed={setCollapsed} loading={appLoading} />
-          ) : (
-            <AppHeader collapsed={collapsed} setCollapsed={setCollapsed} loading={appLoading} />
-          )
-        )}
-
+        {renderHeader()}
         <Layout>
-          {/* Show Sidebar only if user info is loaded and path is in sidebarPaths */}
-          {showSidebar && userLoaded && (
+          {auth?.isAuthenticated && showSidebar && (
             <Sider
               collapsible
               collapsed={collapsed}
@@ -87,16 +122,7 @@ const App: React.FC = () => {
               className="site-layout-background"
               style={{ height: "100vh", zIndex: 1000 }}
             >
-              {/* Render different sidebars based on user role */}
-              {auth?.user?.role === ROLES.ADMIN ? (
-                <AdminSidebar />
-              ) : auth?.user?.role === ROLES.MANAGER ? (
-                <ManagerSidebar />
-              ) : auth?.user?.role === ROLES.STAFF ? (
-                <StaffSidebar />
-              ) : (
-                <UserSidebar />
-              )}
+              {renderSidebar()}
             </Sider>
           )}
 
@@ -114,7 +140,6 @@ const App: React.FC = () => {
                 <Outlet />
               </Content>
             </Loading>
-            {/* Footer will be hidden if path starts with /admin */}
             {!isAdminPath && <AppFooter />}
           </Layout>
         </Layout>

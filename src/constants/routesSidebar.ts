@@ -6,8 +6,8 @@ export const hiddenHeaderPaths: string[] = [
 
 export const sidebarPaths: string[] = [
     '/user', 
-    '/my-profile', 
-    '/setting', 
+    '/user/my-profile', 
+    '/user/setting', 
     '/admin/manager-user', 
     '/admin/manager-club', 
     '/admin/manager-session', 
