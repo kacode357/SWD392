@@ -61,6 +61,10 @@ const App: React.FC = () => {
     fetchAccount();
   }, [setAuth, setAppLoading]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   const renderSidebar = () => {
     if (!userLoaded || !auth?.user?.role) return null;
     switch (auth?.user?.role) {

@@ -248,9 +248,9 @@ const changeSizeStatusApi = async (id: number, status: boolean) => {
   const response = await defaultAxiosInstance.delete(URL_API);
   return response.data;
 };
-const addToCartApi = async (data: { shirtId: number; quantity: number }) => {
+const addToCartApi = async (data: { shirtId: number; quantity: number, sizeId : number }) => {
   const URL_API = `/api/order/addtocart`;
-  const response = await defaultAxiosInstance.post(URL_API, data);
+  const response = await axiosWithoutLoading.post(URL_API, data);
   return response.data;
 };
 const searchOrderApi = async (data: {   pageNum: number;   pageSize: number;   status: number;   date: string }) => {
@@ -263,6 +263,11 @@ const getCartApi = async () => {
   const response = await axiosWithoutLoading.get(URL_API);
   return response.data;
 };
+const getCartDetailApi = async () => {
+  const URL_API = '/api/order/cart';
+  const response = await defaultAxiosInstance.get(URL_API);
+  return response.data;
+};
 const searchShirtSizeApi = async (data: {   pageNum: number;   pageSize: number;   keyWord?: string;   status?: boolean; }) => {
   const URL_API = `/api/shirtsize/search`;
   const response = await defaultAxiosInstance.post(URL_API, data);
@@ -273,7 +278,20 @@ const createShirtSizeApi = async (data: { shirtId: number; sizeId: number; quant
   const response = await defaultAxiosInstance.post(URL_API, data);
   return response.data;
 };
+const updateCartApi = async (data: { orderId: string; shirtSizeId: number; quantity: number }) => {
+  const URL_API = '/api/order/updatecart';
+  const response = await axiosWithoutLoading.post(URL_API, data);
+  return response.data;
+};
+const deleteCartApi = async (orderId: string, status: 0) => {
+  const URL_API = `/api/order/${orderId}?status=${status}`;
+  const response = await defaultAxiosInstance.delete(URL_API);
+  return response.data;
+};
 export { 
+  getCartDetailApi,
+  deleteCartApi,
+  updateCartApi,
   createShirtSizeApi,
   searchShirtSizeApi,
   getCartApi,

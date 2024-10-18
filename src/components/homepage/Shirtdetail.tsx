@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { Breadcrumb, Collapse, notification } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import { getShirtByIdApi, addToCartApi } from "../../util/api";
-import { CartContext } from "../../context/cart.context"; 
+import { CartContext } from "../../context/cart.context";
 
 const { Panel } = Collapse;
 
@@ -13,16 +13,23 @@ const Shirtdetail: React.FC = () => {
   const [shirtData, setShirtData] = useState<any>(null);
   const [mainImage, setMainImage] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
+  const [selectedSizeId, setSelectedSizeId] = useState<number | null>(null); // State để lưu sizeId
 
+  // Fetch shirt details when component is mounted
   useEffect(() => {
     const fetchShirtDetail = async () => {
       try {
         const data = await getShirtByIdApi(Number(id));
-        console.log("Shirt Data:", data);
-        setShirtData(data);
-        setMainImage(data.urlImg);
+        if (data) {
+          setShirtData(data);
+          setMainImage(data.urlImg);
+        }
       } catch (error) {
         console.error("Error fetching shirt data:", error);
+        notification.error({
+          message: "Error",
+          description: "Unable to load shirt details.",
+        });
       }
     };
 
@@ -31,20 +38,31 @@ const Shirtdetail: React.FC = () => {
     }
   }, [id]);
 
-  const handleAddToBasket = async () => {
-    try {
-      const cartData = {
-        shirtId: Number(id),
-        quantity: quantity,
-      };
-      const response = await addToCartApi(cartData);
-      console.log("Add to cart success:", response);
-      notification.success({
-        message: "Success",
-        description: "Added to basket successfully.",
+  // Function to handle add to basket
+  const handleAddToBasket = useCallback(async () => {
+    if (!selectedSizeId) {
+      notification.error({
+        message: "Error",
+        description: "Please select a size before adding to basket.",
       });
+      return;
+    }
 
-      updateCart(); // Gọi hàm updateCart sau khi thêm sản phẩm thành công
+    const cartData = {
+      shirtId: Number(id),
+      quantity: quantity,
+      sizeId: selectedSizeId, // Gửi sizeId trực tiếp
+    };
+
+    try {
+      const response = await addToCartApi(cartData);
+      if (response) {
+        notification.success({
+          message: "Success",
+          description: "Added to basket successfully.",
+        });
+        updateCart(); // Update cart after success
+      }
     } catch (error) {
       console.error("Error adding to cart:", error);
       notification.error({
@@ -52,8 +70,9 @@ const Shirtdetail: React.FC = () => {
         description: "Failed to add to basket.",
       });
     }
-  };
+  }, [id, quantity, selectedSizeId, updateCart]);
 
+  // Early return for loading state
   if (!shirtData) {
     return <div>Loading...</div>;
   }
@@ -78,9 +97,9 @@ const Shirtdetail: React.FC = () => {
         ]}
       />
 
-      {/* Thông tin chi tiết áo */}
+      {/* Shirt details */}
       <div className="flex flex-col lg:flex-row items-start p-4 max-w-6xl mx-auto">
-        {/* Ảnh chính */}
+        {/* Main Image */}
         <div className="w-full lg:w-1/2 p-4">
           <div className="relative w-full">
             <img
@@ -91,12 +110,12 @@ const Shirtdetail: React.FC = () => {
           </div>
         </div>
 
-        {/* Thông tin áo */}
+        {/* Shirt Information */}
         <div className="w-full lg:w-1/2 p-4">
           <h1 className="text-3xl font-bold mb-4">{shirtData.name}</h1>
           <p className="text-3xl font-semibold text-green-600">£{shirtData.price}</p>
 
-          {/* Thông tin chung */}
+          {/* General Information */}
           <div className="mt-6 p-4 border rounded-lg shadow-sm bg-white">
             <h2 className="text-xl font-semibold">Thông tin chung</h2>
             <p className="text-lg mt-2">Player: {shirtData.playerName}</p>
@@ -105,21 +124,28 @@ const Shirtdetail: React.FC = () => {
             <p className="text-lg">Status: {shirtData.status === 1 ? "Available" : "Out of stock"}</p>
           </div>
 
-          {/* Kích thước */}
+          {/* Size Selection */}
           <div className="mt-6 p-4 border rounded-lg shadow-sm bg-white">
             <h2 className="text-xl font-semibold">Kích thước và Số lượng</h2>
             <div className="flex flex-wrap mt-2">
-              {shirtData.listSize.map((size: any) => (
-                <div key={size.id} className="mr-4 mb-2">
-                  <p className="text-lg">
-                    {size.sizeName} - <span className="font-semibold">{size.quantity}</span>
-                  </p>
-                </div>
-              ))}
+              <select
+                value={selectedSizeId || ""}
+                onChange={(e) => setSelectedSizeId(Number(e.target.value))} // Lưu trực tiếp sizeId
+                className="p-2 border rounded shadow-sm"
+              >
+                <option value="" disabled>
+                  Chọn kích thước
+                </option>
+                {shirtData.listSize.map((size: any) => (
+                  <option key={size.sizeId} value={size.sizeId}>
+                    {size.sizeName} - {size.quantity} chiếc có sẵn
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
-          {/* Thêm vào giỏ hàng */}
+          {/* Add to Basket */}
           <div className="flex items-center space-x-4 mt-6">
             <input
               type="number"
@@ -136,7 +162,7 @@ const Shirtdetail: React.FC = () => {
             </button>
           </div>
 
-          {/* Collapse cho thông tin khác */}
+          {/* Collapse for Additional Info */}
           <Collapse defaultActiveKey={["1"]} className="mt-6">
             <Panel header="Câu lạc bộ" key="1">
               <p>Club Name: {shirtData.clubName}</p>
