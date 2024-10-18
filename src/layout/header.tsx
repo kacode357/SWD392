@@ -6,6 +6,7 @@ import logo from '../assets/log 111-02.png';
 import { AuthContext } from '../context/auth.context';
 import { CartContext } from '../context/cart.context'; // Import CartContext
 
+
 const { Header } = Layout;
 
 interface AppHeaderProps {
@@ -104,9 +105,13 @@ const AppHeader: React.FC<AppHeaderProps> = ({ collapsed, setCollapsed, loading 
               )}
             </div>
           </>
+
         )}
+
       </Header>
+
     </Layout>
+
   );
 };
 
