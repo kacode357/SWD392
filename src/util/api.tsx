@@ -80,6 +80,11 @@ const searchClubApi = async (data: { pageNum: number; pageSize: number; keyWord:
   const response = await defaultAxiosInstance.post(URL_API, data);
   return response.data;
 };
+const searchClientClubApi = async (data: { pageNum: number; pageSize: number; keyWord: string; status: boolean }) => {
+  const URL_API = '/api/club/search';
+  const response = await axiosWithoutLoading.post(URL_API, data);
+  return response.data;
+};
 const getAllClubApi = async (data: { pageNum: number; pageSize: number; keyWord: string; status: boolean }) => {
   const URL_API = '/api/club/search';
   const response = await axiosWithoutLoading.post(URL_API, data);
@@ -289,6 +294,7 @@ const deleteCartApi = async (orderId: string, status: 0) => {
   return response.data;
 };
 export { 
+  searchClientClubApi,
   getCartDetailApi,
   deleteCartApi,
   updateCartApi,

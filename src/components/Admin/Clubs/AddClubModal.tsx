@@ -12,6 +12,7 @@ interface AddClubModalProps {
 const AddClubModal: React.FC<AddClubModalProps> = ({ visible, onClose, refreshClubs }) => {
   const [form] = Form.useForm();
   const [clubLogo, setClubLogo] = useState<string>(''); // Store the uploaded club logo URL
+  const [logoInputType, setLogoInputType] = useState<'url' | 'file'>('url'); // Toggle between URL input and file upload
   const [loading, setLoading] = useState(false);
 
   // Handle the submission of the form
@@ -19,7 +20,7 @@ const AddClubModal: React.FC<AddClubModalProps> = ({ visible, onClose, refreshCl
     try {
       const values = await form.validateFields();
       if (!clubLogo) {
-        message.error('Please upload a club logo.');
+        message.error('Please provide a club logo.');
         return;
       }
 
@@ -82,11 +83,28 @@ const AddClubModal: React.FC<AddClubModalProps> = ({ visible, onClose, refreshCl
           <Input.TextArea />
         </Form.Item>
 
-        {/* Club Logo Upload */}
+        {/* Club Logo: Select between URL input or File Upload */}
         <Form.Item label="Club Logo" required>
-          <FileUploader
-            onUploadSuccess={(url: string) => setClubLogo(url)} // Capture the uploaded file URL
-          />
+          <Button.Group className='mb-2'>
+            <Button type={logoInputType === 'url' ? 'primary' : 'default'} onClick={() => setLogoInputType('url')}>
+              Input URL
+            </Button>
+            <Button type={logoInputType === 'file' ? 'primary' : 'default'} onClick={() => setLogoInputType('file')}>
+              Upload File
+            </Button>
+          </Button.Group>
+          
+          {logoInputType === 'url' ? (
+            <Form.Item name="logoUrl" rules={[{ required: true, message: 'Please enter the logo URL!' }]}>
+              <Input
+                placeholder="Enter logo URL"
+                value={clubLogo}
+                onChange={(e) => setClubLogo(e.target.value)}
+              />
+            </Form.Item>
+          ) : (
+            <FileUploader onUploadSuccess={(url: string) => setClubLogo(url)} /> // Capture the uploaded file URL
+          )}
         </Form.Item>
       </Form>
     </Modal>
