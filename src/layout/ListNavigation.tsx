@@ -1,22 +1,113 @@
-import React from 'react';
-import { Button } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Button, Dropdown, Menu } from 'antd';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation (React Router v6)
+import { searchClientClubApi } from '../util/api'; // Import API
+
+interface Club {
+    id: number;
+    name: string;
+    country: string;
+    establishedYear: string;
+    stadiumName: string;
+    clubLogo: string;
+    description: string;
+    status: boolean;
+}
 
 const NavigationComponent: React.FC = () => {
-    const navigate = useNavigate();
+    const [clubs, setClubs] = useState<Club[]>([]);
+    const navigate = useNavigate(); // Initialize navigate for navigation
 
-    const handleNavigate = () => {
-        navigate('/clubshirt'); // Điều hướng đến trang clubshirt
+    const handleClubMouseEnter = async () => {
+        try {
+            const data = { pageNum: 1, pageSize: 10, keyWord: '', status: true };
+            const result = await searchClientClubApi(data);
+
+            // Truy cập vào 'pageData' để lấy danh sách câu lạc bộ
+            if (result && Array.isArray(result.pageData)) {
+                setClubs(result.pageData);
+            } else {
+                setClubs([]); // Đặt giá trị rỗng nếu không đúng định dạng
+            }
+        } catch (error) {
+            console.error('Error fetching clubs', error);
+            setClubs([]); // Đặt mảng rỗng trong trường hợp có lỗi
+        }
     };
+
+    // Xử lý điều hướng khi nhấn vào club
+    const handleClubClick = (clubId: number) => {
+        navigate(`/clubshirt/${clubId}`); // Chuyển sang trang với URL /clubshirt/:clubId
+    };
+
+    // Render danh sách các câu lạc bộ trong 4 hàng
+    const clubMenu = (
+        <Menu>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
+                {clubs.map((club) => (
+                    <div
+                        key={club.id}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            padding: '8px',
+                            borderRight: '1px solid #ccc',
+                            cursor: 'pointer', // Thêm con trỏ khi hover
+                        }}
+                        onClick={() => handleClubClick(club.id)} // Chuyển hướng khi nhấn vào club
+                    >
+                        <img
+                            src={club.clubLogo}
+                            alt={club.name}
+                            style={{
+                                width: '24px',
+                                height: '24px',
+                                marginRight: '8px',
+                                borderRight: '1px solid #ddd',
+                                paddingRight: '8px',
+                            }}
+                        />
+                        <span>{club.name}</span>
+                    </div>
+                ))}
+            </div>
+            <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                {/* Thêm nút View All */}
+                <Button type="link" onClick={() => navigate('/clubshirt')}>
+                    View All
+                </Button>
+            </div>
+        </Menu>
+    );
+
     return (
         <div>
-            <nav className="fixed top-0 w-full bg-black text-white py-4 z-50" style={{ backgroundColor: 'black', color: 'white', padding: '16px', marginTop: '64px' }}>
-                <ul style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', listStyle: 'none', padding: 0 }}>
+            <nav
+                className="fixed top-0 w-full bg-black text-white py-4 z-50"
+                style={{ backgroundColor: 'black', color: 'white', padding: '16px', marginTop: '64px' }}
+            >
+                <ul
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        listStyle: 'none',
+                        padding: 0,
+                    }}
+                >
                     <li>
                         <Button type="text" style={{ color: 'white' }}>
                             <span style={{ position: 'relative' }}>
                                 LATEST
-                                <div style={{ position: 'absolute', width: '100%', height: '4px', backgroundColor: '#22c55e', marginTop: '4px' }}></div>
+                                <div
+                                    style={{
+                                        position: 'absolute',
+                                        width: '100%',
+                                        height: '4px',
+                                        backgroundColor: '#22c55e',
+                                        marginTop: '4px',
+                                    }}
+                                ></div>
                             </span>
                         </Button>
                     </li>
@@ -24,7 +115,15 @@ const NavigationComponent: React.FC = () => {
                         <Button type="text" style={{ color: 'white' }}>
                             <span style={{ position: 'relative' }}>
                                 OFFERS
-                                <div style={{ position: 'absolute', width: '100%', height: '4px', backgroundColor: '#ef4444', marginTop: '4px' }}></div>
+                                <div
+                                    style={{
+                                        position: 'absolute',
+                                        width: '100%',
+                                        height: '4px',
+                                        backgroundColor: '#ef4444',
+                                        marginTop: '4px',
+                                    }}
+                                ></div>
                             </span>
                         </Button>
                     </li>
@@ -39,9 +138,11 @@ const NavigationComponent: React.FC = () => {
                         </Button>
                     </li>
                     <li>
-                        <Button type="text" style={{ color: 'white' }} onClick={handleNavigate}>
-                            CLUB
-                        </Button>
+                        <Dropdown overlay={clubMenu} trigger={['hover']} onVisibleChange={handleClubMouseEnter}>
+                            <Button type="text" style={{ color: 'white' }}>
+                                CLUB
+                            </Button>
+                        </Dropdown>
                     </li>
                     <li>
                         <Button type="text" style={{ color: 'white' }}>

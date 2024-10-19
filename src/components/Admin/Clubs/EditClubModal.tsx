@@ -15,6 +15,7 @@ const EditClubModal: React.FC<EditClubModalProps> = ({ visible, clubId, onClose,
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [clubLogo, setClubLogo] = useState<string>(''); // Store the uploaded club logo URL
+  const [logoInputType, setLogoInputType] = useState<'url' | 'file'>('url'); // Toggle between URL input and file upload
 
   // Fetch existing club data when clubId is provided
   useEffect(() => {
@@ -48,7 +49,7 @@ const EditClubModal: React.FC<EditClubModalProps> = ({ visible, clubId, onClose,
     try {
       const values = await form.validateFields();
       if (!clubLogo) {
-        message.error('Please upload a club logo.');
+        message.error('Please provide a club logo.');
         return;
       }
 
@@ -56,7 +57,7 @@ const EditClubModal: React.FC<EditClubModalProps> = ({ visible, clubId, onClose,
         ...values,
         establishedYear: values.establishedYear.toISOString(), // Convert moment object to ISO string
         clubLogo, // Attach the uploaded club logo URL
-        status : true 
+        status: true, 
       };
 
       setLoading(true);
@@ -110,12 +111,28 @@ const EditClubModal: React.FC<EditClubModalProps> = ({ visible, clubId, onClose,
           <Input.TextArea />
         </Form.Item>
 
-        {/* Club Logo Upload */}
+        {/* Club Logo: Select between URL input or File Upload */}
         <Form.Item label="Club Logo" required>
-          <FileUploader
-            defaultImage={clubLogo} // Show the existing logo if available
-            onUploadSuccess={(url: string) => setClubLogo(url)} // Capture the uploaded file URL
-          />
+          <Button.Group className='mb-2'>
+            <Button type={logoInputType === 'url' ? 'primary' : 'default'} onClick={() => setLogoInputType('url')}>
+              Input URL
+            </Button>
+            <Button type={logoInputType === 'file' ? 'primary' : 'default'} onClick={() => setLogoInputType('file')}>
+              Upload File
+            </Button>
+          </Button.Group>
+
+          {logoInputType === 'url' ? (
+            <Form.Item name="logoUrl">
+              <Input
+                placeholder="Enter logo URL"
+                value={clubLogo}
+                onChange={(e) => setClubLogo(e.target.value)} // Update logo from URL input
+              />
+            </Form.Item>
+          ) : (
+            <FileUploader defaultImage={clubLogo} onUploadSuccess={(url: string) => setClubLogo(url)} /> // FileUploader for uploading image
+          )}
         </Form.Item>
       </Form>
     </Modal>

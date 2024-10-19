@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Breadcrumb, notification } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 import { searchClubApi } from "../../util/api"; // Assuming you have the searchClubApi in util/api
