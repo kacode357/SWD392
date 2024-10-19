@@ -1,7 +1,13 @@
 import React from 'react';
 import { Button } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const NavigationComponent: React.FC = () => {
+    const navigate = useNavigate();
+
+    const handleNavigate = () => {
+        navigate('/clubshirt'); // Điều hướng đến trang clubshirt
+    };
     return (
         <div>
             <nav className="fixed top-0 w-full bg-black text-white py-4 z-50" style={{ backgroundColor: 'black', color: 'white', padding: '16px', marginTop: '64px' }}>
@@ -33,7 +39,7 @@ const NavigationComponent: React.FC = () => {
                         </Button>
                     </li>
                     <li>
-                        <Button type="text" style={{ color: 'white' }}>
+                        <Button type="text" style={{ color: 'white' }} onClick={handleNavigate}>
                             CLUB
                         </Button>
                     </li>
