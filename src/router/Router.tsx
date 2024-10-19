@@ -23,6 +23,7 @@ import Listshirt from '../pages/User/Listshirt';
 import ManagerSize from '../pages/Admin/ManagerSize';
 import ManagerShirtSize from '../pages/Admin/ManagerShirtSize';
 import Cartdetail from '../components/homepage/Cartdetail';
+import ClubShirts from '../pages/User/ClubShirts';
 
 const router = createBrowserRouter([
   {
@@ -41,12 +42,13 @@ const router = createBrowserRouter([
       { path: "shirt-details/:id", element: <Shirtdetail /> },
       { path: "cart", element: <Cartdetail /> },
       { path: "listshirt", element: <Listshirt /> },
+      { path: "clubshirt", element: <ClubShirts /> },
       { path: "", element: <HomePage /> },
       { path: "*", element: <NotFound /> },
-      ]
-      },
-      { path: "verifyemail/:id", element: <VerifyAccount /> },
-      { path: "/login", element: <Login /> }, // Login page
+    ]
+  },
+  { path: "verifyemail/:id", element: <VerifyAccount /> },
+  { path: "/login", element: <Login /> }, // Login page
 ]);
 
 

@@ -78,7 +78,7 @@ const Shirtdetail: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="py-20">
       {/* Breadcrumb */}
       <Breadcrumb
         items={[

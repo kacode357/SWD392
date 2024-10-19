@@ -2,7 +2,7 @@ import React from 'react';
 
 const Shirtnew: React.FC = () => {
     return (
-        <div className="px-20 py-5">
+        <div className="px-20 ">
             <div className="grid grid-cols-3 gap-4 ">
                 {/* Main Image Section */}
                 <div className="col-span-2 relative">

@@ -5,13 +5,13 @@ import Shirtseason from '../components/homepage/Shirtseason';
 
 const HomePage: React.FC = () => {
   return (
-    <div className=''>
+    <div className=' pt-20' >
 
       <Shirtnew />
 
       <Shirtclub />
       <Shirtseason />
-  
+
     </div>
   );
 };

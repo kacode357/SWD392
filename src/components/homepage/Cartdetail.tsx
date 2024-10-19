@@ -34,7 +34,7 @@ const Cartdetail: React.FC = () => {
         <Button
           onClick={() => navigate("/")} // Điều hướng đến trang chủ
           size="large"
-       
+
         >
           Add Products
         </Button>
@@ -101,7 +101,7 @@ const Cartdetail: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="py-20" >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Title level={2}>Giỏ hàng của bạn</Title>
         <Button type="primary" danger onClick={handleDeleteCart}>
