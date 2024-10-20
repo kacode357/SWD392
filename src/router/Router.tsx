@@ -1,4 +1,3 @@
-// Import ROLES at the top
 import { ROLES } from '../constants/index';  // Adjust the path as needed
 import React from 'react';
 import { RouterProvider } from 'react-router-dom';
@@ -28,7 +27,6 @@ import ClubShirts from '../pages/User/ClubShirts';
 const router = createBrowserRouter([
   {
     path: "/", element: <App />, children: [
-      // Root "/"
       { path: "admin/manager-user", element: <PrivateRoute element={ManagerUser} allowedRoles={[ROLES.ADMIN]} /> },
       { path: "admin/manager-club", element: <PrivateRoute element={ManagerClub} allowedRoles={[ROLES.ADMIN]} /> },
       { path: "admin/manager-session", element: <PrivateRoute element={ManagerSession} allowedRoles={[ROLES.ADMIN]} /> },
@@ -47,20 +45,17 @@ const router = createBrowserRouter([
       { path: "staff/manager-shirt-size", element: <PrivateRoute element={ManagerShirtSize} allowedRoles={[ROLES.STAFF]} />, },
       { path: "user/my-profile", element: <PrivateRoute element={MyProfile} allowedRoles={[ROLES.USER , ROLES.STAFF]} /> },
       { path: "user/setting", element: <PrivateRoute element={SettingUser} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
-      { path: "shirt-details/:id", element: <Shirtdetail /> },
-      { path: "cart", element: <Cartdetail /> },
-      { path: "listshirt/:clubId", element: <Listshirt /> },
-      { path: "clubshirt", element: <ClubShirts /> },
-      { path: "", element: <HomePage /> },
-      { path: "*", element: <NotFound /> },
+      { path: "shirt-details/:id", element: <PrivateRoute element={Shirtdetail} allowedRoles={[ROLES.USER]} /> },
+      { path: "cart", element: <PrivateRoute element={Cartdetail} allowedRoles={[ROLES.USER]} /> },
+      { path: "listshirt/:clubId", element: <PrivateRoute element={Listshirt} allowedRoles={[ROLES.USER]} /> },
+      { path: "clubshirt", element: <PrivateRoute element={ClubShirts} allowedRoles={[ROLES.USER]} /> },
+      { path: "", element: <PrivateRoute element={HomePage} allowedRoles={[ROLES.USER]} /> },
     ]
   },
   { path: "verifyemail/:id", element: <VerifyAccount /> },
   { path: "/login", element: <Login /> }, // Login page
+  { path: "*", element: <NotFound /> }, // Catch-all for undefined routes
 ]);
-
-
-
 
 // The main router component with authentication context
 const RouterComponent: React.FC = () => {
