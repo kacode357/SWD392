@@ -29,6 +29,8 @@ const ToggleStatusButton: React.FC<ToggleStatusButtonProps> = ({ isDelete, shirt
       checked={!isDelete}  // checked = true nếu áo đang active, ngược lại là inactive
       onChange={handleToggle}
       loading={loading}
+      checkedChildren="Active" 
+      unCheckedChildren="Inactive" 
     />
   );
 };

@@ -61,12 +61,7 @@ const AdminSidebar: React.FC = () => {
       label: 'Manager Shirt Size',
       onClick: () => navigate('/admin/manager-shirt-size'),
     },
-    {
-      key: 'logout',
-      icon: <LogoutOutlined />,
-      label: 'Logout',
-      onClick: handleLogout,
-    }
+
   ];
 
   return (

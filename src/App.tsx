@@ -3,7 +3,7 @@ import { Layout } from "antd";
 import { Outlet, useLocation } from "react-router-dom";
 import AppHeader from "./layout/HeaderHomepage";
 import HeaderAdmin from "./layout/HeaderAdmin";
-import HeaderHomepage from "./layout/HeaderUser"; 
+import HeaderHomepage from "./layout/HeaderUser";
 import UserSidebar from "./layout/SidebarUser";
 import AdminSidebar from "./layout/SidebarAdmin";
 import ManagerSidebar from "./layout/SidebarManager";
@@ -30,6 +30,7 @@ const App: React.FC = () => {
   const hideHeader = hiddenHeaderPaths.includes(location.pathname);
   const isAdminPath = location.pathname.startsWith("/admin");
   const isUserPath = location.pathname.startsWith("/user");
+  const isStaffPath = location.pathname.startsWith("/staff");
 
   useEffect(() => {
     setGlobalLoadingHandler(setIsLoading);
@@ -37,7 +38,6 @@ const App: React.FC = () => {
       try {
         setAppLoading(true);
         const res = await getCurrentLogin();
-
         if (res) {
           setAuth({
             isAuthenticated: true,
@@ -65,71 +65,49 @@ const App: React.FC = () => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  const renderSidebar = () => {
-    if (!userLoaded || !auth?.user?.role) return null;
-    switch (auth?.user?.role) {
-      case ROLES.ADMIN:
-        return <AdminSidebar />;
-      case ROLES.MANAGER:
-        return <ManagerSidebar />;
-      case ROLES.STAFF:
-        return <StaffSidebar />;
-      default:
-        return <UserSidebar />;
-    }
+  const sidebarComponents = {
+    [ROLES.ADMIN]: AdminSidebar,
+    [ROLES.MANAGER]: ManagerSidebar,
+    [ROLES.STAFF]: StaffSidebar,
+    [ROLES.USER]: UserSidebar,
   };
 
-  const renderHeader = () => {
-    if (hideHeader) return null;
-
-    // Use HeaderHomepage if the path starts with /admin or /user
-    if (isAdminPath || isUserPath) {
-      return (
-        <HeaderHomepage
-          collapsed={collapsed}
-          setCollapsed={setCollapsed}
-          loading={appLoading}
-        />
-      );
-    }
-
-    if (auth?.user?.role === ROLES.ADMIN) {
-      return (
-        <HeaderAdmin
-          collapsed={collapsed}
-          setCollapsed={setCollapsed}
-          loading={appLoading}
-        />
-      );
-    }
-
-    return (
-      <AppHeader
-        collapsed={collapsed}
-        setCollapsed={setCollapsed}
-        loading={appLoading}
-      />
-    );
+  const headerComponents = {
+    [ROLES.ADMIN]: HeaderAdmin,
+    default: HeaderHomepage,
   };
+
+  const HeaderComponent = hideHeader
+    ? null
+    : headerComponents[auth?.user?.role] || AppHeader;
+
+  const SidebarComponent = auth?.isAuthenticated && showSidebar && userLoaded
+    ? sidebarComponents[auth?.user?.role] || UserSidebar
+    : null;
 
   return (
     <CartProvider>
       <Layout style={{ minHeight: "100vh" }}>
-        {renderHeader()}
+        {HeaderComponent && (
+          <HeaderComponent
+            collapsed={collapsed}
+            setCollapsed={setCollapsed}
+            loading={appLoading}
+          />
+        )}
         <Layout>
-          {auth?.isAuthenticated && showSidebar && (
+          {SidebarComponent && (
             <Sider
               collapsible
               collapsed={collapsed}
-              onCollapse={(collapsed) => setCollapsed(collapsed)}
+              onCollapse={setCollapsed}
               width={200}
               className="site-layout-background"
               style={{ height: "100vh", zIndex: 1000 }}
             >
-              {renderSidebar()}
+              <SidebarComponent />
             </Sider>
           )}
-
           <Layout>
             <Loading isLoading={isLoading}>
               <Content

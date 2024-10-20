@@ -34,6 +34,8 @@ const ToggleStatusButton: React.FC<ToggleStatusButtonProps> = ({ sessionId, isDe
       loading={loading}
       checked={!isDelete} // Nếu không bị xóa (hoặc không bị vô hiệu hóa) thì checked là true
       onChange={handleToggle} // Gọi hàm khi người dùng thay đổi trạng thái
+      checkedChildren="Active" // Label for active status
+      unCheckedChildren="Inactive" // Label for inactive status
     />
   );
 };
