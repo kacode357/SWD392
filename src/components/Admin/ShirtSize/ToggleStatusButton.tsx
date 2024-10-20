@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Switch, message } from 'antd';
+import { deleteShirtSizeApi } from '../../../util/api'; // Adjust the path to your actual API file
 
 interface ToggleStatusButtonProps {
   isDelete: boolean; // true if deleted, false if active
@@ -13,8 +14,10 @@ const ToggleStatusButton: React.FC<ToggleStatusButtonProps> = ({ isDelete, sizeI
   const handleToggle = async (checked: boolean) => {
     setLoading(true);
     try {
-      // Simulate API call with a console log
-      console.log(`Toggling size ID: ${sizeId}, new status: ${checked ? 'active' : 'inactive'}`);
+      // Call the API to update the size status
+      const status = !checked; // Invert the checked value for the API (if checked, it's active, otherwise it's inactive)
+      await deleteShirtSizeApi(sizeId, !status);
+
       message.success(`Size ${checked ? 'activated' : 'deactivated'} successfully`);
 
       refreshSizes(); // Refresh the size list
@@ -30,6 +33,8 @@ const ToggleStatusButton: React.FC<ToggleStatusButtonProps> = ({ isDelete, sizeI
       checked={!isDelete}
       onChange={handleToggle}
       loading={loading}
+      checkedChildren="Active" // Label for active status
+      unCheckedChildren="Inactive" // Label for inactive status
     />
   );
 };

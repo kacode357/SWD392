@@ -8,29 +8,38 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ element: Component, allowedRoles }) => {
-    const { auth, appLoading } = useContext(AuthContext); // Lấy trạng thái xác thực và trạng thái loading
+    const { auth, appLoading } = useContext(AuthContext);
 
-    // Nếu đang tải dữ liệu người dùng, hiển thị loader hoặc empty div
+    // Hiển thị loader nếu dữ liệu đang được tải
     if (appLoading) {
-        return <div></div>;  // Bạn có thể thay thế bằng một spinner hoặc loader khác
+        return <div></div>;
     }
 
-    const userRole = auth?.user?.role;  // Lấy vai trò người dùng từ context
+    const userRole = auth?.user?.role;
 
-    // Nếu người dùng đã đăng nhập và có role phù hợp, render component
+    // Nếu không đăng nhập hoặc không có role thì chỉ chặn các trang admin
+    if (!userRole) {
+        // Nếu không đăng nhập và trang yêu cầu quyền admin, điều hướng về trang đăng nhập
+        if (allowedRoles.includes(ROLES.ADMIN)) {
+            return <Navigate to="/login" replace />;
+        }
+        // Cho phép truy cập các trang công khai (cart, listshirt, clubshirt) mà không cần đăng nhập
+        return <Component />;
+    }
+
+    // Kiểm tra role của người dùng để xác định quyền truy cập
     if (userRole && allowedRoles.includes(userRole)) {
         return <Component />;
     }
-    if (auth.user?.role === ROLES.ADMIN && !allowedRoles.includes(ROLES.ADMIN)) {
-        return <Navigate to="/admin/manager-user" />; // Chuyển hướng admin về trang admin hợp lệ
-      }
-    // Nếu người dùng là admin nhưng truy cập vào trang không được phép, điều hướng về "/admin/manager-user"
-    if (userRole === ROLES.ADMIN) {
+
+    // Nếu người dùng là admin nhưng truy cập vào trang không dành cho admin, điều hướng về trang admin
+    if (userRole === ROLES.ADMIN && !allowedRoles.includes(ROLES.ADMIN)) {
         return <Navigate to="/admin/manager-user" replace />;
     }
 
-    // Nếu không có quyền truy cập, điều hướng về trang chủ hoặc trang khác
+    // Điều hướng người dùng không có quyền về trang chủ
     return <Navigate to="/" replace />;
-}
+};
+
 
 export default PrivateRoute;

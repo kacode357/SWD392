@@ -11,7 +11,9 @@ const { TabPane } = Tabs;
 
 interface ShirtSize {
   id: number;
-  name: string;
+  shirtName: string;  // Thêm trường shirtName
+  sizeName: string;   // Thêm trường sizeName
+  quantity: number;
   description: string;
   status: boolean;
 }
@@ -99,17 +101,27 @@ const ShirtSizeComponent: React.FC = () => {
   // Table columns
   const columns = [
     {
-      title: "Size Name",
-      dataIndex: "name",
-      key: "name",
+      title: "Shirt Name",  // Cột hiển thị shirtName
+      dataIndex: "shirtName",
+      key: "shirtName",
     },
     {
-      title: "Description",
+      title: "Size Name",   // Cột hiển thị sizeName
+      dataIndex: "sizeName",
+      key: "sizeName",
+    },
+    {
+      title: "Quantity",    // Cột hiển thị quantity
+      dataIndex: "quantity",
+      key: "quantity",
+    },
+    {
+      title: "Description", // Cột hiển thị description
       dataIndex: "description",
       key: "description",
     },
     {
-      title: "Status",
+      title: "Status",      // Cột hiển thị status
       dataIndex: "status",
       key: "status",
       render: (status: boolean, record: ShirtSize) => (
@@ -121,7 +133,7 @@ const ShirtSizeComponent: React.FC = () => {
       ),
     },
     {
-      title: "Action",
+      title: "Action",      // Cột Action để chỉnh sửa
       key: "action",
       render: (_: any, record: ShirtSize) => (
         <EditOutlined

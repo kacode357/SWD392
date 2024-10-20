@@ -30,6 +30,7 @@ const App: React.FC = () => {
   const hideHeader = hiddenHeaderPaths.includes(location.pathname);
   const isAdminPath = location.pathname.startsWith("/admin");
   const isUserPath = location.pathname.startsWith("/user");
+  const isStaffPath = location.pathname.startsWith("/staff");
 
   useEffect(() => {
     setGlobalLoadingHandler(setIsLoading);
@@ -82,6 +83,7 @@ const App: React.FC = () => {
   const renderHeader = () => {
     if (hideHeader) return null;
 
+
     if (isAdminPath) {
       return (
         <HeaderAdmin
@@ -92,6 +94,7 @@ const App: React.FC = () => {
       );
     }
 
+
     if (isUserPath) {
       return (
         <HeaderHomepage
@@ -101,7 +104,15 @@ const App: React.FC = () => {
         />
       );
     }
-
+    if (isAdminPath || isUserPath || isStaffPath) {
+      return (
+        <HeaderHomepage
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+          loading={appLoading}
+        />
+      );
+    }
     return (
       <AppHeader
         collapsed={collapsed}

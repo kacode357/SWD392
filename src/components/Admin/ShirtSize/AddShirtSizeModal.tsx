@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, message, Select } from 'antd';
-import { createShirtSizeApi, searchShirtApi, searchSizeApi } from '../../../util/api'; // Import API phù hợp
+import { createShirtSizeApi, getShirtApi, getSizeApi } from '../../../util/api'; // Import API phù hợp
 
 interface AddShirtSizeModalProps {
   visible: boolean; // Trạng thái hiển thị modal
@@ -20,13 +20,13 @@ const AddShirtSizeModal: React.FC<AddShirtSizeModalProps> = ({ visible, onClose,
   useEffect(() => {
     const fetchShirtsAndSizes = async () => {
       try {
-        const shirtResponse = await searchShirtApi({
+        const shirtResponse = await getShirtApi({
           pageNum: 1,
           pageSize: 100, // Adjust as needed
           keyWord: '',
           status: 1, // Active shirts
         });
-        const sizeResponse = await searchSizeApi({
+        const sizeResponse = await getSizeApi({
           pageNum: 1,
           pageSize: 100, // Adjust as needed
           keyWord: '',

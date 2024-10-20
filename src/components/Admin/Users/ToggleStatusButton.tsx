@@ -34,8 +34,8 @@ const ToggleStatusButton: React.FC<ToggleStatusButtonProps> = ({
     <Switch
       checked={!isDelete} // Hiển thị nút bật tắt theo trạng thái isDelete
       onChange={handleToggle}
-      checkedChildren="Active"
-      unCheckedChildren="Deleted"
+      checkedChildren="Active" // Label for active status
+      unCheckedChildren="Inactive" // Label for inactive status
     />
   );
 };

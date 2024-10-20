@@ -1,31 +1,21 @@
 import React from 'react';
 import { Menu } from 'antd';
-import { SettingOutlined, TeamOutlined, FileOutlined } from '@ant-design/icons';
+import { SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const StaffSidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const items = [
-    {
-      key: '/my-tasks',
-      icon: <FileOutlined />,
-      label: 'My Tasks',
-      onClick: () => navigate('/my-tasks'),
-    },
-    {
-      key: '/team',
-      icon: <TeamOutlined />,
-      label: 'Team',
-      onClick: () => navigate('/team'),
-    },
-    {
-      key: '/user/setting',
-      icon: <SettingOutlined />,
-      label: 'Setting',
-      onClick: () => navigate('/user/setting'),
-    },
+  const menuItems = [
+    { key: '/staff/manager-session', icon: <UserOutlined />, label: 'Manager Session' },
+    { key: '/staff/manager-club', icon: <UserOutlined />, label: 'Manager Club' },
+    { key: '/staff/manager-size', icon: <UserOutlined />, label: 'Manager Size' },
+    { key: '/staff/manager-player', icon: <UserOutlined />, label: 'Manager Player' },
+    { key: '/staff/manager-type-shirt', icon: <UserOutlined />, label: 'Manager Type Shirt' },
+    { key: '/staff/manager-shirt', icon: <UserOutlined />, label: 'Manager Shirt' },
+    { key: '/staff/manager-shirt-size', icon: <UserOutlined />, label: 'Manager Shirt Size' },
+    { key: '/user/setting', icon: <SettingOutlined />, label: 'Setting' },
   ];
 
   return (
@@ -33,7 +23,10 @@ const StaffSidebar: React.FC = () => {
       mode="inline"
       selectedKeys={[location.pathname]}
       style={{ height: '100%', borderRight: 0, marginTop: '64px' }}
-      items={items}
+      items={menuItems.map((item) => ({
+        ...item,
+        onClick: () => navigate(item.key),
+      }))}
     />
   );
 };
