@@ -16,7 +16,7 @@ const ToggleStatusButton: React.FC<ToggleStatusButtonProps> = ({ isDelete, sizeI
     try {
       // Call the API to update the size status
       const status = !checked; // Invert the checked value for the API (if checked, it's active, otherwise it's inactive)
-      await deleteShirtSizeApi(sizeId, status);
+      await deleteShirtSizeApi(sizeId, !status);
 
       message.success(`Size ${checked ? 'activated' : 'deactivated'} successfully`);
 
