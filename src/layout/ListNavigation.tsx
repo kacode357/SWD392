@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Dropdown, Menu } from 'antd';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation (React Router v6)
-import { searchClientClubApi } from '../util/api'; // Import API
+import { DownOutlined } from '@ant-design/icons'; // Import DownOutlined for dropdown icon
+import { useNavigate } from 'react-router-dom';
+import { searchClientClubApi } from '../util/api';
 
 interface Club {
     id: number;
@@ -16,31 +17,28 @@ interface Club {
 
 const NavigationComponent: React.FC = () => {
     const [clubs, setClubs] = useState<Club[]>([]);
-    const navigate = useNavigate(); // Initialize navigate for navigation
+    const navigate = useNavigate();
 
     const handleClubMouseEnter = async () => {
         try {
             const data = { pageNum: 1, pageSize: 10, keyWord: '', status: true };
             const result = await searchClientClubApi(data);
 
-            // Truy cập vào 'pageData' để lấy danh sách câu lạc bộ
             if (result && Array.isArray(result.pageData)) {
                 setClubs(result.pageData);
             } else {
-                setClubs([]); // Đặt giá trị rỗng nếu không đúng định dạng
+                setClubs([]);
             }
         } catch (error) {
             console.error('Error fetching clubs', error);
-            setClubs([]); // Đặt mảng rỗng trong trường hợp có lỗi
+            setClubs([]);
         }
     };
 
-    // Xử lý điều hướng khi nhấn vào club
     const handleClubClick = (clubId: number) => {
-        navigate(`/clubshirt/${clubId}`); // Chuyển sang trang với URL /clubshirt/:clubId
+        navigate(`/clubshirt/${clubId}`);
     };
 
-    // Render danh sách các câu lạc bộ trong 4 hàng
     const clubMenu = (
         <Menu>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
@@ -52,9 +50,9 @@ const NavigationComponent: React.FC = () => {
                             alignItems: 'center',
                             padding: '8px',
                             borderRight: '1px solid #ccc',
-                            cursor: 'pointer', // Thêm con trỏ khi hover
+                            cursor: 'pointer',
                         }}
-                        onClick={() => handleClubClick(club.id)} // Chuyển hướng khi nhấn vào club
+                        onClick={() => handleClubClick(club.id)}
                     >
                         <img
                             src={club.clubLogo}
@@ -72,7 +70,6 @@ const NavigationComponent: React.FC = () => {
                 ))}
             </div>
             <div style={{ textAlign: 'center', marginTop: '10px' }}>
-                {/* Thêm nút View All */}
                 <Button type="link" onClick={() => navigate('/clubshirt')}>
                     View All
                 </Button>
@@ -140,13 +137,13 @@ const NavigationComponent: React.FC = () => {
                     <li>
                         <Dropdown overlay={clubMenu} trigger={['hover']} onVisibleChange={handleClubMouseEnter}>
                             <Button type="text" style={{ color: 'white' }}>
-                                CLUB
+                                CLUB <DownOutlined /> {/* Add dropdown icon */}
                             </Button>
                         </Dropdown>
                     </li>
                     <li>
                         <Button type="text" style={{ color: 'white' }}>
-                            NATIONAL
+                            NATIONAL <DownOutlined /> {/* Add dropdown icon */}
                         </Button>
                     </li>
                     <li>
@@ -156,12 +153,12 @@ const NavigationComponent: React.FC = () => {
                     </li>
                     <li>
                         <Button type="text" style={{ color: 'white' }}>
-                            PRODUCTS
+                            PRODUCTS <DownOutlined /> {/* Add dropdown icon */}
                         </Button>
                     </li>
                     <li>
                         <Button type="text" style={{ color: 'white' }}>
-                            PLAYERS
+                            PLAYERS <DownOutlined /> {/* Add dropdown icon */}
                         </Button>
                     </li>
                     <li>

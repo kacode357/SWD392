@@ -58,8 +58,12 @@ const Shirtclub: React.FC = () => {
                     >
                         <div className="relative w-full h-80 overflow-hidden"> {/* Increased height */}
                             <img
-                                src={shirt.urlImg} // Giả sử response chứa trường urlImg
-                                alt={shirt.name} // Giả sử response chứa trường name
+                                src={
+                                    shirt.urlImg && (shirt.urlImg.startsWith('http://') || shirt.urlImg.startsWith('https://'))
+                                        ? shirt.urlImg
+                                        : 'https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg'
+                                }
+                                alt={shirt.name}
                                 className="w-full h-full object-cover transition duration-300 hover:scale-110"
                             />
                             <div className="absolute bottom-0 w-full bg-black bg-opacity-40 text-white text-lg p-2">

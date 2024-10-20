@@ -98,14 +98,18 @@ const Shirtdetail: React.FC = () => {
       />
 
       {/* Shirt details */}
-      <div className="flex flex-col lg:flex-row items-start p-4 max-w-6xl mx-auto">
+      <div className="flex flex-col lg:flex-row items-start p-4 max-w-6xl mx-auto gap-4"> {/* Added gap-4 for spacing */}
+
         {/* Main Image */}
-        <div className="w-full lg:w-1/2 p-4">
-          <div className="relative w-full">
+        <div className="w-full lg:w-1/2 p-4 mt-12 lg:mt-28"> {/* Adjusted margin to align with price */}
+          <div className="relative w-full h-80">
             <img
-              src={mainImage}
-              alt={shirtData.name}
-              className="w-full h-auto object-contain shadow-lg rounded-lg"
+              src={
+                mainImage && (mainImage.startsWith('http://') || mainImage.startsWith('https://'))
+                  ? mainImage
+                  : 'https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg'
+              }
+              className="w-full h-full object-contain shadow-lg rounded-lg"
             />
           </div>
         </div>
@@ -130,7 +134,7 @@ const Shirtdetail: React.FC = () => {
             <div className="flex flex-wrap mt-2">
               <select
                 value={selectedSizeId || ""}
-                onChange={(e) => setSelectedSizeId(Number(e.target.value))} // Lưu trực tiếp sizeId
+                onChange={(e) => setSelectedSizeId(Number(e.target.value))}
                 className="p-2 border rounded shadow-sm"
               >
                 <option value="" disabled>
