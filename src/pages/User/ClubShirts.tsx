@@ -2,17 +2,24 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Breadcrumb, notification } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 import { searchClubApi } from "../../util/api"; // Assuming you have the searchClubApi in util/api
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const ClubShirts: React.FC = () => {
     const [clubs, setClubs] = useState<any[]>([]);
+    const navigate = useNavigate(); // Khai báo useNavigate
 
     useEffect(() => {
         const fetchClubs = async () => {
             try {
                 const data = { pageNum: 1, pageSize: 20, keyWord: "", status: true };
                 const response = await searchClubApi(data);
-                if (response) {
+                if (response && response.pageData) {
                     setClubs(response.pageData);
+                } else {
+                    notification.error({
+                        message: "Error",
+                        description: "No club data found.",
+                    });
                 }
             } catch (error) {
                 console.error("Error fetching clubs:", error);
@@ -55,25 +62,32 @@ const ClubShirts: React.FC = () => {
 
             {/* Grid Layout */}
             <Row gutter={[16, 16]} className="text-center">
-                {clubs.map((club) => (
-                    <Col
-                        key={club.id}
-                        xs={12}
-                        sm={8}
-                        md={6}
-                        lg={4}
-                        className="flex justify-center items-center"
-                    >
-                        <div className="text-center space-y-2">
-                            <img
-                                src={club.clubLogo}
-                                alt={club.name}
-                                className="w-16 h-16 mx-auto"
-                            />
-                            <p className="text-gray-600">{club.name}</p>
-                        </div>
-                    </Col>
-                ))}
+                {clubs.length === 0 ? (
+                    <div className="text-gray-600">No clubs available.</div>
+                ) : (
+                    clubs.map((club) => (
+                        <Col
+                            key={club.id}
+                            xs={12}
+                            sm={8}
+                            md={6}
+                            lg={4}
+                            className="flex justify-center items-center"
+                        >
+                            <div
+                                className="text-center space-y-2 cursor-pointer"
+                                onClick={() => navigate(`/listshirt/${club.id}`)} // Điều hướng đến trang Listshirt với clubId
+                            >
+                                <img
+                                    src={club.clubLogo}
+                                    alt={club.name}
+                                    className="w-16 h-16 mx-auto"
+                                />
+                                <p className="text-gray-600">{club.name}</p>
+                            </div>
+                        </Col>
+                    ))
+                )}
             </Row>
         </div>
     );
