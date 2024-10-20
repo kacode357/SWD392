@@ -7,25 +7,10 @@ const ManagerSidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const items = [
-    {
-      key: '/manage-users',
-      icon: <TeamOutlined />,
-      label: 'Manage Users',
-      onClick: () => navigate('/manage-users'),
-    },
-    {
-      key: '/reports',
-      icon: <FileOutlined />,
-      label: 'Reports',
-      onClick: () => navigate('/reports'),
-    },
-    {
-      key: '/user/setting',
-      icon: <SettingOutlined />,
-      label: 'Setting',
-      onClick: () => navigate('/user/setting'),
-    },
+  const menuItems = [
+    { key: '/manage-users', icon: <TeamOutlined />, label: 'Manage Users' },
+    { key: '/reports', icon: <FileOutlined />, label: 'Reports' },
+    { key: '/user/setting', icon: <SettingOutlined />, label: 'Setting' },
   ];
 
   return (
@@ -33,7 +18,10 @@ const ManagerSidebar: React.FC = () => {
       mode="inline"
       selectedKeys={[location.pathname]}
       style={{ height: '100%', borderRight: 0, marginTop: '64px' }}
-      items={items}
+      items={menuItems.map((item) => ({
+        ...item,
+        onClick: () => navigate(item.key),
+      }))}
     />
   );
 };
