@@ -3,6 +3,7 @@ import { Row, Col, Breadcrumb, notification } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 import { searchClubApi } from "../../util/api"; // Assuming you have the searchClubApi in util/api
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import BreadcrumbComponent from "../../layout/Breadcrumb";
 
 const ClubShirts: React.FC = () => {
     const [clubs, setClubs] = useState<any[]>([]);
@@ -36,13 +37,7 @@ const ClubShirts: React.FC = () => {
     return (
         <div className="mx-auto px-4 py-20">
             {/* Breadcrumb */}
-            <Breadcrumb className="mb-4">
-                <Breadcrumb.Item href="/">
-                    <HomeOutlined />
-                    <span>Home</span>
-                </Breadcrumb.Item>
-                <Breadcrumb.Item>CLUB</Breadcrumb.Item>
-            </Breadcrumb>
+            <BreadcrumbComponent />
 
             {/* Title */}
             <div className="text-center mb-8">

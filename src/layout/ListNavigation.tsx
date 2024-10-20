@@ -36,7 +36,7 @@ const NavigationComponent: React.FC = () => {
     };
 
     const handleClubClick = (clubId: number) => {
-        navigate(`/clubshirt/${clubId}`);
+        navigate(`/listshirt/${clubId}`);
     };
 
     const clubMenu = (

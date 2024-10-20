@@ -3,7 +3,7 @@ import { Layout } from "antd";
 import { Outlet, useLocation } from "react-router-dom";
 import AppHeader from "./layout/HeaderHomepage";
 import HeaderAdmin from "./layout/HeaderAdmin";
-import HeaderHomepage from "./layout/HeaderUser"; 
+import HeaderHomepage from "./layout/HeaderUser";
 import UserSidebar from "./layout/SidebarUser";
 import AdminSidebar from "./layout/SidebarAdmin";
 import ManagerSidebar from "./layout/SidebarManager";
@@ -83,12 +83,21 @@ const App: React.FC = () => {
   const renderHeader = () => {
     if (hideHeader) return null;
 
-    // Use HeaderHomepage if the path starts with /admin or /user
-  
 
-    if (auth?.user?.role === ROLES.ADMIN) {
+    if (isAdminPath) {
       return (
         <HeaderAdmin
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+          loading={appLoading}
+        />
+      );
+    }
+
+
+    if (isUserPath) {
+      return (
+        <HeaderHomepage
           collapsed={collapsed}
           setCollapsed={setCollapsed}
           loading={appLoading}
