@@ -41,7 +41,7 @@ const router = createBrowserRouter([
       { path: "user/setting", element: <PrivateRoute element={SettingUser} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "shirt-details/:id", element: <Shirtdetail /> },
       { path: "cart", element: <Cartdetail /> },
-      { path: "listshirt", element: <Listshirt /> },
+      { path: "listshirt/:clubId", element: <Listshirt /> },
       { path: "clubshirt", element: <ClubShirts /> },
       { path: "", element: <HomePage /> },
       { path: "*", element: <NotFound /> },
