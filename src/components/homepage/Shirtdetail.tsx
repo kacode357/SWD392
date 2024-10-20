@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import { Breadcrumb, Collapse, notification } from "antd";
-import { HomeOutlined } from "@ant-design/icons";
+import {  Collapse, notification } from "antd";
+
 import { useParams } from "react-router-dom";
 import { getShirtByIdApi, addToCartApi } from "../../util/api";
 import { CartContext } from "../../context/cart.context";

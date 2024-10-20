@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Breadcrumb, notification } from "antd";
-import { HomeOutlined } from "@ant-design/icons";
+import { Row, Col, notification } from "antd";
+
 import { searchClubApi } from "../../util/api"; // Assuming you have the searchClubApi in util/api
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import BreadcrumbComponent from "../../layout/Breadcrumb";
