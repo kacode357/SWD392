@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Card, notification } from 'antd';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { searchShirtApi } from '../../util/api'; // Đảm bảo đường dẫn nhập chính xác
-import { useParams } from 'react-router-dom'; // Import useParams
+import { useNavigate, useParams } from 'react-router-dom'; // Import useParams
+import BreadcrumbComponent from '../../layout/Breadcrumb';
 
 interface ShirtProps {
     id: number;
@@ -17,7 +18,7 @@ const Listshirt: React.FC = () => {
     const { clubId } = useParams<{ clubId: string }>(); // Nhận ID câu lạc bộ từ đường dẫn
     const [shirts, setShirts] = useState<ShirtProps[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchShirts = async () => {
             try {
@@ -71,12 +72,14 @@ const Listshirt: React.FC = () => {
     }
 
     return (
-        <div className="grid grid-cols-4 gap-4 p-8 py-20">
+        <div className="grid grid-cols-5 gap-4 p-8 py-20">
+            <BreadcrumbComponent />
             {shirts.map((shirt) => (
                 <Card
                     key={shirt.id}
-                    className="relative border border-gray-200 shadow-sm"
-                    cover={<img alt={shirt.name} src={shirt.imageUrl} />}
+                    className="relative border border-gray-200 shadow-sm w-64 "
+                    cover={<img className='h-64 rounded ' alt={shirt.name} src={shirt.imageUrl} />}
+                    onClick={() => navigate(`/shirt-details/${shirt.id}`)}
                 >
                     <div className="absolute top-2 right-2">
                         {shirt.isLiked ? (

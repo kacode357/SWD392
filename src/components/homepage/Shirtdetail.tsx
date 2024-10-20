@@ -4,6 +4,7 @@ import { HomeOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import { getShirtByIdApi, addToCartApi } from "../../util/api";
 import { CartContext } from "../../context/cart.context";
+import BreadcrumbComponent from "../../layout/Breadcrumb";
 
 const { Panel } = Collapse;
 
@@ -13,7 +14,7 @@ const Shirtdetail: React.FC = () => {
   const [shirtData, setShirtData] = useState<any>(null);
   const [mainImage, setMainImage] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
-  const [selectedSizeId, setSelectedSizeId] = useState<number | null>(null); // State để lưu sizeId
+  const [selectedSizeId, setSelectedSizeId] = useState<number | null>(null); // State to store sizeId
 
   // Fetch shirt details when component is mounted
   useEffect(() => {
@@ -51,7 +52,7 @@ const Shirtdetail: React.FC = () => {
     const cartData = {
       shirtId: Number(id),
       quantity: quantity,
-      sizeId: selectedSizeId, // Gửi sizeId trực tiếp
+      sizeId: selectedSizeId, // Send sizeId directly
     };
 
     try {
@@ -80,22 +81,7 @@ const Shirtdetail: React.FC = () => {
   return (
     <div className="py-20">
       {/* Breadcrumb */}
-      <Breadcrumb
-        items={[
-          {
-            href: "/",
-            title: (
-              <>
-                <HomeOutlined />
-                <span>Home</span>
-              </>
-            ),
-          },
-          {
-            title: "Detail",
-          },
-        ]}
-      />
+      <BreadcrumbComponent />
 
       {/* Shirt details */}
       <div className="flex flex-col lg:flex-row items-start p-4 max-w-6xl mx-auto gap-4"> {/* Added gap-4 for spacing */}
@@ -121,7 +107,7 @@ const Shirtdetail: React.FC = () => {
 
           {/* General Information */}
           <div className="mt-6 p-4 border rounded-lg shadow-sm bg-white">
-            <h2 className="text-xl font-semibold">Thông tin chung</h2>
+            <h2 className="text-xl font-semibold">General Information</h2>
             <p className="text-lg mt-2">Player: {shirtData.playerName}</p>
             <p className="text-lg">Number: {shirtData.number}</p>
             <p className="text-lg">Type: {shirtData.typeShirtName}</p>
@@ -130,7 +116,7 @@ const Shirtdetail: React.FC = () => {
 
           {/* Size Selection */}
           <div className="mt-6 p-4 border rounded-lg shadow-sm bg-white">
-            <h2 className="text-xl font-semibold">Kích thước và Số lượng</h2>
+            <h2 className="text-xl font-semibold">Size and Quantity</h2>
             <div className="flex flex-wrap mt-2">
               <select
                 value={selectedSizeId || ""}
@@ -138,11 +124,11 @@ const Shirtdetail: React.FC = () => {
                 className="p-2 border rounded shadow-sm"
               >
                 <option value="" disabled>
-                  Chọn kích thước
+                  Select size
                 </option>
                 {shirtData.listSize.map((size: any) => (
                   <option key={size.sizeId} value={size.sizeId}>
-                    {size.sizeName} - {size.quantity} chiếc có sẵn
+                    {size.sizeName} - {size.quantity} available
                   </option>
                 ))}
               </select>
@@ -168,12 +154,12 @@ const Shirtdetail: React.FC = () => {
 
           {/* Collapse for Additional Info */}
           <Collapse defaultActiveKey={["1"]} className="mt-6">
-            <Panel header="Câu lạc bộ" key="1">
+            <Panel header="Club" key="1">
               <p>Club Name: {shirtData.clubName}</p>
               <p>Established Year: {new Date(shirtData.clubEstablishedYear).getFullYear()}</p>
               <img src={shirtData.clubLogo} alt={shirtData.clubName} className="w-16 h-16 mt-2" />
             </Panel>
-            <Panel header="Mô tả" key="2">
+            <Panel header="Description" key="2">
               <p>{shirtData.description}</p>
             </Panel>
           </Collapse>

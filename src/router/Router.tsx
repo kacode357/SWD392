@@ -1,5 +1,3 @@
-// Import ROLES at the top
-import { ROLES } from '../constants/index';  // Adjust the path as needed
 import React from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { createBrowserRouter } from 'react-router-dom';
@@ -24,21 +22,26 @@ import ManagerSize from '../pages/Admin/ManagerSize';
 import ManagerShirtSize from '../pages/Admin/ManagerShirtSize';
 import Cartdetail from '../components/homepage/Cartdetail';
 import ClubShirts from '../pages/User/ClubShirts';
+import { ROLES } from '../constants/index'; // Import ROLES
 
+// Định nghĩa router với các routes
 const router = createBrowserRouter([
   {
     path: "/", element: <App />, children: [
-      // Root "/"
       { path: "admin/manager-user", element: <PrivateRoute element={ManagerUser} allowedRoles={[ROLES.ADMIN]} /> },
       { path: "admin/manager-club", element: <PrivateRoute element={ManagerClub} allowedRoles={[ROLES.ADMIN]} /> },
       { path: "admin/manager-session", element: <PrivateRoute element={ManagerSession} allowedRoles={[ROLES.ADMIN]} /> },
       { path: "admin/manager-player", element: <PrivateRoute element={ManagerPlayer} allowedRoles={[ROLES.ADMIN]} /> },
       { path: "admin/manager-size", element: <PrivateRoute element={ManagerSize} allowedRoles={[ROLES.ADMIN]} /> },
-      { path: "admin/manager-type-shirt", element: <PrivateRoute element={ManagerTypeShirt} allowedRoles={[ROLES.ADMIN]} />, },
-      { path: "admin/manager-shirt", element: <PrivateRoute element={ManagerShirt} allowedRoles={[ROLES.ADMIN]} />, },
-      { path: "admin/manager-shirt-size", element: <PrivateRoute element={ManagerShirtSize} allowedRoles={[ROLES.ADMIN]} />, },
+      { path: "admin/manager-type-shirt", element: <PrivateRoute element={ManagerTypeShirt} allowedRoles={[ROLES.ADMIN]} /> },
+      { path: "admin/manager-shirt", element: <PrivateRoute element={ManagerShirt} allowedRoles={[ROLES.ADMIN]} /> },
+      { path: "admin/manager-shirt-size", element: <PrivateRoute element={ManagerShirtSize} allowedRoles={[ROLES.ADMIN]} /> },
+
+      // Các trang user
       { path: "user/my-profile", element: <PrivateRoute element={MyProfile} allowedRoles={[ROLES.USER]} /> },
       { path: "user/setting", element: <PrivateRoute element={SettingUser} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
+
+      // Các trang không yêu cầu quyền hạn
       { path: "shirt-details/:id", element: <Shirtdetail /> },
       { path: "cart", element: <Cartdetail /> },
       { path: "listshirt/:clubId", element: <Listshirt /> },
@@ -48,13 +51,10 @@ const router = createBrowserRouter([
     ]
   },
   { path: "verifyemail/:id", element: <VerifyAccount /> },
-  { path: "/login", element: <Login /> }, // Login page
+  { path: "/login", element: <Login /> }, // Trang login
 ]);
 
-
-
-
-// The main router component with authentication context
+// Main Router Component
 const RouterComponent: React.FC = () => {
   return (
     <AuthWrapper>
