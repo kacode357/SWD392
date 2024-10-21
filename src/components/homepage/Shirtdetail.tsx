@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import {  Collapse, notification } from "antd";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getShirtByIdApi, addToCartApi } from "../../util/api";
 import { CartContext } from "../../context/cart.context";
 import BreadcrumbComponent from "../../layout/Breadcrumb";
@@ -14,9 +14,9 @@ const Shirtdetail: React.FC = () => {
   const [shirtData, setShirtData] = useState<any>(null);
   const [mainImage, setMainImage] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
-  const [selectedSizeId, setSelectedSizeId] = useState<number | null>(null); // State to store sizeId
-
-  // Fetch shirt details when component is mounted
+  const [selectedSizeId, setSelectedSizeId] = useState<number | null>(null); 
+  const navigate = useNavigate();
+ 
   useEffect(() => {
     const fetchShirtDetail = async () => {
       try {
@@ -41,6 +41,16 @@ const Shirtdetail: React.FC = () => {
 
   // Function to handle add to basket
   const handleAddToBasket = useCallback(async () => {
+    const token = localStorage.getItem("token"); // Check if token exists
+
+    if (!token) {
+      notification.error({
+        message: "Please Login",
+        description: "You need to login before adding items to the basket.",
+      });
+      navigate("/login"); // Redirect to login page
+      return;
+    }
     if (!selectedSizeId) {
       notification.error({
         message: "Error",
@@ -93,7 +103,7 @@ const Shirtdetail: React.FC = () => {
               src={
                 mainImage && (mainImage.startsWith('http://') || mainImage.startsWith('https://'))
                   ? mainImage
-                  : 'https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg'
+                  : 'https://m.media-amazon.com/images/I/B1HVVUyLAhL._CLa%7C2140%2C2000%7C51TfbGiVkfL.png%7C0%2C0%2C2140%2C2000%2B0.0%2C0.0%2C2140.0%2C2000.0_AC_UY1000_.png'
               }
               className="w-full h-full object-contain shadow-lg rounded-lg"
             />
