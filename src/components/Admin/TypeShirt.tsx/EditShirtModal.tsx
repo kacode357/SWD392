@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Form, Input, Button, Select, message } from "antd";
-import { getTypeShirtByIdApi, updateTypeShirtApi, searchSessionApi, searchClubApi } from "../../../util/api"; // Giả sử có API tương ứng
+import { getTypeShirtByIdApi, updateTypeShirtApi, getSessionApi, getClubApi } from "../../../util/api"; // Giả sử có API tương ứng
 
 const { Option } = Select;
 
@@ -13,7 +13,6 @@ interface EditShirtModalProps {
 
 const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClose, refreshShirts }) => {
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
   const [sessions, setSessions] = useState([]);
   const [clubs, setClubs] = useState([]);
   const [searchSessionKeyword, setSearchSessionKeyword] = useState("");
@@ -22,7 +21,7 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
   // Fetch sessions for selection
   const fetchSessions = async (keyword = "") => {
     try {
-      const response = await searchSessionApi({
+      const response = await getSessionApi({
         pageNum: 1,
         pageSize: 10,
         keyWord: keyword,
@@ -37,7 +36,7 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
   // Fetch clubs for selection
   const fetchClubs = async (keyword = "") => {
     try {
-      const response = await searchClubApi({
+      const response = await getClubApi({
         pageNum: 1,
         pageSize: 10,
         keyWord: keyword,
@@ -69,7 +68,6 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
   const handleSave = async () => {
     try {
       const values = form.getFieldsValue();
-      setLoading(true);
       // Update shirt with new values
       await updateTypeShirtApi(shirtId, {
         ...values,
@@ -80,8 +78,6 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
       onClose(); // Đóng modal
     } catch (error) {
       message.error("Failed to update shirt");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -94,7 +90,7 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
         <Button key="cancel" onClick={onClose}>
           Cancel
         </Button>,
-        <Button key="save" type="primary" loading={loading} onClick={handleSave}>
+        <Button key="save" type="primary" onClick={handleSave}>
           Save
         </Button>,
       ]}

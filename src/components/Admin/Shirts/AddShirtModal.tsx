@@ -16,7 +16,7 @@ const AddShirtModal: React.FC<AddShirtModalProps> = ({ visible, onClose, refresh
   const [loading, setLoading] = useState(false);
   const [typeShirts, setTypeShirts] = useState([]);
   const [players, setPlayers] = useState([]);
-  const [imageUrl, setImageUrl] = useState<string | null>(null); // Store uploaded image URL
+  const [imageUrl, setImageUrl] = useState<string | null>(null); 
 
   // Fetch type shirts for selection
   const fetchTypeShirts = async (keyword = "") => {

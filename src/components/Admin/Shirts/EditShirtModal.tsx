@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Form, Input, Button, Select, message } from "antd";
-import { getShirtByIdApi, updateShirtApi, searchTypeShirtApi, searchPlayerApi } from "../../../util/api"; // Giả sử có API tương ứng
+import { getShirtByIdApi, updateShirtApi, getTypeShirtApi, getPlayerApi } from "../../../util/api"; // Giả sử có API tương ứng
 import FileUploader from "../../../util/FileUploader"; // Import FileUploader component
 
 const { Option } = Select;
@@ -27,7 +27,8 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
       keyWord: keyword,
       status: true,
     };
-    const response = await searchTypeShirtApi(data);
+    const response = await getTypeShirtApi(data);
+    console.log('TypeShirts:', response.pageData);
     setTypeShirts(response.pageData);
   };
 
@@ -39,7 +40,7 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
       keyWord: keyword,
       status: true,
     };
-    const response = await searchPlayerApi(data);
+    const response = await getPlayerApi(data);
     setPlayers(response.pageData);
   };
 
@@ -47,10 +48,15 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
     if (shirtId && visible) {
       // Lấy thông tin áo để chỉnh sửa khi mở modal
       getShirtByIdApi(shirtId).then((shirt) => {
+        console.log('EditShirtModalProps:', shirt);
         form.setFieldsValue({
           name: shirt.name,
           description: shirt.description,
           sessionId: shirt.sessionId,
+          typeShirtId: shirt.typeShirtId,
+          playerId: shirt.playerId,
+          typeShirtName: shirt.typeShirtName,
+          fullName : shirt.fullName,
           clubId: shirt.clubId,
         });
         setImageUrl(shirt.urlImg || null); // Lấy ảnh nếu có và set URL ảnh
@@ -143,7 +149,7 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
           >
             {players.map((player: any) => (
               <Option key={player.id} value={player.id}>
-                {player.name}
+                {player.fullName}
               </Option>
             ))}
           </Select>
