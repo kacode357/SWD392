@@ -55,7 +55,7 @@ const router = createBrowserRouter([
       // Public routes
       { path: "shirt-details/:id", element: <Shirtdetail /> },
       { path: "cart", element: <Cartdetail /> },
-      { path: "listshirt/:clubId", element: <Listshirt /> },
+      { path: "clubshirt/:clubId", element: <Listshirt /> },
       { path: "clubshirt", element: <ClubShirts /> },
       { path: "", element: <HomePage /> },
       { path: "*", element: <NotFound /> },

@@ -36,7 +36,7 @@ const NavigationComponent: React.FC = () => {
     };
 
     const handleClubClick = (clubId: number) => {
-        navigate(`/listshirt/${clubId}`);
+        navigate(`/clubshirt/${clubId}`);
     };
 
     const clubMenu = (
@@ -80,7 +80,7 @@ const NavigationComponent: React.FC = () => {
     return (
         <div>
             <nav
-               className="fixed top-0 w-full bg-black text-white py-4 z-50 border-t border-white"
+                className="fixed top-0 w-full bg-black text-white py-4 z-50 border-t border-white"
                 style={{ backgroundColor: 'black', color: 'white', padding: '16px', marginTop: '64px' }}
             >
                 <ul
