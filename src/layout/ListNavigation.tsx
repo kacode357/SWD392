@@ -40,7 +40,7 @@ const NavigationComponent: React.FC = () => {
     };
 
     const handleClubClick = (clubId: number) => {
-        navigate(`/clubshirt/${clubId}`);
+        navigate(`/listshirt/${clubId}`);
     };
 
     const clubMenu = (
@@ -75,7 +75,7 @@ const NavigationComponent: React.FC = () => {
                                     width: '30px',
                                     height: '30px',
                                     marginRight: '8px',
-                                    
+
                                     paddingRight: '8px',
                                 }}
                             />
