@@ -71,7 +71,7 @@ const ClubShirts: React.FC = () => {
                         >
                             <div
                                 className="text-center space-y-2 cursor-pointer"
-                                onClick={() => navigate(`/listshirt/${club.id}`)} // Điều hướng đến trang Listshirt với clubId
+                                onClick={() => navigate(`/clubshirt/${club.id}`)} // Điều hướng đến trang Listshirt với clubId
                             >
                                 <img
                                     src={club.clubLogo}

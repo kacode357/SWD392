@@ -53,17 +53,20 @@ const router = createBrowserRouter([
       { path: "user/setting", element: <PrivateRoute element={SettingUser} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
 
       // Public routes
+
+
       { path: "shirt-details/:id", element: <PrivateRoute element={Shirtdetail} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "cart", element: <PrivateRoute element={Cartdetail} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "listshirt/:clubId", element: <PrivateRoute element={Listshirt} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "clubshirt", element: <PrivateRoute element={ClubShirts} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "", element: <PrivateRoute element={HomePage} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
+
       { path: "*", element: <NotFound /> },
-        ],
-      },
-      { path: "verifyemail/:id", element: <VerifyAccount /> },
-      { path: "/login", element: <Login /> },
-      { path: "*", element: <NotFound /> }, // Catch-all for undefined routes
+    ],
+  },
+  { path: "verifyemail/:id", element: <VerifyAccount /> },
+  { path: "/login", element: <Login /> },
+  { path: "*", element: <NotFound /> }, // Catch-all for undefined routes
 ]);
 
 // Main Router Component

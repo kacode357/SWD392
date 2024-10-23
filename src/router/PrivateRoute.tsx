@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
-import { AuthContext } from '../context/auth.context'; 
+import { AuthContext } from '../context/auth.context';
 import { ROLES } from '../constants/index';
 interface PrivateRouteProps {
     element: React.ComponentType;
@@ -23,7 +23,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ element: Component, allowed
         if (allowedRoles.includes(ROLES.ADMIN)) {
             return <Navigate to="/login" replace />;
         }
-        // Cho phép truy cập các trang công khai (cart, listshirt, clubshirt) mà không cần đăng nhập
+
         return <Component />;
     }
 
