@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Dropdown, Menu } from 'antd';
+import { Button, Dropdown, Menu, Skeleton } from 'antd';
 import { DownOutlined } from '@ant-design/icons'; // Import DownOutlined for dropdown icon
 import { useNavigate } from 'react-router-dom';
 import { searchClientClubApi } from '../util/api';
@@ -17,10 +17,12 @@ interface Club {
 
 const NavigationComponent: React.FC = () => {
     const [clubs, setClubs] = useState<Club[]>([]);
+    const [loading, setLoading] = useState(false); // State for loading
     const navigate = useNavigate();
 
     const handleClubMouseEnter = async () => {
         try {
+            setLoading(true); // Set loading to true when fetching data
             const data = { pageNum: 1, pageSize: 10, keyWord: '', status: true };
             const result = await searchClientClubApi(data);
 
@@ -32,6 +34,8 @@ const NavigationComponent: React.FC = () => {
         } catch (error) {
             console.error('Error fetching clubs', error);
             setClubs([]);
+        } finally {
+            setLoading(false); // Set loading to false when data is fetched
         }
     };
 
@@ -42,32 +46,43 @@ const NavigationComponent: React.FC = () => {
     const clubMenu = (
         <Menu>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
-                {clubs.map((club) => (
-                    <div
-                        key={club.id}
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            padding: '8px',
-                            borderRight: '1px solid #ccc',
-                            cursor: 'pointer',
-                        }}
-                        onClick={() => handleClubClick(club.id)}
-                    >
-                        <img
-                            src={club.clubLogo}
-                            alt={club.name}
+                {loading ? (
+                    // Display Skeleton when loading
+                    Array.from({ length: 8 }).map((_, index) => (
+                        <div key={index} style={{ padding: '8px', textAlign: 'center' }}>
+                            <Skeleton.Avatar active size="large" shape="circle" />
+                            <Skeleton.Input style={{ width: '80px', marginTop: '8px' }} active size="small" />
+                        </div>
+                    ))
+                ) : (
+                    // Display club logos and names when data is loaded
+                    clubs.map((club) => (
+                        <div
+                            key={club.id}
                             style={{
-                                width: '24px',
-                                height: '24px',
-                                marginRight: '8px',
-                                borderRight: '1px solid #ddd',
-                                paddingRight: '8px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                padding: '8px',
+                                borderRight: '1px solid #ccc',
+                                cursor: 'pointer',
                             }}
-                        />
-                        <span>{club.name}</span>
-                    </div>
-                ))}
+                            onClick={() => handleClubClick(club.id)}
+                        >
+                            <img
+                                src={club.clubLogo}
+                                alt={club.name}
+                                style={{
+                                    width: '30px',
+                                    height: '30px',
+                                    marginRight: '8px',
+                                    
+                                    paddingRight: '8px',
+                                }}
+                            />
+                            <span>{club.name}</span>
+                        </div>
+                    ))
+                )}
             </div>
             <div style={{ textAlign: 'center', marginTop: '10px' }}>
                 <Button type="link" onClick={() => navigate('/clubshirt')}>

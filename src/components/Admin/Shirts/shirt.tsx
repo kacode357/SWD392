@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Input, Button, Space, Row, Col, Tabs, message, Avatar } from "antd";
-import { searchShirtApi } from "../../../util/api"; // Giả sử có API tương ứng cho áo
+import { searchShirtApi } from "../../../util/api";
 import EditShirtModal from "./EditShirtModal";
 import AddShirtModal from "./AddShirtModal";
 import { EditOutlined, ReloadOutlined } from "@ant-design/icons";
@@ -25,7 +25,7 @@ interface Shirt {
 
 const ShirtComponent: React.FC = () => {
   const [shirts, setShirts] = useState<Shirt[]>([]);
-  const [loading, setLoading] = useState(false);
+ 
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 5,
@@ -39,7 +39,7 @@ const ShirtComponent: React.FC = () => {
 
   // Fetch shirts from API
   const fetchShirts = async (page = 1, pageSize = 10, keyword = "", status = 1) => {
-    setLoading(true);
+ 
     const data = {
       pageNum: page,
       pageSize: pageSize,
@@ -56,9 +56,7 @@ const ShirtComponent: React.FC = () => {
       });
     } catch (error) {
       message.error("Failed to fetch shirts");
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   useEffect(() => {
@@ -125,8 +123,8 @@ const ShirtComponent: React.FC = () => {
     },
     {
       title: "Player",
-      dataIndex: "playerName",
-      key: "playerId",
+      dataIndex: "fullName",
+      key: "fullName",
     },
     {
       title: "Price",
@@ -203,7 +201,7 @@ const ShirtComponent: React.FC = () => {
               showSizeChanger: true,
               showQuickJumper: true,
             }}
-            loading={loading}
+         
             onChange={handleTableChange}
           />
         </TabPane>
@@ -233,7 +231,7 @@ const ShirtComponent: React.FC = () => {
               showSizeChanger: true,
               showQuickJumper: true,
             }}
-            loading={loading}
+         
             onChange={handleTableChange}
           />
         </TabPane>

@@ -80,6 +80,11 @@ const searchClubApi = async (data: { pageNum: number; pageSize: number; keyWord:
   const response = await defaultAxiosInstance.post(URL_API, data);
   return response.data;
 };
+const getClubApi = async (data: { pageNum: number; pageSize: number; keyWord: string; status: boolean }) => {
+  const URL_API = '/api/club/search';
+  const response = await axiosWithoutLoading.post(URL_API, data);
+  return response.data;
+};
 const searchClientClubApi = async (data: { pageNum: number; pageSize: number; keyWord: string; status: boolean }) => {
   const URL_API = '/api/club/search';
   const response = await axiosWithoutLoading.post(URL_API, data);
@@ -119,7 +124,11 @@ const searchSessionApi = async (data: { pageNum: number; pageSize: number; keyWo
   const response = await defaultAxiosInstance.post(URL_API, data);
   return response.data;
 };
-
+const getSessionApi = async (data: { pageNum: number; pageSize: number; keyWord: string; status: boolean }) => {
+  const URL_API = '/api/session/search';
+  const response = await axiosWithoutLoading.post(URL_API, data);
+  return response.data;
+};
 const changeSessionStatusApi = async (id: number, status: boolean) => {
   const URL_API = `/api/session/change-status/${id}?status=${status}`;
   const response = await defaultAxiosInstance.delete(URL_API);
@@ -158,6 +167,11 @@ const searchPlayerApi = async (data: { pageNum: number; pageSize: number; keyWor
   const response = await defaultAxiosInstance.post(URL_API, data);
   return response.data;
 };
+const getPlayerApi = async (data: { pageNum: number; pageSize: number; keyWord: string; status: boolean; }) => {
+  const URL_API = '/api/player/search';
+  const response = await axiosWithoutLoading.post(URL_API, data);
+  return response.data;
+};
 const changePlayerStatusApi = async (id: number, status: boolean) => {
   const URL_API = `/api/session/player/${id}?status=${status}`;
   const response = await defaultAxiosInstance.delete(URL_API);
@@ -171,6 +185,11 @@ const updatePlayerApi = async (id: number, data: { clubId: number; fullName: str
 const searchTypeShirtApi = async (data: { pageNum: number; pageSize: number; keyWord: string; status: boolean }) => {
   const URL_API = '/api/typeshirt/search';
   const response = await defaultAxiosInstance.post(URL_API, data);
+  return response.data;
+};
+const getTypeShirtApi = async (data: { pageNum: number; pageSize: number; keyWord: string; status: boolean }) => {
+  const URL_API = '/api/typeshirt/search';
+  const response = await axiosWithoutLoading.post(URL_API, data);
   return response.data;
 };
 const changeTypeShirtStatusApi = async (id: number, status: boolean) => {
@@ -295,7 +314,7 @@ const createShirtSizeApi = async (data: { shirtId: number; sizeId: number; quant
 };
 const getShirtSizeByIdApi = async (id: number) => {
   const URL_API = `/api/shirtsize/${id}`;
-  const response = await defaultAxiosInstance.get(URL_API);
+  const response = await axiosWithoutLoading.get(URL_API);
   return response.data;
 };
 const updateShirtSizeApi = async (id: number, payload: { shirtId: number; sizeId: number; quantity: number; description: string; status: boolean; }) => {
@@ -319,6 +338,10 @@ const deleteCartApi = async (orderId: string, status: 0) => {
   return response.data;
 };
 export { 
+  getPlayerApi,
+  getTypeShirtApi,
+  getClubApi,
+  getSessionApi,
   getSizeApi,
   getShirtApi,
   getShirtSizeByIdApi,

@@ -10,8 +10,7 @@ const GoogleLoginButton: React.FC = () => {
 
   const handleSuccess = async (response: any) => {  
     const googleId = response.credential; 
-    console.log('Login success:', response);
-    
+
   
     setLoading(true);
 
