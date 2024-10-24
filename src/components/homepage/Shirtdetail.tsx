@@ -73,6 +73,7 @@ const Shirtdetail: React.FC = () => {
           description: "Added to basket successfully.",
         });
         updateCart(); // Update cart after success
+        console.log("Added to cart:");
       }
     } catch (error) {
       console.error("Error adding to cart:", error);

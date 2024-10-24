@@ -337,7 +337,14 @@ const deleteCartApi = async (orderId: string, status: 0) => {
   const response = await defaultAxiosInstance.delete(URL_API);
   return response.data;
 };
+const deleteItemInCartApi = async (payload: { orderId: string; shirtSizeId: number; }) => {
+  const URL_API = `/api/order/deteleitemincart`;
+  const response = await defaultAxiosInstance.post(URL_API,payload);
+  return response.data;
+};
+
 export { 
+  deleteItemInCartApi,
   getPlayerApi,
   getTypeShirtApi,
   getClubApi,
