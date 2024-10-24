@@ -4,7 +4,7 @@ import { getPlayerApi } from '../../util/api';
 import { useNavigate } from 'react-router-dom';
 
 interface Player {
-    id: number; // Add an ID property to identify the player
+    id: number;
     name: string;
 }
 
@@ -15,12 +15,13 @@ interface MenuSection {
 
 interface PlayerMenuProps {
     onViewAllClick: (sectionTitle: string) => void;
+    initialLetter: string; // Thêm prop initialLetter
 }
 
-const PlayerMenu: React.FC<PlayerMenuProps> = ({ onViewAllClick }) => {
+const PlayerMenu: React.FC<PlayerMenuProps> = ({ onViewAllClick, initialLetter }) => {
     const [sections, setSections] = useState<MenuSection[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const navigate = useNavigate(); // Hook for navigation
+    const navigate = useNavigate();
 
     const columnMappings = [
         { title: 'A - E', range: /^[A-Ea-e]/ },
@@ -43,7 +44,7 @@ const PlayerMenu: React.FC<PlayerMenuProps> = ({ onViewAllClick }) => {
 
             if (response && response.pageData) {
                 const players = response.pageData.map((player: any) => ({
-                    id: player.id, // Assuming player data contains an ID
+                    id: player.id,
                     name: player.fullName,
                 }));
 
@@ -73,10 +74,10 @@ const PlayerMenu: React.FC<PlayerMenuProps> = ({ onViewAllClick }) => {
 
     useEffect(() => {
         fetchPlayers();
-    }, []);
+    }, [initialLetter]); // Có thể sử dụng initialLetter để cập nhật dữ liệu nếu cần
 
     const handlePlayerClick = (playerId: number) => {
-        navigate(`/listshirt/${playerId}`); // Navigate to the Listshirt page with the player's ID
+        navigate(`/listshirt/${playerId}`);
     };
 
     return (
@@ -132,11 +133,11 @@ const PlayerMenu: React.FC<PlayerMenuProps> = ({ onViewAllClick }) => {
                             {section.players.map((player) => (
                                 <li
                                     key={player.id}
-                                    onClick={() => handlePlayerClick(player.id)} // Handle click event
+                                    onClick={() => handlePlayerClick(player.id)}
                                     style={{
                                         padding: '4px 0',
                                         color: 'black',
-                                        cursor: 'pointer', // Make it look clickable
+                                        cursor: 'pointer',
                                     }}
                                 >
                                     {player.name}
