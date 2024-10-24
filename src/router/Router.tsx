@@ -57,7 +57,15 @@ const router = createBrowserRouter([
 
       { path: "shirt-details/:id", element: <PrivateRoute element={Shirtdetail} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "cart", element: <PrivateRoute element={Cartdetail} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
-      { path: "listshirt/:clubId", element: <PrivateRoute element={Listshirt} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
+      {
+        path: "listshirt/:clubId", // Route for showing shirts by clubId only
+        element: <PrivateRoute element={Listshirt} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} />
+      },
+      {
+        path: "listshirt/:playerId", // Route for showing shirts by both clubId and playerId
+        element: <PrivateRoute element={Listshirt} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} />
+      },
+
       { path: "clubshirt", element: <PrivateRoute element={ClubShirts} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "", element: <PrivateRoute element={HomePage} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
 

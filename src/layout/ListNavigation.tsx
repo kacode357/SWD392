@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Button, Dropdown, Menu, Skeleton } from 'antd';
-import { DownOutlined } from '@ant-design/icons'; // Import DownOutlined for dropdown icon
+import { DownOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+
 import { searchClientClubApi } from '../util/api';
+import PlayerMenu from '../components/Menu/PlayerMenu';
 
 interface Club {
     id: number;
@@ -17,12 +19,14 @@ interface Club {
 
 const NavigationComponent: React.FC = () => {
     const [clubs, setClubs] = useState<Club[]>([]);
-    const [loading, setLoading] = useState(false); // State for loading
+    const [loading, setLoading] = useState(false);
+    const [showPlayerMenu, setShowPlayerMenu] = useState(false); // State for displaying player menu
+    const [selectedLetter, setSelectedLetter] = useState('A'); // Chữ cái mặc định là 'A'
     const navigate = useNavigate();
 
     const handleClubMouseEnter = async () => {
         try {
-            setLoading(true); // Set loading to true when fetching data
+            setLoading(true);
             const data = { pageNum: 1, pageSize: 10, keyWord: '', status: true };
             const result = await searchClientClubApi(data);
 
@@ -35,7 +39,7 @@ const NavigationComponent: React.FC = () => {
             console.error('Error fetching clubs', error);
             setClubs([]);
         } finally {
-            setLoading(false); // Set loading to false when data is fetched
+            setLoading(false);
         }
     };
 
@@ -43,11 +47,37 @@ const NavigationComponent: React.FC = () => {
         navigate(`/listshirt/${clubId}`);
     };
 
+    const handleViewAllClick = (sectionTitle: string) => {
+        alert(`You clicked "View all" for section: ${sectionTitle}`);
+    };
+
+    const handleMouseEnter = (letter: string) => {
+        setSelectedLetter(letter);
+        setShowPlayerMenu(true);
+    };
+
+    const playerMenu = (
+        <div
+            onMouseLeave={() => setShowPlayerMenu(false)}
+            style={{
+                position: 'absolute',
+                top: '50px',
+                left: '50%', // Căn giữa theo chiều ngang
+                transform: 'translateX(-50%)', // Dịch chuyển menu sang trái 50% để căn giữa
+                zIndex: 1000,
+                borderRadius: '8px',
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                backgroundColor: 'white', // Đảm bảo có màu nền để dễ nhìn thấy menu
+            }}
+        >
+            <PlayerMenu onViewAllClick={handleViewAllClick} initialLetter={selectedLetter} />
+        </div>
+    );
+
     const clubMenu = (
         <Menu>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
                 {loading ? (
-                    // Display Skeleton when loading
                     Array.from({ length: 8 }).map((_, index) => (
                         <div key={index} style={{ padding: '8px', textAlign: 'center' }}>
                             <Skeleton.Avatar active size="large" shape="circle" />
@@ -55,7 +85,6 @@ const NavigationComponent: React.FC = () => {
                         </div>
                     ))
                 ) : (
-                    // Display club logos and names when data is loaded
                     clubs.map((club) => (
                         <div
                             key={club.id}
@@ -75,7 +104,6 @@ const NavigationComponent: React.FC = () => {
                                     width: '30px',
                                     height: '30px',
                                     marginRight: '8px',
-
                                     paddingRight: '8px',
                                 }}
                             />
@@ -93,7 +121,7 @@ const NavigationComponent: React.FC = () => {
     );
 
     return (
-        <div>
+        <div style={{ position: 'relative' }}>
             <nav
                 className="fixed top-0 w-full bg-black text-white py-4 z-50 border-t border-white"
                 style={{ backgroundColor: 'black', color: 'white', padding: '16px', marginTop: '64px' }}
@@ -152,14 +180,18 @@ const NavigationComponent: React.FC = () => {
                     <li>
                         <Dropdown overlay={clubMenu} trigger={['hover']} onVisibleChange={handleClubMouseEnter}>
                             <Button type="text" style={{ color: 'white' }}>
-                                CLUB <DownOutlined /> {/* Add dropdown icon */}
+                                CLUB <DownOutlined />
                             </Button>
                         </Dropdown>
                     </li>
-                    <li>
+                    <li
+                        onMouseEnter={() => handleMouseEnter('A')} // Di chuột vào để hiển thị PlayerMenu
+                        style={{ position: 'relative' }}
+                    >
                         <Button type="text" style={{ color: 'white' }}>
-                            NATIONAL <DownOutlined /> {/* Add dropdown icon */}
+                            PLAYERS <DownOutlined />
                         </Button>
+                        {showPlayerMenu && playerMenu}
                     </li>
                     <li>
                         <Button type="text" style={{ color: 'white' }}>
@@ -168,12 +200,7 @@ const NavigationComponent: React.FC = () => {
                     </li>
                     <li>
                         <Button type="text" style={{ color: 'white' }}>
-                            PRODUCTS <DownOutlined /> {/* Add dropdown icon */}
-                        </Button>
-                    </li>
-                    <li>
-                        <Button type="text" style={{ color: 'white' }}>
-                            PLAYERS <DownOutlined /> {/* Add dropdown icon */}
+                            PRODUCTS
                         </Button>
                     </li>
                     <li>
