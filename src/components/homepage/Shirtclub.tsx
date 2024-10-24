@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Skeleton } from 'antd'; // Import Skeleton từ Ant Design
-import { searchClientShirtApi } from '../../util/api'; // Giả sử hàm searchShirtApi nằm trong file api.ts hoặc api.js
-import { useNavigate } from 'react-router-dom'; // Import useNavigate để điều hướng
+import { Skeleton } from 'antd'; 
+import { searchClientShirtApi } from '../../util/api'; 
+import { useNavigate } from 'react-router-dom'; 
 
 const Shirtclub: React.FC = () => {
-    const [shirts, setShirts] = useState<any[]>([]); // State lưu trữ danh sách áo
-    const [loading, setLoading] = useState<boolean>(true); // State để quản lý trạng thái loading
-    const [error, setError] = useState<string | null>(null); // State để quản lý lỗi
-    const navigate = useNavigate(); // Khởi tạo hook để điều hướng
+    const [shirts, setShirts] = useState<any[]>([]); 
+    const [loading, setLoading] = useState<boolean>(true); 
+    const [error, setError] = useState<string | null>(null); 
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         const fetchShirts = async () => {
@@ -15,22 +15,22 @@ const Shirtclub: React.FC = () => {
                 const response = await searchClientShirtApi({ pageNum: 1, pageSize: 5, keyWord: '', status: 1 });
                 console.log(response);
                 if (response.pageData && Array.isArray(response.pageData)) {
-                    setShirts(response.pageData); // Đảm bảo chỉ setShirts khi pageData là một mảng
+                    setShirts(response.pageData); 
                 } else {
-                    setShirts([]); // Đặt về mảng rỗng nếu dữ liệu không phải mảng
+                    setShirts([]); 
                 }
-                setLoading(false); // Ngừng trạng thái loading sau khi fetch xong
+                setLoading(false); 
             } catch (error) {
                 setError('Failed to fetch shirts.');
                 setLoading(false);
             }
         };
 
-        fetchShirts(); // Gọi hàm fetch dữ liệu
+        fetchShirts(); 
     }, []);
 
     if (loading) {
-        // Hiển thị skeleton khi dữ liệu đang tải
+        
         return (
             <div className="px-20 py-10">
                 <div className="grid grid-cols-5 gap-6">
@@ -45,24 +45,24 @@ const Shirtclub: React.FC = () => {
         );
     }
 
-    if (error) return <div>{error}</div>; // Hiển thị nếu có lỗi
+    if (error) return <div>{error}</div>; 
 
     return (
         <div className="px-20 py-10">
-            <div className="grid grid-cols-5 gap-6"> {/* Increased gap for larger images */}
+            <div className="grid grid-cols-5 gap-6"> 
                 {shirts.map((shirt, index) => (
                     <div
                         key={index}
-                        className="text-center cursor-pointer" // Thêm class cursor-pointer để có hiệu ứng trỏ chuột
-                        onClick={() => navigate(`/shirt-details/${shirt.id}`)} // Điều hướng đến trang chi tiết của áo
+                        className="text-center cursor-pointer" 
+                        onClick={() => navigate(`/shirt-details/${shirt.id}`)} 
                     >
                         <div className="relative w-full h-80 overflow-hidden"> {/* Increased height */}
                             <img
-                                src={
-                                    shirt.urlImg && (shirt.urlImg.startsWith('http://') || shirt.urlImg.startsWith('https://'))
-                                        ? shirt.urlImg
-                                        : 'https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg'
-                                }
+                               src={
+                                shirt.urlImg && (shirt.urlImg.startsWith('http://') || shirt.urlImg.startsWith('https://'))
+                                    ? shirt.urlImg
+                                    : 'https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg'
+                            }
                                 alt={shirt.name}
                                 className="w-full h-full object-cover transition duration-300 hover:scale-110"
                             />

@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { getCartDetailApi, updateCartApi, deleteCartApi } from "../../util/api";
+import React, { useState, useEffect, useContext } from "react";
+import { getCartDetailApi, updateCartApi, deleteCartApi, deleteItemInCartApi } from "../../util/api"; // Import API deleteItemInCartApi
 import { Row, Col, Image, Typography, Button, Input, notification } from "antd";
 import { useNavigate } from "react-router-dom";
+import { CartContext } from "../../context/cart.context";
 
 const { Title, Text } = Typography;
 
 const Cartdetail: React.FC = () => {
   const [cartData, setCartData] = useState<any>(null);
-  const [editedQuantities, setEditedQuantities] = useState<any>({}); // Lưu trữ số lượng đã chỉnh sửa
-
+  const [editedQuantities, setEditedQuantities] = useState<any>({});
+  const { updateCart } = useContext(CartContext); // Sử dụng CartContext để cập nhật giỏ hàng
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,11 +32,7 @@ const Cartdetail: React.FC = () => {
         <Text style={{ display: "block", marginBottom: "20px" }}>
           No products in your cart yet. Click the button below to add products.
         </Text>
-        <Button
-          onClick={() => navigate("/")} // Điều hướng đến trang chủ
-          size="large"
-
-        >
+        <Button onClick={() => navigate("/")} size="large">
           Add Products
         </Button>
       </div>
@@ -59,7 +56,6 @@ const Cartdetail: React.FC = () => {
         message: "Cập nhật thành công",
         description: `Số lượng sản phẩm đã được cập nhật.`,
       });
-      // Fetch lại giỏ hàng sau khi cập nhật thành công
       const updatedCartData = await getCartDetailApi();
       setCartData(updatedCartData);
       setEditedQuantities({}); // Reset lại trạng thái sau khi cập nhật
@@ -88,8 +84,8 @@ const Cartdetail: React.FC = () => {
         message: "Xóa thành công",
         description: "Giỏ hàng đã được xóa.",
       });
-      // Fetch lại giỏ hàng sau khi xóa thành công
-      const updatedCartData = await getCartDetailApi();
+      updateCart(); // Cập nhật lại giỏ hàng trong context
+      const updatedCartData = await getCartDetailApi(); // Fetch lại giỏ hàng sau khi xóa thành công
       setCartData(updatedCartData);
     } catch (error) {
       console.error("Error deleting cart:", error);
@@ -100,8 +96,28 @@ const Cartdetail: React.FC = () => {
     }
   };
 
+  // Hàm xóa từng sản phẩm nhỏ trong giỏ hàng
+  const handleDeleteItem = async (shirtSizeId: number) => {
+    try {
+      await deleteItemInCartApi({ orderId, shirtSizeId });
+      notification.success({
+        message: "Xóa thành công",
+        description: "Sản phẩm đã được xóa khỏi giỏ hàng.",
+      });
+      updateCart(); // Cập nhật lại giỏ hàng trong context
+      const updatedCartData = await getCartDetailApi(); // Fetch lại giỏ hàng sau khi xóa thành công
+      setCartData(updatedCartData);
+    } catch (error) {
+      console.error("Error deleting item:", error);
+      notification.error({
+        message: "Lỗi xóa sản phẩm",
+        description: "Xóa sản phẩm không thành công.",
+      });
+    }
+  };
+
   return (
-    <div className="py-20" >
+    <div className="py-20">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Title level={2}>Giỏ hàng của bạn</Title>
         <Button type="primary" danger onClick={handleDeleteCart}>
@@ -123,8 +139,8 @@ const Cartdetail: React.FC = () => {
                     borderRadius: "8px",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "space-between", // Để đặt các thành phần cách đều
-                    position: "relative", // Để đặt nút "Xóa" ở góc phải
+                    justifyContent: "space-between",
+                    position: "relative",
                   }}
                 >
                   <Image
@@ -151,9 +167,7 @@ const Cartdetail: React.FC = () => {
                       type="number"
                       value={editedQuantities[item.shirtSizeId] ?? item.quantity}
                       min={1}
-                      onChange={(e) =>
-                        handleQuantityChange(item.shirtSizeId, Number(e.target.value))
-                      }
+                      onChange={(e) => handleQuantityChange(item.shirtSizeId, Number(e.target.value))}
                       style={{ width: "80px" }}
                     />
                     <br />
@@ -161,15 +175,26 @@ const Cartdetail: React.FC = () => {
                   </div>
 
                   {/* Nút cập nhật số lượng */}
-                  {editedQuantities[item.shirtSizeId] !== undefined && editedQuantities[item.shirtSizeId] !== item.quantity && (
-                    <Button
-                      type="primary"
-                      onClick={() => handleUpdateQuantity(item.shirtSizeId, editedQuantities[item.shirtSizeId])}
-                      style={{ position: "absolute", bottom: "10px", right: "10px" }} // Di chuyển nút xuống góc phải dưới
-                    >
-                      Cập nhật
-                    </Button>
-                  )}
+                  {editedQuantities[item.shirtSizeId] !== undefined &&
+                    editedQuantities[item.shirtSizeId] !== item.quantity && (
+                      <Button
+                        type="primary"
+                        onClick={() => handleUpdateQuantity(item.shirtSizeId, editedQuantities[item.shirtSizeId])}
+                        style={{ position: "absolute", bottom: "10px", right: "10px" }}
+                      >
+                        Cập nhật
+                      </Button>
+                    )}
+
+                  {/* Nút xóa sản phẩm nhỏ */}
+                  <Button
+                    type="primary"
+                    danger
+                    onClick={() => handleDeleteItem(item.shirtSizeId)}
+                    style={{ position: "absolute", top: "10px", right: "10px" }}
+                  >
+                    Xóa
+                  </Button>
                 </div>
               </Col>
             ))}

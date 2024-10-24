@@ -17,16 +17,25 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Hàm để cập nhật số lượng giỏ hàng bằng cách gọi API
   const updateCart = async () => {
     try {
+      console.log("Updating cart...");
       const token = localStorage.getItem("token");
       if (!token) {
-      
         return;
       }
+      
       const response = await getCartApi();
-      const totalItems = response.orderDetails.length;
-      setCartItemCount(totalItems);
+      
+      if (response && response.orderDetails) {
+        const totalItems = response.orderDetails.length;
+        setCartItemCount(totalItems);
+      } else {
+        // Nếu response là null hoặc không có orderDetails, đặt cartItemCount là 0
+        setCartItemCount(0);
+      }
     } catch (error) {
       console.error("Error updating cart:", error);
+      // Đặt cartItemCount là 0 nếu xảy ra lỗi
+      setCartItemCount(0);
     }
   };
 
