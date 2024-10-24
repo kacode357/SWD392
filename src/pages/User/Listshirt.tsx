@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, notification } from 'antd';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
-import { searchShirtApi } from '../../util/api';
+import { searchShirtApi, searchClientClubApi } from '../../util/api'; // Import thêm API để lấy dữ liệu câu lạc bộ
 import { useNavigate, useParams } from 'react-router-dom';
 import BreadcrumbComponent from '../../layout/Breadcrumb';
 
@@ -18,10 +18,25 @@ const Listshirt: React.FC = () => {
     const { clubId, playerId } = useParams<{ clubId?: string; playerId?: string }>();
     const [shirts, setShirts] = useState<ShirtProps[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [clubName, setClubName] = useState<string>(''); // State để lưu tên câu lạc bộ
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!clubId) return; // Ensure clubId is present
+        if (!clubId) return;
+
+        const fetchClubName = async () => {
+            try {
+                const data = await searchClientClubApi({ pageNum: 1, pageSize: 10, keyWord: '', status: true });
+                const club = data.pageData.find((club: any) => club.id === Number(clubId));
+                if (club) {
+                    setClubName(club.name); // Lưu tên câu lạc bộ vào state
+                }
+            } catch (error) {
+                console.error('Failed to fetch club name:', error);
+            }
+        };
+
+        fetchClubName();
 
         const fetchShirtsByClub = async () => {
             try {
@@ -69,10 +84,10 @@ const Listshirt: React.FC = () => {
         };
 
         fetchShirtsByClub();
-    }, [clubId]); // Fetch shirts when clubId changes
+    }, [clubId]);
 
     useEffect(() => {
-        if (!playerId) return; // Ensure playerId is present
+        if (!playerId) return;
 
         const fetchShirtsByPlayer = async () => {
             try {
@@ -120,7 +135,7 @@ const Listshirt: React.FC = () => {
         };
 
         fetchShirtsByPlayer();
-    }, [playerId]); // Fetch shirts when playerId changes
+    }, [playerId]);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -144,9 +159,9 @@ const Listshirt: React.FC = () => {
                         )}
                     </div>
                     <div className="mt-2">
-                        <p className="text-sm text-gray-500 line-through">{shirt.price}</p>
-                        <p className="text-xl font-semibold text-red-600">{shirt.salePrice}</p>
-                        <p className="text-sm text-gray-700 mt-2">{shirt.name}</p>
+                        <p className="text-xl text-gray-700 mt-2">{shirt.name}</p>
+                        <p className="text-sm text-gray-500">Club: {clubName}</p> {/* Hiển thị tên câu lạc bộ */}
+                        <p className="text-xl font-semibold text-red-600">{shirt.price}</p>
                     </div>
                 </Card>
             ))}
