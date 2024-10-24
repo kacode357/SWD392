@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { notification } from 'antd';
+import { notification, Skeleton } from 'antd'; // Thêm Skeleton vào đây
 import { getPlayerApi } from '../../util/api';
 import { useNavigate } from 'react-router-dom';
 
@@ -74,7 +74,7 @@ const PlayerMenu: React.FC<PlayerMenuProps> = ({ onViewAllClick, initialLetter }
 
     useEffect(() => {
         fetchPlayers();
-    }, [initialLetter]); // Có thể sử dụng initialLetter để cập nhật dữ liệu nếu cần
+    }, [initialLetter]);
 
     const handlePlayerClick = (playerId: number) => {
         navigate(`/listshirt/${playerId}`);
@@ -95,7 +95,14 @@ const PlayerMenu: React.FC<PlayerMenuProps> = ({ onViewAllClick, initialLetter }
             }}
         >
             {loading ? (
-                <div style={{ textAlign: 'center', width: '100%' }}>Loading...</div>
+                <div style={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
+                    {Array.from({ length: 5 }).map((_, index) => (
+                        <div key={index} style={{ textAlign: 'center', margin: '0 10px' }}>
+                            <Skeleton.Avatar active size="large" shape="circle" />
+                            <Skeleton.Input active size="small" style={{ width: '80px', marginTop: '8px' }} />
+                        </div>
+                    ))}
+                </div>
             ) : sections.length === 0 ? (
                 <div style={{ textAlign: 'center', width: '100%' }}>No players found</div>
             ) : (
