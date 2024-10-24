@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Card, notification } from 'antd';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
-import { searchShirtApi } from '../../util/api'; // Đảm bảo đường dẫn nhập chính xác
-import { useNavigate, useParams } from 'react-router-dom'; // Import useParams
+import { searchShirtApi } from '../../util/api';
+import { useNavigate, useParams } from 'react-router-dom';
 import BreadcrumbComponent from '../../layout/Breadcrumb';
 
 interface ShirtProps {
@@ -15,19 +15,24 @@ interface ShirtProps {
 }
 
 const Listshirt: React.FC = () => {
-    const { clubId } = useParams<{ clubId: string }>(); // Nhận ID câu lạc bộ từ đường dẫn
+    const { clubId, playerId } = useParams<{ clubId?: string; playerId?: string }>();
     const [shirts, setShirts] = useState<ShirtProps[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const navigate = useNavigate();
+
     useEffect(() => {
-        const fetchShirts = async () => {
+        if (!clubId) return; // Ensure clubId is present
+
+        const fetchShirtsByClub = async () => {
             try {
+                setLoading(true);
                 const data = await searchShirtApi({ pageNum: 1, pageSize: 20, keyWord: '', status: 1 });
 
                 if (data && data.pageData) {
-                    const filteredShirts = data.pageData.filter((shirt: any) => shirt.clubId === Number(clubId));
+                    const filteredShirts = data.pageData.filter(
+                        (shirt: any) => shirt.clubId === Number(clubId)
+                    );
 
-                    // Kiểm tra nếu không có áo phông nào cho câu lạc bộ
                     if (filteredShirts.length === 0) {
                         notification.error({
                             message: 'Error',
@@ -35,14 +40,13 @@ const Listshirt: React.FC = () => {
                         });
                     }
 
-                    // Map the fetched shirt data to the expected format
                     const mappedShirts = filteredShirts.map((shirt: any) => ({
                         id: shirt.id,
                         name: shirt.name,
-                        price: `£${shirt.price}`, // Điều chỉnh định dạng nếu cần
-                        salePrice: `£${shirt.salePrice || shirt.price}`, // Điều chỉnh cho giá bán nếu có
-                        imageUrl: shirt.urlImg || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd2NAjCcjjk7ac57mKCQvgWVTmP0ysxnzQnQ&s', // Placeholder nếu không có URL hình ảnh
-                        isLiked: false, // Khởi tạo trạng thái liked theo nhu cầu
+                        price: `£${shirt.price}`,
+                        salePrice: `£${shirt.salePrice || shirt.price}`,
+                        imageUrl: shirt.urlImg || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd2NAjCcjjk7ac57mKCQvgWVTmP0ysxnzQnQ&s',
+                        isLiked: false,
                     }));
 
                     setShirts(mappedShirts);
@@ -64,11 +68,62 @@ const Listshirt: React.FC = () => {
             }
         };
 
-        fetchShirts();
-    }, [clubId]);
+        fetchShirtsByClub();
+    }, [clubId]); // Fetch shirts when clubId changes
+
+    useEffect(() => {
+        if (!playerId) return; // Ensure playerId is present
+
+        const fetchShirtsByPlayer = async () => {
+            try {
+                setLoading(true);
+                const data = await searchShirtApi({ pageNum: 1, pageSize: 20, keyWord: '', status: 1 });
+
+                if (data && data.pageData) {
+                    const filteredShirts = data.pageData.filter(
+                        (shirt: any) => shirt.playerId === Number(playerId)
+                    );
+
+                    if (filteredShirts.length === 0) {
+                        notification.error({
+                            message: 'Error',
+                            description: 'No shirts found for the selected player.',
+                        });
+                    }
+
+                    const mappedShirts = filteredShirts.map((shirt: any) => ({
+                        id: shirt.id,
+                        name: shirt.name,
+                        price: `£${shirt.price}`,
+                        salePrice: `£${shirt.salePrice || shirt.price}`,
+                        imageUrl: shirt.urlImg || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd2NAjCcjjk7ac57mKCQvgWVTmP0ysxnzQnQ&s',
+                        isLiked: false,
+                    }));
+
+                    setShirts(mappedShirts);
+                } else {
+                    console.error('Unexpected data format:', data);
+                    notification.error({
+                        message: 'Error',
+                        description: 'Failed to fetch shirts data.',
+                    });
+                }
+            } catch (error) {
+                console.error('Failed to fetch shirts:', error);
+                notification.error({
+                    message: 'Error',
+                    description: 'Unable to load shirt data.',
+                });
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchShirtsByPlayer();
+    }, [playerId]); // Fetch shirts when playerId changes
 
     if (loading) {
-        return <div>Loading...</div>; // Thay thế bằng component loading đẹp hơn nếu cần
+        return <div>Loading...</div>;
     }
 
     return (

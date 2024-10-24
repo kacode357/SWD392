@@ -101,7 +101,7 @@ const createClubApi = async (data: { name: string; country: string; establishedY
   return response.data;
 };
 
-const editClubApi = async (id: number, data: { name: string; country: string; establishedYear: string; stadiumName: string; clubLogo: string; description: string; status : boolean }) => {
+const editClubApi = async (id: number, data: { name: string; country: string; establishedYear: string; stadiumName: string; clubLogo: string; description: string; status: boolean }) => {
   const URL_API = `/api/club?id=${id}`;
   const response = await defaultAxiosInstance.put(URL_API, data);
   return response.data;
@@ -252,6 +252,11 @@ const updateShirtApi = async (id: number, data: { typeShirtId: number; playerId:
   const response = await defaultAxiosInstance.put(URL_API, data);
   return response.data;
 };
+const getShirtByMultipleNamesApi = async (data: { pageNum: number; pageSize: number; nameShirt: string; nameClub: string; nameSeason: string; namePlayer: string; status: number }) => {
+  const URL_API = '/api/shirt/searchbymutilname';
+  const response = await defaultAxiosInstance.post(URL_API, data);
+  return response.data;
+};
 const searchSizeApi = async (data: { pageNum: number; pageSize: number; keyWord: string; status: boolean }) => {
   const URL_API = '/api/size/search';
   const response = await defaultAxiosInstance.post(URL_API, data);
@@ -282,12 +287,12 @@ const changeSizeStatusApi = async (id: number, status: boolean) => {
   const response = await defaultAxiosInstance.delete(URL_API);
   return response.data;
 };
-const addToCartApi = async (data: { shirtId: number; quantity: number, sizeId : number }) => {
+const addToCartApi = async (data: { shirtId: number; quantity: number, sizeId: number }) => {
   const URL_API = `/api/order/addtocart`;
   const response = await axiosWithoutLoading.post(URL_API, data);
   return response.data;
 };
-const searchOrderApi = async (data: {   pageNum: number;   pageSize: number;   status: number;   date: string }) => {
+const searchOrderApi = async (data: { pageNum: number; pageSize: number; status: number; date: string }) => {
   const URL_API = `/api/order/search`;
   const response = await defaultAxiosInstance.post(URL_API, data);
   return response.data;
@@ -302,7 +307,7 @@ const getCartDetailApi = async () => {
   const response = await defaultAxiosInstance.get(URL_API);
   return response.data;
 };
-const searchShirtSizeApi = async (data: {   pageNum: number;   pageSize: number;   keyWord?: string;   status?: boolean; }) => {
+const searchShirtSizeApi = async (data: { pageNum: number; pageSize: number; keyWord?: string; status?: boolean; }) => {
   const URL_API = `/api/shirtsize/search`;
   const response = await defaultAxiosInstance.post(URL_API, data);
   return response.data;
@@ -337,7 +342,7 @@ const deleteCartApi = async (orderId: string, status: 0) => {
   const response = await defaultAxiosInstance.delete(URL_API);
   return response.data;
 };
-export { 
+export {
   getPlayerApi,
   getTypeShirtApi,
   getClubApi,
@@ -360,7 +365,7 @@ export {
   getSizeByIdApi,
   updateSizeApi,
   createSizeApi,
-  searchSizeApi,  
+  searchSizeApi,
   searchClientShirtApi,
   updateShirtApi,
   deleteShirtApi,
@@ -383,22 +388,24 @@ export {
   createSessionApi,
   changeSessionStatusApi,
   searchSessionApi,
-  createUserApi, 
-  loginUserApi, 
-  getCurrentLogin, 
-  getAllUserApi, 
-  changeUserStatusApi, 
-  getUserByIdApi, 
-  updateUserByIdApi, 
-  verifyUserByIdApi, 
-  createStaffApi, 
-  createManagerApi, 
-  googleSignUpApi, 
-  googleSigInpApi, 
-  searchClubApi, 
+  createUserApi,
+  loginUserApi,
+  getCurrentLogin,
+  getAllUserApi,
+  changeUserStatusApi,
+  getUserByIdApi,
+  updateUserByIdApi,
+  verifyUserByIdApi,
+  createStaffApi,
+  createManagerApi,
+  googleSignUpApi,
+  googleSigInpApi,
+  searchClubApi,
   getAllClubApi,
-  createClubApi, 
-  editClubApi, 
-  getClubByIdApi, 
-  changeClubStatusApi 
+  createClubApi,
+  editClubApi,
+  getClubByIdApi,
+  getShirtByMultipleNamesApi,
+  changeClubStatusApi
+
 };
