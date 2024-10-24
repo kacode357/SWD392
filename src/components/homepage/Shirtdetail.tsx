@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import {  Collapse, notification } from "antd";
+import { Collapse, notification } from "antd";
 
 import { useNavigate, useParams } from "react-router-dom";
 import { getShirtByIdApi, addToCartApi } from "../../util/api";
@@ -14,9 +14,9 @@ const Shirtdetail: React.FC = () => {
   const [shirtData, setShirtData] = useState<any>(null);
   const [mainImage, setMainImage] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
-  const [selectedSizeId, setSelectedSizeId] = useState<number | null>(null); 
+  const [selectedSizeId, setSelectedSizeId] = useState<number | null>(null);
   const navigate = useNavigate();
- 
+
   useEffect(() => {
     const fetchShirtDetail = async () => {
       try {
@@ -95,57 +95,67 @@ const Shirtdetail: React.FC = () => {
       <BreadcrumbComponent />
 
       {/* Shirt details */}
-      <div className="flex flex-col lg:flex-row items-start p-4 max-w-6xl mx-auto gap-4"> {/* Added gap-4 for spacing */}
-
+      <div className="flex flex-col lg:flex-row items-start p-4 max-w-6xl mx-auto gap-4">
+        {" "}
+        {/* Added gap-4 for spacing */}
         {/* Main Image */}
-        <div className="w-full lg:w-1/2 p-4 mt-12 lg:mt-28"> {/* Adjusted margin to align with price */}
+        <div className="w-full lg:w-1/2 p-4 mt-12 lg:mt-28">
+          {" "}
+          {/* Adjusted margin to align with price */}
           <div className="relative w-full h-80">
             <img
               src={
-                mainImage && (mainImage.startsWith('http://') || mainImage.startsWith('https://'))
+                mainImage &&
+                (mainImage.startsWith("http://") ||
+                  mainImage.startsWith("https://"))
                   ? mainImage
-                  : 'https://m.media-amazon.com/images/I/B1HVVUyLAhL._CLa%7C2140%2C2000%7C51TfbGiVkfL.png%7C0%2C0%2C2140%2C2000%2B0.0%2C0.0%2C2140.0%2C2000.0_AC_UY1000_.png'
+                  : "https://m.media-amazon.com/images/I/B1HVVUyLAhL._CLa%7C2140%2C2000%7C51TfbGiVkfL.png%7C0%2C0%2C2140%2C2000%2B0.0%2C0.0%2C2140.0%2C2000.0_AC_UY1000_.png"
               }
               className="w-full h-full object-contain shadow-lg rounded-lg"
             />
           </div>
         </div>
-
         {/* Shirt Information */}
         <div className="w-full lg:w-1/2 p-4">
           <h1 className="text-3xl font-bold mb-4">{shirtData.name}</h1>
-          <p className="text-3xl font-semibold text-green-600">£{shirtData.price}</p>
-
+          <p className="text-3xl font-semibold text-green-600">
+            £{shirtData.price}
+          </p>
           {/* General Information */}
           <div className="mt-6 p-4 border rounded-lg shadow-sm bg-white">
             <h2 className="text-xl font-semibold">General Information</h2>
-            <p className="text-lg mt-2">Player: {shirtData.playerName}</p>
+            <p className="text-lg mt-2">Shirt Name: {shirtData.name}</p>
+            <p className="text-lg">Player: {shirtData.fullName}</p>
             <p className="text-lg">Number: {shirtData.number}</p>
             <p className="text-lg">Type: {shirtData.typeShirtName}</p>
-            <p className="text-lg">Status: {shirtData.status === 1 ? "Available" : "Out of stock"}</p>
-          </div>
 
-          {/* Size Selection */}
+            <p className="text-lg">
+              Status: {shirtData.status === 1 ? "Available" : "Out of stock"}
+            </p>
+          </div>
+        
           <div className="mt-6 p-4 border rounded-lg shadow-sm bg-white">
             <h2 className="text-xl font-semibold">Size and Quantity</h2>
             <div className="flex flex-wrap mt-2">
-              <select
-                value={selectedSizeId || ""}
-                onChange={(e) => setSelectedSizeId(Number(e.target.value))}
-                className="p-2 border rounded shadow-sm"
-              >
-                <option value="" disabled>
-                  Select size
-                </option>
-                {shirtData.listSize.map((size: any) => (
-                  <option key={size.sizeId} value={size.sizeId}>
-                    {size.sizeName} - {size.quantity} available
-                  </option>
-                ))}
-              </select>
+              {shirtData.listSize.map((size: any) => (
+                <div
+                  key={size.sizeId}
+                  onClick={() => setSelectedSizeId(size.sizeId)}
+                  className={`cursor-pointer border rounded-lg p-4 m-2 ${
+                    selectedSizeId === size.sizeId
+                      ? "bg-green-500 text-white"
+                      : "bg-gray-200"
+                  }`}
+                  style={{ minWidth: "80px", textAlign: "center" }}
+                >
+                  <p>{size.sizeName}</p>
+                  <p className="text-sm text-gray-600">
+                  Quantity :   {size.quantity} 
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
-
           {/* Add to Basket */}
           <div className="flex items-center space-x-4 mt-6">
             <input
@@ -159,16 +169,23 @@ const Shirtdetail: React.FC = () => {
               className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 shadow-lg w-full"
               onClick={handleAddToBasket}
             >
-              Add to Basket
+              Add to Cart
             </button>
           </div>
-
           {/* Collapse for Additional Info */}
           <Collapse defaultActiveKey={["1"]} className="mt-6">
             <Panel header="Club" key="1">
               <p>Club Name: {shirtData.clubName}</p>
-              <p>Established Year: {new Date(shirtData.clubEstablishedYear).getFullYear()}</p>
-              <img src={shirtData.clubLogo} alt={shirtData.clubName} className="w-16 h-16 mt-2" />
+              <p>Club Country: {shirtData.clubCountry}</p>
+              <p>
+                Established Year:{" "}
+                {new Date(shirtData.clubEstablishedYear).getFullYear()}
+              </p>
+              <img
+                src={shirtData.clubLogo}
+                alt={shirtData.clubName}
+                className="w-16 h-16 mt-2"
+              />
             </Panel>
             <Panel header="Description" key="2">
               <p>{shirtData.description}</p>
