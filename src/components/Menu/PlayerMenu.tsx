@@ -1,177 +1,117 @@
 import React, { useEffect, useState } from 'react';
-import { notification, Skeleton } from 'antd'; // Thêm Skeleton vào đây
-import { getPlayerApi } from '../../util/api';
+import { Button, Menu, Skeleton } from 'antd';
 import { useNavigate } from 'react-router-dom';
+
+import { getPlayerApi } from '../../util/api'; // Giả sử bạn có API getPlayerApi
 
 interface Player {
     id: number;
-    name: string;
+    fullName: string;
+    position: string;
+    club: string;
 }
 
-interface MenuSection {
-    title: string;
-    players: Player[];
-}
-
-interface PlayerMenuProps {
-    onViewAllClick: (sectionTitle: string) => void;
-    initialLetter: string; // Thêm prop initialLetter
-}
-
-const PlayerMenu: React.FC<PlayerMenuProps> = ({ onViewAllClick, initialLetter }) => {
-    const [sections, setSections] = useState<MenuSection[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+const PlayerMenuComponent: React.FC = () => {
+    const [players, setPlayers] = useState<Player[]>([]);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const columnMappings = [
-        { title: 'A - E', range: /^[A-Ea-e]/ },
-        { title: 'F - J', range: /^[F-Jf-j]/ },
-        { title: 'K - M', range: /^[K-Mk-m]/ },
-        { title: 'N - R', range: /^[N-Rn-r]/ },
-        { title: 'S - Z', range: /^[S-Zs-z]/ },
-    ];
+    // Helper function to group players by initial letters
+    const groupPlayers = (players: Player[]) => {
+        const groups = {
+            'A-E': [] as Player[],
+            'F-J': [] as Player[],
+            'K-M': [] as Player[],
+            'N-R': [] as Player[],
+            'S-Z': [] as Player[],
+        };
 
-    const fetchPlayers = async () => {
-        try {
-            setLoading(true);
-            const data = {
-                pageNum: 1,
-                pageSize: 100,
-                keyWord: '',
-                status: true,
-            };
-            const response = await getPlayerApi(data);
-
-            if (response && response.pageData) {
-                const players = response.pageData.map((player: any) => ({
-                    id: player.id,
-                    name: player.fullName,
-                }));
-
-                const sectionsData: MenuSection[] = columnMappings.map(mapping => ({
-                    title: mapping.title,
-                    players: players.filter((player: { name: string; }) => mapping.range.test(player.name)),
-                }));
-
-                setSections(sectionsData);
-            } else {
-                notification.error({
-                    message: 'Error',
-                    description: 'No player data found.',
-                });
-                setSections([]);
+        players.forEach((player) => {
+            const firstLetter = player.fullName.charAt(0).toUpperCase();
+            if (/[A-E]/.test(firstLetter)) {
+                groups['A-E'].push(player);
+            } else if (/[F-J]/.test(firstLetter)) {
+                groups['F-J'].push(player);
+            } else if (/[K-M]/.test(firstLetter)) {
+                groups['K-M'].push(player);
+            } else if (/[N-R]/.test(firstLetter)) {
+                groups['N-R'].push(player);
+            } else if (/[S-Z]/.test(firstLetter)) {
+                groups['S-Z'].push(player);
             }
-        } catch (error) {
-            console.error('Error fetching players:', error);
-            notification.error({
-                message: 'Error',
-                description: 'Unable to load player data.',
-            });
-        } finally {
-            setLoading(false);
-        }
+        });
+
+        return groups;
     };
 
     useEffect(() => {
-        fetchPlayers();
-    }, [initialLetter]);
+        const fetchPlayers = async () => {
+            try {
+                setLoading(true);
+                const data = { pageNum: 1, pageSize: 100, keyWord: '', status: true }; // Tăng pageSize để lấy nhiều cầu thủ hơn
+                const result = await getPlayerApi(data); // Giả sử API trả về danh sách player
 
-    const handlePlayerClick = (playerId: number) => {
-        navigate(`/listshirt/${playerId}`);
+                if (result && Array.isArray(result.pageData)) {
+                    setPlayers(result.pageData);
+                } else {
+                    setPlayers([]);
+                }
+            } catch (error) {
+                console.error('Error fetching players', error);
+                setPlayers([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPlayers();
+    }, []); // Gọi API khi component được render
+
+    const handlePlayerClick = (playerName: string) => {
+        navigate(`/listshirt?nameplayer=${encodeURIComponent(playerName)}`);
     };
 
+    const groupedPlayers = groupPlayers(players);
+
     return (
-        <div
-            style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                backgroundColor: 'white',
-                padding: '16px',
-                borderRadius: '8px',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                maxWidth: '1000px',
-                margin: '0 auto',
-                overflow: 'hidden',
-            }}
-        >
-            {loading ? (
-                <div style={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
-                    {Array.from({ length: 5 }).map((_, index) => (
-                        <div key={index} style={{ textAlign: 'center', margin: '0 10px' }}>
-                            <Skeleton.Avatar active size="large" shape="circle" />
-                            <Skeleton.Input active size="small" style={{ width: '80px', marginTop: '8px' }} />
+        <Menu>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px' }}>
+                {loading ? (
+                    Array.from({ length: 8 }).map((_, index) => (
+                        <div key={index} style={{ padding: '8px', textAlign: 'center' }}>
+                            <Skeleton.Input style={{ width: '80px', marginTop: '8px' }} active size="small" />
                         </div>
-                    ))}
-                </div>
-            ) : sections.length === 0 ? (
-                <div style={{ textAlign: 'center', width: '100%' }}>No players found</div>
-            ) : (
-                sections.map((section, index) => (
-                    <div
-                        key={index}
-                        style={{
-                            flex: 1,
-                            margin: '0 10px',
-                            minWidth: '150px',
-                            maxWidth: '180px',
-                            textAlign: 'center',
-                        }}
-                    >
-                        <h3
-                            style={{
-                                borderBottom: '2px solid grey',
-                                paddingBottom: '4px',
-                                fontSize: '16px',
-                                fontWeight: 'bold',
-                                color: 'black',
-                            }}
-                        >
-                            {section.title}
-                        </h3>
-                        <ul
-                            style={{
-                                listStyleType: 'none',
-                                padding: 0,
-                                margin: '8px 0',
-                                maxHeight: '250px',
-                                overflowY: 'auto',
-                            }}
-                        >
-                            {section.players.map((player) => (
-                                <li
+                    ))
+                ) : (
+                    Object.keys(groupedPlayers).map((group) => (
+                        <div key={group}>
+                            <h4 style={{ textAlign: 'center', fontWeight: 'bold', margin: '16px 0' }}>{group}</h4>
+                            {groupedPlayers[group as keyof typeof groupedPlayers].map((player) => (
+                                <div
                                     key={player.id}
-                                    onClick={() => handlePlayerClick(player.id)}
                                     style={{
-                                        padding: '4px 0',
-                                        color: 'black',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        padding: '8px',
+                                        borderRight: '1px solid #ccc',
                                         cursor: 'pointer',
                                     }}
+                                    onClick={() => handlePlayerClick(player.fullName)}
                                 >
-                                    {player.name}
-                                </li>
+                                    <span>{player.fullName}</span>
+                                </div>
                             ))}
-                        </ul>
-                        <a
-                            href="#"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                onViewAllClick(section.title);
-                            }}
-                            style={{
-                                color: 'black',
-                                textDecoration: 'underline',
-                                fontSize: '14px',
-                                display: 'block',
-                                marginTop: '8px',
-                            }}
-                        >
-                            View all &gt;
-                        </a>
-                    </div>
-                ))
-            )}
-        </div>
+                        </div>
+                    ))
+                )}
+            </div>
+            <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                <Button type="link" onClick={() => navigate('/all-players')}>
+                    View All
+                </Button>
+            </div>
+        </Menu>
     );
 };
 
-export default PlayerMenu;
+export default PlayerMenuComponent;

@@ -17,12 +17,13 @@ import ManagerPlayer from "../pages/Admin/ManagerPlayer";
 import ManagerTypeShirt from "../pages/Admin/ManagerTypeShirt";
 import ManagerShirt from "../pages/Admin/ManagerShirt";
 import Shirtdetail from "../components/homepage/Shirtdetail";
-import Listshirt from "../pages/User/Listshirt";
+
 import ManagerSize from "../pages/Admin/ManagerSize";
 import ManagerShirtSize from "../pages/Admin/ManagerShirtSize";
 import Cartdetail from "../components/homepage/Cartdetail";
 import ClubShirts from "../pages/User/ClubShirts";
 import { ROLES } from "../constants/index"; // Import ROLES
+import ListShirtPage from "../pages/User/PageSearchShirt";
 
 // Define routes with role-based access
 const router = createBrowserRouter([
@@ -55,16 +56,10 @@ const router = createBrowserRouter([
       // Public routes
 
 
-      { path: "shirt-details/:id", element: <PrivateRoute element={Shirtdetail} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
+      { path: "listshirt/shirt-details/:id", element: <PrivateRoute element={Shirtdetail} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "cart", element: <PrivateRoute element={Cartdetail} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
-      {
-        path: "listshirt/:clubId", // Route for showing shirts by clubId only
-        element: <PrivateRoute element={Listshirt} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} />
-      },
-      {
-        path: "listshirt/:playerId", // Route for showing shirts by both clubId and playerId
-        element: <PrivateRoute element={Listshirt} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} />
-      },
+    
+      { path: "listshirt", element: <PrivateRoute element={ListShirtPage} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
 
       { path: "clubshirt", element: <PrivateRoute element={ClubShirts} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "", element: <PrivateRoute element={HomePage} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
