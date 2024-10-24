@@ -56,74 +56,80 @@ const ListShirtPage: React.FC = () => {
         {nameClub
           ? `Shirts for ${nameClub}`
           : namePlayer
-          ? `Shirts for player ${namePlayer}`
-          : "No club or player selected"}
+            ? `Shirts for player ${namePlayer}`
+            : "No club or player selected"}
       </h1>
       <Row gutter={[16, 16]}>
         {loading
           ? Array.from({ length: 10 }).map((_, index) => (
-              <Col key={index} xs={24} sm={12} md={8} lg={6}>
-                <Card hoverable style={{ width: "100%" }}>
-                  <Skeleton.Image style={{ width: "100%", height: "300px" }} />
-                  <Skeleton active paragraph={{ rows: 2 }} />
-                </Card>
-              </Col>
-            ))
+            <Col key={index} xs={24} sm={12} md={8} lg={6}>
+              <Card hoverable style={{ width: "100%" }}>
+                <Skeleton.Image style={{ width: "100%", height: "300px" }} />
+                <Skeleton active paragraph={{ rows: 2 }} />
+              </Card>
+            </Col>
+          ))
           : shirts.map((shirt: any) => (
-              <Col key={shirt.id} xs={24} sm={12} md={8} lg={6}>
-                <Card
-                  hoverable
-                  cover={
-                    loading ? (
-                      <Skeleton.Image style={{ width: "100%", height: "300px" }} />
-                    ) : (
-                      <img alt={shirt.name} src={shirt.urlImg} style={{ height: "300px", objectFit: "cover" }} />
-                    )
+            <Col key={shirt.id} xs={24} sm={12} md={8} lg={6}>
+              <Card
+                hoverable
+                cover={
+                  loading ? (
+                    <Skeleton.Image style={{ width: "100%", height: "300px" }} />
+                  ) : (
+                    <img alt={shirt.name} src={shirt.urlImg} style={{ height: "300px", objectFit: "cover" }} />
+                  )
+                }
+                style={{ width: "100%", position: "relative" }} // Thêm position: relative để xử lý giá
+                onClick={() => handleCardClick(shirt.id)}
+              >
+                <Card.Meta
+                  title={shirt.name}
+                  description={
+                    <>
+                      <div>Club: {shirt.clubName}</div>
+                      <div>Player: {shirt.fullName}</div>
+                      <div>Number: {shirt.number}</div>
+                    </>
                   }
-                  style={{ width: "100%", position: "relative" }} // Thêm position: relative để xử lý giá
-                  onClick={() => handleCardClick(shirt.id)}
+                />
+                <div
+                  style={{
+                    marginTop: "10px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
                 >
-                  <Card.Meta
-                    title={shirt.name}
-                    description={`Club: ${shirt.clubName}, Player: ${shirt.fullName}, Number: ${shirt.number}`}
+                  <img
+                    src={shirt.clubLogo}
+                    alt={shirt.clubName}
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      marginRight: "10px",
+                    }}
                   />
-                  <div
-                    style={{
-                      marginTop: "10px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <img
-                      src={shirt.clubLogo}
-                      alt={shirt.clubName}
-                      style={{
-                        width: "30px",
-                        height: "30px",
-                        marginRight: "10px",
-                      }}
-                    />
-                    <span>{shirt.clubName}</span>
-                  </div>
-                  {/* Hiển thị giá ở góc phải dưới cùng */}
-                  <div
-                    style={{
-                      position: "absolute",
-                      bottom: "10px",
-                      right: "10px",
-                      backgroundColor: "#fff",
-                      padding: "5px 10px",
-                      borderRadius: "5px",
-                      fontWeight: "bold",
-                      boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-                    }}
-                  >
-                    {formatPrice(shirt.price)}
-                  </div>
-                </Card>
-              </Col>
-            ))}
+                  <span>{shirt.clubName}</span>
+                </div>
+                {/* Hiển thị giá ở góc phải dưới cùng */}
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "10px",
+                    right: "10px",
+                    backgroundColor: "#fff",
+                    padding: "5px 10px",
+                    borderRadius: "5px",
+                    fontWeight: "bold",
+                    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+                  }}
+                >
+                  {formatPrice(shirt.price)}
+                </div>
+              </Card>
+            </Col>
+          ))}
       </Row>
     </div>
   );

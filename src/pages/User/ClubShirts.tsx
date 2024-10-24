@@ -5,8 +5,15 @@ import { searchClubApi } from "../../util/api"; // Assuming you have the searchC
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import BreadcrumbComponent from "../../layout/Breadcrumb";
 
+// Define the Club interface
+interface Club {
+    id: number;
+    name: string;
+    clubLogo: string;
+}
+
 const ClubShirts: React.FC = () => {
-    const [clubs, setClubs] = useState<any[]>([]);
+    const [clubs, setClubs] = useState<Club[]>([]); // Use the Club interface
     const navigate = useNavigate(); // Khai báo useNavigate
 
     useEffect(() => {
@@ -33,6 +40,10 @@ const ClubShirts: React.FC = () => {
 
         fetchClubs();
     }, []);
+
+    const handleClubClick = (clubName: string) => {
+        navigate(`/listshirt?nameclub=${encodeURIComponent(clubName)}`);
+    };
 
     return (
         <div className="mx-auto px-4 py-20">
@@ -71,7 +82,7 @@ const ClubShirts: React.FC = () => {
                         >
                             <div
                                 className="text-center space-y-2 cursor-pointer"
-                                onClick={() => navigate(`/listshirt/${club.id}`)} // Điều hướng đến trang Listshirt với clubId
+                                onClick={() => handleClubClick(club.name)} // Sử dụng club.name thay vì club.id
                             >
                                 <img
                                     src={club.clubLogo}
