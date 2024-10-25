@@ -4,39 +4,35 @@ import { useNavigate } from 'react-router-dom';
 
 const Shirtseason: React.FC = () => {
     const [clubs, setClubs] = useState<Array<{ clubId: number; clubName: string; clubLogo: string }>>([]);
-    const navigate = useNavigate(); // Khai báo useNavigate
+    const navigate = useNavigate();
 
-    // Gọi API khi component mount
     useEffect(() => {
         const fetchClubs = async () => {
             try {
                 const data = {
                     pageNum: 1,
                     pageSize: 20,
-                    nameShirt: '', // Điều kiện lọc nếu cần
-                    nameClub: '',  // Điều kiện lọc nếu cần
-                    nameSeason: '', // Điều kiện lọc nếu cần
-                    namePlayer: '', // Điều kiện lọc nếu cần
+                    nameShirt: '',
+                    nameClub: '',
+                    nameSeason: '',
+                    namePlayer: '',
                     status: 1
                 };
-                const response = await getShirtByMultipleNamesApi(data); // Gọi API
+                const response = await getShirtByMultipleNamesApi(data);
 
-                // Lọc ra các câu lạc bộ cụ thể và đảm bảo không bị trùng
                 const selectedClubs = ['Real Madrid', 'Barcelona', 'Manchester United'];
                 const uniqueClubs = response.pageData.filter((club: { clubName: string }) =>
                     selectedClubs.includes(club.clubName)
                 );
 
-                // Loại bỏ các câu lạc bộ trùng lặp
-                const clubsMap = new Map(); // Dùng Map để loại bỏ trùng lặp
-                uniqueClubs.forEach((club: { clubName: any; }) => {
+                const clubsMap = new Map<string, { clubId: number; clubName: string; clubLogo: string }>();
+                uniqueClubs.forEach((club: { clubId: number; clubName: string; clubLogo: string }) => {
                     if (!clubsMap.has(club.clubName)) {
                         clubsMap.set(club.clubName, club);
                     }
                 });
 
-                // Chuyển đổi Map thành mảng
-                setClubs(Array.from(clubsMap.values())); // Cập nhật danh sách clubs sau khi lọc
+                setClubs(Array.from(clubsMap.values()));
             } catch (error) {
                 console.error('Error fetching clubs:', error);
             }
@@ -45,16 +41,20 @@ const Shirtseason: React.FC = () => {
         fetchClubs();
     }, []);
 
-    const handleClubClick = (clubId: number) => {
-        navigate(`/listshirt/${clubId}`); // Điều hướng đến trang listshirt với clubId
+    const handleClubClick = (clubName: string) => {
+        navigate(`/listshirt?nameclub=${encodeURIComponent(clubName)}`);
     };
 
     return (
         <div className="px-20 py-10">
-            <div className="grid grid-cols-3 gap-4"> {/* Grid adjusted for 3 columns */}
+            <div className="grid grid-cols-3 gap-4">
                 {clubs.map((club) => (
-                    <div key={club.clubId} className="text-center" onClick={() => handleClubClick(club.clubId)}> {/* Thêm sự kiện onClick */}
-                        <div className="relative w-full h-100 overflow-hidden"> {/* Same height as Shirtclub */}
+                    <div
+                        key={club.clubId}
+                        className="text-center"
+                        onClick={() => handleClubClick(club.clubName)}
+                    >
+                        <div className="relative w-full h-100 overflow-hidden">
                             <img
                                 src={club.clubLogo}
                                 alt={club.clubName}
