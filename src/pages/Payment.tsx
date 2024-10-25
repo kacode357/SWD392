@@ -1,9 +1,5 @@
-
-
 const Payment = () => {
-  return (
-    <div>Payment</div>
-  )
-}
+  return <div className="py-20">Payment</div>;
+};
 
-export default Payment
+export default Payment;
