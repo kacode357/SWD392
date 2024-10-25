@@ -1,15 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { Collapse, Checkbox } from 'antd';
-import { getShirtByMultipleNamesApi } from '../../util/api'; // Import hàm API
+import { Collapse, Radio } from 'antd';
+import { getShirtByMultipleNamesApi } from '../../util/api';
 
 const { Panel } = Collapse;
 
-const ShoppingOptions: React.FC = () => {
-    const [setSelectedFilters] = useState<any>({});
+interface ShoppingOptionsProps {
+    onClubChange: (club: string) => void;
+    onSessionChange: (session: string) => void;
+    onPlayerChange: (player: string) => void;
+    onTypeChange: (type: string) => void;
+}
+
+const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
+    onClubChange,
+    onSessionChange,
+    onPlayerChange,
+    onTypeChange,
+}) => {
     const [clubList, setClubList] = useState<string[]>([]);
     const [sessionList, setSessionList] = useState<string[]>([]);
     const [playerList, setPlayerList] = useState<string[]>([]);
-    const [typeList, setTypeList] = useState<string[]>([]); // Thêm state cho loại áo
+    const [typeList, setTypeList] = useState<string[]>([]);
+    const [selectedClub, setSelectedClub] = useState<string | null>(null);
+    const [selectedSession, setSelectedSession] = useState<string | null>(null);
+    const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
+    const [selectedType, setSelectedType] = useState<string | null>(null);
 
     // Lấy dữ liệu từ API
     useEffect(() => {
@@ -17,12 +32,12 @@ const ShoppingOptions: React.FC = () => {
             try {
                 const data = {
                     pageNum: 1,
-                    pageSize: 1000, // Giả sử lấy hết tất cả dữ liệu
+                    pageSize: 1000,
                     nameShirt: '',
                     nameClub: '',
                     nameSeason: '',
                     namePlayer: '',
-                    status: 1, // Giả sử 1 là trạng thái active
+                    status: 1,
                 };
                 const result = await getShirtByMultipleNamesApi(data);
                 const clubs = result.pageData.map((shirt: any) => shirt.clubName).filter((club: any) => typeof club === 'string');
@@ -49,17 +64,28 @@ const ShoppingOptions: React.FC = () => {
         fetchData();
     }, []);
 
-    const handleFilterChange = (category: string, value: string, checked: boolean) => {
-        setSelectedFilters((prevFilters: { [x: string]: never[]; }) => {
-            const categoryFilters = prevFilters[category] || [];
-            const updatedCategoryFilters = checked
-                ? [...categoryFilters, value]
-                : categoryFilters.filter((item: string) => item !== value);
-            return {
-                ...prevFilters,
-                [category]: updatedCategoryFilters,
-            };
-        });
+    const handleClubChange = (e: any) => {
+        const selectedClub = e.target.value;
+        setSelectedClub(selectedClub);
+        onClubChange(selectedClub); // Gọi hàm callback khi câu lạc bộ được chọn
+    };
+
+    const handleSessionChange = (e: any) => {
+        const selectedSession = e.target.value;
+        setSelectedSession(selectedSession);
+        onSessionChange(selectedSession); // Gọi hàm callback khi phiên được chọn
+    };
+
+    const handlePlayerChange = (e: any) => {
+        const selectedPlayer = e.target.value;
+        setSelectedPlayer(selectedPlayer);
+        onPlayerChange(selectedPlayer); // Gọi hàm callback khi cầu thủ được chọn
+    };
+
+    const handleTypeChange = (e: any) => {
+        const selectedType = e.target.value;
+        setSelectedType(selectedType);
+        onTypeChange(selectedType); // Gọi hàm callback khi loại áo được chọn
     };
 
     return (
@@ -67,48 +93,40 @@ const ShoppingOptions: React.FC = () => {
             <h3>Shopping Options</h3>
             <Collapse defaultActiveKey={['1', '2', '3', '4']}>
                 <Panel header="Club" key="1">
-                    {clubList.map((club, index) => (
-                        <div key={index} style={{ marginBottom: '8px' }}>
-                            <Checkbox
-                                onChange={e => handleFilterChange('club', club, e.target.checked)}
-                            >
+                    <Radio.Group onChange={handleClubChange} value={selectedClub}>
+                        {clubList.map((club, index) => (
+                            <Radio key={index} value={club} style={{ display: 'block', marginBottom: '8px' }}>
                                 {club}
-                            </Checkbox>
-                        </div>
-                    ))}
+                            </Radio>
+                        ))}
+                    </Radio.Group>
                 </Panel>
                 <Panel header="Session" key="2">
-                    {sessionList.map((session, index) => (
-                        <div key={index} style={{ marginBottom: '8px' }}>
-                            <Checkbox
-                                onChange={e => handleFilterChange('session', session, e.target.checked)}
-                            >
+                    <Radio.Group onChange={handleSessionChange} value={selectedSession}>
+                        {sessionList.map((session, index) => (
+                            <Radio key={index} value={session} style={{ display: 'block', marginBottom: '8px' }}>
                                 {session}
-                            </Checkbox>
-                        </div>
-                    ))}
+                            </Radio>
+                        ))}
+                    </Radio.Group>
                 </Panel>
                 <Panel header="Player" key="3">
-                    {playerList.map((player, index) => (
-                        <div key={index} style={{ marginBottom: '8px' }}>
-                            <Checkbox
-                                onChange={e => handleFilterChange('player', player, e.target.checked)}
-                            >
+                    <Radio.Group onChange={handlePlayerChange} value={selectedPlayer}>
+                        {playerList.map((player, index) => (
+                            <Radio key={index} value={player} style={{ display: 'block', marginBottom: '8px' }}>
                                 {player}
-                            </Checkbox>
-                        </div>
-                    ))}
+                            </Radio>
+                        ))}
+                    </Radio.Group>
                 </Panel>
                 <Panel header="Type" key="4">
-                    {typeList.map((type, index) => (
-                        <div key={index} style={{ marginBottom: '8px' }}>
-                            <Checkbox
-                                onChange={e => handleFilterChange('type', type, e.target.checked)}
-                            >
+                    <Radio.Group onChange={handleTypeChange} value={selectedType}>
+                        {typeList.map((type, index) => (
+                            <Radio key={index} value={type} style={{ display: 'block', marginBottom: '8px' }}>
                                 {type}
-                            </Checkbox>
-                        </div>
-                    ))}
+                            </Radio>
+                        ))}
+                    </Radio.Group>
                 </Panel>
             </Collapse>
         </div>

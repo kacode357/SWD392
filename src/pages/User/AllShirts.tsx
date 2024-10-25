@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Skeleton, Row, Col, Pagination } from 'antd';
 import { useNavigate } from 'react-router-dom';
-
-import { getShirtByMultipleNamesApi } from '../../util/api'; // Import API
+import { getShirtByMultipleNamesApi } from '../../util/api';
 import ShoppingOptions from '../../components/Menu/ShoppingOptions';
 
 const AllShirts: React.FC = () => {
@@ -11,7 +10,11 @@ const AllShirts: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
-    const pageSize = 10; // Số lượng áo hiển thị trên mỗi trang
+    const [selectedClub, setSelectedClub] = useState<string>('');
+    const [selectedSession, setSelectedSession] = useState<string>('');
+    const [selectedPlayer, setSelectedPlayer] = useState<string>('');
+    const [selectedType, setSelectedType] = useState<string>('');
+    const pageSize = 10;
 
     useEffect(() => {
         const fetchShirts = async () => {
@@ -21,14 +24,15 @@ const AllShirts: React.FC = () => {
                     pageNum: currentPage,
                     pageSize: pageSize,
                     nameShirt: '',
-                    nameClub: '',
-                    nameSeason: '',
-                    namePlayer: '',
-                    status: 1, // Giả sử 1 là trạng thái active
+                    nameClub: selectedClub,
+                    nameSeason: selectedSession,
+                    namePlayer: selectedPlayer,
+                    typeShirt: selectedType,
+                    status: 1,
                 };
                 const result = await getShirtByMultipleNamesApi(data);
-                setShirts(result.pageData); // Giả sử `pageData` là mảng chứa kết quả
-                setTotalItems(result.totalItems); // Giả sử `totalItems` là tổng số áo
+                setShirts(result.pageData);
+                setTotalItems(result.totalItems);
             } catch (error) {
                 console.error('Error fetching shirts', error);
             } finally {
@@ -37,7 +41,7 @@ const AllShirts: React.FC = () => {
         };
 
         fetchShirts();
-    }, [currentPage]);
+    }, [currentPage, selectedClub, selectedSession, selectedPlayer, selectedType]);
 
     const handleCardClick = (id: number) => {
         navigate(`/listshirt/shirt-details/${id}`);
@@ -54,13 +58,16 @@ const AllShirts: React.FC = () => {
     return (
         <div className="py-20 px-20">
             <div style={{ display: 'flex' }}>
-                {/* Bộ lọc bên trái */}
                 <div style={{ width: '250px', marginRight: '20px' }}>
-                    <ShoppingOptions />
+                    <ShoppingOptions
+                        onClubChange={setSelectedClub}
+                        onSessionChange={setSelectedSession}
+                        onPlayerChange={setSelectedPlayer}
+                        onTypeChange={setSelectedType}
+                    />
                 </div>
-                {/* Danh sách áo */}
                 <div style={{ flex: 1 }}>
-                    <h1 className='py-5 '>All Shirts</h1>
+                    <h1 className='py-5'>All Shirts</h1>
                     <Row gutter={[16, 16]}>
                         {loading
                             ? Array.from({ length: pageSize }).map((_, index) => (
@@ -77,15 +84,11 @@ const AllShirts: React.FC = () => {
                                         hoverable
                                         onClick={() => handleCardClick(shirt.id)}
                                         cover={
-                                            loading ? (
-                                                <Skeleton.Image style={{ width: '100%', height: '300px' }} />
-                                            ) : (
-                                                <img
-                                                    alt={shirt.name}
-                                                    src={shirt.urlImg}
-                                                    style={{ height: '300px', objectFit: 'cover' }}
-                                                />
-                                            )
+                                            <img
+                                                alt={shirt.name}
+                                                src={shirt.urlImg}
+                                                style={{ height: '300px', objectFit: 'cover' }}
+                                            />
                                         }
                                         style={{ width: '100%', position: 'relative' }}
                                     >
@@ -97,29 +100,10 @@ const AllShirts: React.FC = () => {
                                                     <div>Player: {shirt.fullName}</div>
                                                     <div>Number: {shirt.number}</div>
                                                     <div>Type: {shirt.typeShirtName}</div>
-                                                    <div>Session: {shirt.sessionName}</div> {/* Thêm session */}
+                                                    <div>Session: {shirt.sessionName}</div>
                                                 </>
                                             }
                                         />
-                                        <div
-                                            style={{
-                                                marginTop: '10px',
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                            }}
-                                        >
-                                            <img
-                                                src={shirt.clubLogo}
-                                                alt={shirt.clubName}
-                                                style={{
-                                                    width: '30px',
-                                                    height: '30px',
-                                                    marginRight: '10px',
-                                                }}
-                                            />
-                                            <span>{shirt.clubName}</span>
-                                        </div>
                                         <div
                                             style={{
                                                 position: 'absolute',
@@ -138,7 +122,6 @@ const AllShirts: React.FC = () => {
                                 </Col>
                             ))}
                     </Row>
-                    {/* Phân trang */}
                     <div style={{ textAlign: 'center', marginTop: '20px' }}>
                         <Pagination
                             current={currentPage}
