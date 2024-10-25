@@ -24,6 +24,7 @@ import Cartdetail from "../components/homepage/Cartdetail";
 import ClubShirts from "../pages/User/ClubShirts";
 import { ROLES } from "../constants/index"; // Import ROLES
 import ListShirtPage from "../pages/User/PageSearchShirt";
+import Payment from "../pages/Payment";
 
 // Define routes with role-based access
 const router = createBrowserRouter([
@@ -54,16 +55,12 @@ const router = createBrowserRouter([
       { path: "user/setting", element: <PrivateRoute element={SettingUser} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
 
       // Public routes
-
-
       { path: "listshirt/shirt-details/:id", element: <PrivateRoute element={Shirtdetail} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "cart", element: <PrivateRoute element={Cartdetail} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
-    
+      { path: "payment", element: <PrivateRoute element={Payment} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "listshirt", element: <PrivateRoute element={ListShirtPage} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
-
       { path: "clubshirt", element: <PrivateRoute element={ClubShirts} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "", element: <PrivateRoute element={HomePage} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
-
       { path: "*", element: <NotFound /> },
     ],
   },
