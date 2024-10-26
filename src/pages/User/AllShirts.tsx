@@ -54,10 +54,10 @@ const AllShirts: React.FC = () => {
             <div style={{ display: 'flex' }}>
                 <div style={{ width: '250px', marginRight: '20px' }}>
                     <ShoppingOptions
-                        onClubChange={setSelectedClub}
-                        onSessionChange={setSelectedSession}
-                        onPlayerChange={setSelectedPlayer}
-                        onTypeChange={setSelectedType}
+                        onClubChange={(club) => { setSelectedClub(club); setCurrentPage(1); }}
+                        onSessionChange={(session) => { setSelectedSession(session); setCurrentPage(1); }}
+                        onPlayerChange={(player) => { setSelectedPlayer(player); setCurrentPage(1); }}
+                        onTypeChange={(type) => { setSelectedType(type); setCurrentPage(1); }}
                     />
                 </div>
                 <div style={{ flex: 1 }}>
