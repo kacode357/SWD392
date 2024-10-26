@@ -254,7 +254,7 @@ const updateShirtApi = async (id: number, data: { typeShirtId: number; playerId:
 };
 const getShirtByMultipleNamesApi = async (data: { pageNum: number; pageSize: number; nameShirt: string; nameClub: string; nameSeason: string; namePlayer: string; status: number }) => {
   const URL_API = '/api/shirt/searchbymutilname';
-  const response = await defaultAxiosInstance.post(URL_API, data);
+  const response = await axiosWithoutLoading.post(URL_API, data);
   return response.data;
 };
 const searchSizeApi = async (data: { pageNum: number; pageSize: number; keyWord: string; status: boolean }) => {
