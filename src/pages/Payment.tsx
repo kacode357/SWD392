@@ -74,7 +74,7 @@ const Payment = () => {
           vnp_TxnRef: newPaymentDetails.txnRef || '',
           vnp_SecureHash: newPaymentDetails.secureHash || '',
         });
-
+        console.log('API Response>>>:', response);
         setApiResponse(response); // Lưu kết quả từ API
 
         // Kiểm tra nếu response có message và hiển thị thông báo
