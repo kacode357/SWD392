@@ -28,10 +28,10 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
     onPlayerChange,
     onTypeChange,
 }) => {
-    const [clubList, setClubList] = useState<string[]>([]);
-    const [sessionList, setSessionList] = useState<string[]>([]);
-    const [playerList, setPlayerList] = useState<string[]>([]);
-    const [typeList, setTypeList] = useState<string[]>([]);
+    const [, setClubList] = useState<string[]>([]);
+    const [, setSessionList] = useState<string[]>([]);
+    const [, setPlayerList] = useState<string[]>([]);
+    const [, setTypeList] = useState<string[]>([]);
 
     const [filteredClubList, setFilteredClubList] = useState<string[]>([]);
     const [filteredSessionList, setFilteredSessionList] = useState<string[]>([]);
