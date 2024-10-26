@@ -44,7 +44,7 @@ const Shirtdetail: React.FC = () => {
     const token = localStorage.getItem("token"); // Check if token exists
 
     if (!token) {
-      notification.error({
+      notification.warning({
         message: "Please Login",
         description: "You need to login before adding items to the basket.",
       });
