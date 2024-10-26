@@ -1,4 +1,6 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { notification } from 'antd'; // Import notification từ Ant Design
+import { createPaymentApi } from '../util/api'; // Đảm bảo đường dẫn chính xác đến file chứa createPaymentApi
 
 const Payment = () => {
   interface PaymentDetails {
@@ -31,15 +33,14 @@ const Payment = () => {
     secureHash: null,
   });
 
+  const [loading, setLoading] = useState(true); // Để hiển thị trạng thái loading
+  const [apiResponse, setApiResponse] = useState<any>(null); // Để lưu kết quả từ API
+
   useEffect(() => {
-    // Lấy URL hiện tại từ window.location
     const currentUrl = window.location.href;
-    
-    // Sử dụng URLSearchParams để lấy các field từ URL
     const params = new URLSearchParams(currentUrl.split('?')[1]);
 
-    // Cập nhật state với các giá trị từ URL
-    setPaymentDetails({
+    const newPaymentDetails = {
       amount: params.get('vnp_Amount'),
       bankCode: params.get('vnp_BankCode'),
       bankTranNo: params.get('vnp_BankTranNo'),
@@ -52,29 +53,82 @@ const Payment = () => {
       transactionStatus: params.get('vnp_TransactionStatus'),
       txnRef: params.get('vnp_TxnRef'),
       secureHash: params.get('vnp_SecureHash'),
-    });
+    };
+
+    setPaymentDetails(newPaymentDetails);
+
+    // Gọi API khi đã có paymentDetails
+    const fetchData = async () => {
+      try {
+        const response = await createPaymentApi({
+          vnp_Amount: newPaymentDetails.amount || '',
+          vnp_BankCode: newPaymentDetails.bankCode || '',
+          vnp_BankTranNo: newPaymentDetails.bankTranNo || '',
+          vnp_CardType: newPaymentDetails.cardType || '',
+          vnp_OrderInfo: newPaymentDetails.orderInfo || '',
+          vnp_PayDate: newPaymentDetails.payDate || '',
+          vnp_ResponseCode: newPaymentDetails.responseCode || '',
+          vnp_TmnCode: newPaymentDetails.tmnCode || '',
+          vnp_TransactionNo: newPaymentDetails.transactionNo || '',
+          vnp_TransactionStatus: newPaymentDetails.transactionStatus || '',
+          vnp_TxnRef: newPaymentDetails.txnRef || '',
+          vnp_SecureHash: newPaymentDetails.secureHash || '',
+        });
+
+        setApiResponse(response); // Lưu kết quả từ API
+
+        // Kiểm tra nếu response có message và hiển thị thông báo
+        if (response?.message) {
+          notification.success({
+            message: 'Payment Success',
+            description: response.message,
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching payment API:', error);
+
+        // Hiển thị thông báo lỗi
+        notification.error({
+          message: 'Payment Failed',
+          description: 'There was an error processing your payment. Please try again.',
+        });
+      } finally {
+        setLoading(false); // Tắt trạng thái loading
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
     <div className="py-20">
       <h1 className="text-2xl font-bold text-center mb-6">Payment Details</h1>
-      {paymentDetails.amount ? (
-        <div className="text-center">
-          <p><strong>Amount:</strong> {paymentDetails.amount}</p>
-          <p><strong>Bank Code:</strong> {paymentDetails.bankCode}</p>
-          <p><strong>Bank Transaction No:</strong> {paymentDetails.bankTranNo}</p>
-          <p><strong>Card Type:</strong> {paymentDetails.cardType}</p>
-          <p><strong>Order Info:</strong> {paymentDetails.orderInfo}</p>
-          <p><strong>Pay Date:</strong> {paymentDetails.payDate}</p>
-          <p><strong>Response Code:</strong> {paymentDetails.responseCode}</p>
-          <p><strong>Tmn Code:</strong> {paymentDetails.tmnCode}</p>
-          <p><strong>Transaction No:</strong> {paymentDetails.transactionNo}</p>
-          <p><strong>Transaction Status:</strong> {paymentDetails.transactionStatus}</p>
-          <p><strong>Txn Ref:</strong> {paymentDetails.txnRef}</p>
-          <p><strong>Secure Hash:</strong> {paymentDetails.secureHash}</p>
-        </div>
-      ) : (
+      {loading ? (
         <p className="text-center">Loading payment details...</p>
+      ) : (
+        <>
+          <div className="text-center">
+            <p><strong>Amount:</strong> {paymentDetails.amount}</p>
+            <p><strong>Bank Code:</strong> {paymentDetails.bankCode}</p>
+            <p><strong>Bank Transaction No:</strong> {paymentDetails.bankTranNo}</p>
+            <p><strong>Card Type:</strong> {paymentDetails.cardType}</p>
+            <p><strong>Order Info:</strong> {paymentDetails.orderInfo}</p>
+            <p><strong>Pay Date:</strong> {paymentDetails.payDate}</p>
+            <p><strong>Response Code:</strong> {paymentDetails.responseCode}</p>
+            <p><strong>Tmn Code:</strong> {paymentDetails.tmnCode}</p>
+            <p><strong>Transaction No:</strong> {paymentDetails.transactionNo}</p>
+            <p><strong>Transaction Status:</strong> {paymentDetails.transactionStatus}</p>
+            <p><strong>Txn Ref:</strong> {paymentDetails.txnRef}</p>
+            <p><strong>Secure Hash:</strong> {paymentDetails.secureHash}</p>
+          </div>
+
+          {apiResponse && (
+            <div className="mt-6 text-center">
+              <h2 className="text-xl font-bold">API Response:</h2>
+              <pre className="text-left p-4 bg-gray-100 rounded">{JSON.stringify(apiResponse, null, 2)}</pre>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
