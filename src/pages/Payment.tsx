@@ -34,7 +34,7 @@ const Payment = () => {
   });
 
   const [loading, setLoading] = useState(true); // Để hiển thị trạng thái loading
-  const [apiResponse, setApiResponse] = useState<any>(null); // Để lưu kết quả từ API
+ 
 
   useEffect(() => {
     const currentUrl = window.location.href;
@@ -75,7 +75,7 @@ const Payment = () => {
           vnp_SecureHash: newPaymentDetails.secureHash || '',
         });
         console.log('API Response>>>:', response);
-        setApiResponse(response); // Lưu kết quả từ API
+        
 
         if (response) {
           notification.success({
