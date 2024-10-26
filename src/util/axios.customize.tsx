@@ -107,7 +107,7 @@ const handleErrorByNotification = (errors: AxiosError<ErrorResponse>) => {
   }
 
   // Kiểm tra nếu message là "Cart null!" hoặc lỗi 404 thì không hiển thị thông báo
-  if (message === "Cart null!" || message === "Request failed with status code 404") {
+  if (message === "Cart null!." || message === "Request failed with status code 404") {
     return Promise.reject(data?.errors ?? { message });
   }
 
