@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { notification } from 'antd'; // Import notification từ Ant Design
+import { notification, Spin, Card, Descriptions, Row, Col } from 'antd'; // Sử dụng các thành phần từ Ant Design
 import { createPaymentApi } from '../util/api'; // Đảm bảo đường dẫn chính xác đến file chứa createPaymentApi
 
 const Payment = () => {
@@ -77,7 +77,6 @@ const Payment = () => {
         console.log('API Response>>>:', response);
         setApiResponse(response); // Lưu kết quả từ API
 
-       
         if (response) {
           notification.success({
             message: 'Payment Success',
@@ -101,34 +100,29 @@ const Payment = () => {
   }, []);
 
   return (
-    <div className="py-20">
-      <h1 className="text-2xl font-bold text-center mb-6">Payment Details</h1>
+    <div className="py-20 flex justify-center items-center min-h-screen">
       {loading ? (
-        <p className="text-center">Loading payment details...</p>
+        <Spin size="large" />
       ) : (
-        <>
-          <div className="text-center">
-            <p><strong>Amount:</strong> {paymentDetails.amount}</p>
-            <p><strong>Bank Code:</strong> {paymentDetails.bankCode}</p>
-            <p><strong>Bank Transaction No:</strong> {paymentDetails.bankTranNo}</p>
-            <p><strong>Card Type:</strong> {paymentDetails.cardType}</p>
-            <p><strong>Order Info:</strong> {paymentDetails.orderInfo}</p>
-            <p><strong>Pay Date:</strong> {paymentDetails.payDate}</p>
-            <p><strong>Response Code:</strong> {paymentDetails.responseCode}</p>
-            <p><strong>Tmn Code:</strong> {paymentDetails.tmnCode}</p>
-            <p><strong>Transaction No:</strong> {paymentDetails.transactionNo}</p>
-            <p><strong>Transaction Status:</strong> {paymentDetails.transactionStatus}</p>
-            <p><strong>Txn Ref:</strong> {paymentDetails.txnRef}</p>
-            <p><strong>Secure Hash:</strong> {paymentDetails.secureHash}</p>
-          </div>
-
-          {apiResponse && (
-            <div className="mt-6 text-center">
-              <h2 className="text-xl font-bold">API Response:</h2>
-              <pre className="text-left p-4 bg-gray-100 rounded">{JSON.stringify(apiResponse, null, 2)}</pre>
-            </div>
-          )}
-        </>
+        <Card
+          title="Payment Details"
+          bordered={false}
+          style={{ width: '100%', maxWidth: '600px', textAlign: 'center' }}
+        >
+          <Row justify="center">
+            <Col>
+              <Descriptions column={1} bordered>
+                <Descriptions.Item label="Amount">{paymentDetails.amount}</Descriptions.Item>
+                <Descriptions.Item label="Bank Code">{paymentDetails.bankCode}</Descriptions.Item>
+                <Descriptions.Item label="Transaction No">{paymentDetails.transactionNo}</Descriptions.Item>
+                <Descriptions.Item label="Transaction Status">{paymentDetails.transactionStatus}</Descriptions.Item>
+                <Descriptions.Item label="Pay Date">{paymentDetails.payDate}</Descriptions.Item>
+                <Descriptions.Item label="Card Type">{paymentDetails.cardType}</Descriptions.Item>
+                <Descriptions.Item label="Order Info">{paymentDetails.orderInfo}</Descriptions.Item>
+              </Descriptions>
+            </Col>
+          </Row>
+        </Card>
       )}
     </div>
   );
