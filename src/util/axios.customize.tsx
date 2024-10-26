@@ -106,8 +106,13 @@ const handleErrorByNotification = (errors: AxiosError<ErrorResponse>) => {
     }
   }
 
-  // Check if message is present and not null/undefined before showing notification
-  if (message && message !== "Request failed with status code 404" || message !== "Cart null!.") {
+  // Kiểm tra nếu message là "Cart null!" hoặc lỗi 404 thì không hiển thị thông báo
+  if (message === "Cart null!" || message === "Request failed with status code 404") {
+    return Promise.reject(data?.errors ?? { message });
+  }
+
+  // Hiển thị thông báo lỗi nếu có
+  if (message) {
     notification.error({
       message: "Error",
       description: message,
@@ -117,5 +122,6 @@ const handleErrorByNotification = (errors: AxiosError<ErrorResponse>) => {
 
   return Promise.reject(data?.errors ?? { message });
 };
+
 
 export { defaultAxiosInstance, axiosWithoutLoading };
