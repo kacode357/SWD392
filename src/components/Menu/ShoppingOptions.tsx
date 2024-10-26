@@ -53,6 +53,7 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
                     nameClub: '',
                     nameSeason: '',
                     namePlayer: '',
+                    nameTypeShirt: '',
                     status: 1,
                 };
 

@@ -25,6 +25,7 @@ const ListShirtPage: React.FC = () => {
           nameClub: nameClub || "",
           nameSeason: nameSession || "",
           namePlayer: namePlayer || "",
+          nameTypeShirt: "",
           status: 1, // Giả sử 1 là trạng thái active
         };
         const result = await getShirtByMultipleNamesApi(data);
