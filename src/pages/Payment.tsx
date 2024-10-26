@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { notification, Spin, Card, Descriptions, Row, Col } from 'antd'; // Sử dụng các thành phần từ Ant Design
+import { notification, Spin, Card, Descriptions, Row, Col, Result, Button } from 'antd'; // Sử dụng các thành phần từ Ant Design
 import { createPaymentApi } from '../util/api'; // Đảm bảo đường dẫn chính xác đến file chứa createPaymentApi
+import { CheckCircleOutlined } from '@ant-design/icons'; // Import icon thành công
 
 const Payment = () => {
   interface PaymentDetails {
@@ -34,7 +35,7 @@ const Payment = () => {
   });
 
   const [loading, setLoading] = useState(true); // Để hiển thị trạng thái loading
- 
+  const [apiResponse, setApiResponse] = useState<any>(null); // Để lưu kết quả từ API
 
   useEffect(() => {
     const currentUrl = window.location.href;
@@ -75,7 +76,7 @@ const Payment = () => {
           vnp_SecureHash: newPaymentDetails.secureHash || '',
         });
         console.log('API Response>>>:', response);
-        
+        setApiResponse(response); // Lưu kết quả từ API
 
         if (response) {
           notification.success({
@@ -99,30 +100,62 @@ const Payment = () => {
     fetchData();
   }, []);
 
+  // Hàm format amount cho đúng đơn vị tiền tệ (chia cho 100)
+  const formatAmount = (amount: string | null) => {
+    if (!amount) return 'N/A';
+    const formattedAmount = (parseFloat(amount) / 100).toLocaleString('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    });
+    return formattedAmount;
+  };
+
+  // Hàm format ngày thanh toán
+  const formatPayDate = (payDate: string | null) => {
+    if (!payDate) return 'N/A';
+    const date = new Date(payDate.slice(0, 4) + '-' + payDate.slice(4, 6) + '-' + payDate.slice(6, 8));
+    return date.toLocaleDateString('vi-VN');
+  };
+
   return (
     <div className="py-20 flex justify-center items-center min-h-screen">
       {loading ? (
         <Spin size="large" />
       ) : (
-        <Card
-          title="Payment Details"
-          bordered={false}
-          style={{ width: '100%', maxWidth: '600px', textAlign: 'center' }}
+        <Result
+          status="success"
+          icon={<CheckCircleOutlined style={{ color: '#52c41a' }} />} // Icon thành công
+          title="Payment Success!"
+          subTitle={`Your payment of ${formatAmount(paymentDetails.amount)} was successful on ${formatPayDate(paymentDetails.payDate)}.`}
+          extra={[
+            <Button type="primary" key="dashboard" href="/dashboard">
+              Go to Dashboard
+            </Button>,
+            <Button key="home" href="/">
+              Back to Home
+            </Button>,
+          ]}
         >
-          <Row justify="center">
-            <Col>
-              <Descriptions column={1} bordered>
-                <Descriptions.Item label="Amount">{paymentDetails.amount}</Descriptions.Item>
-                <Descriptions.Item label="Bank Code">{paymentDetails.bankCode}</Descriptions.Item>
-                <Descriptions.Item label="Transaction No">{paymentDetails.transactionNo}</Descriptions.Item>
-                <Descriptions.Item label="Transaction Status">{paymentDetails.transactionStatus}</Descriptions.Item>
-                <Descriptions.Item label="Pay Date">{paymentDetails.payDate}</Descriptions.Item>
-                <Descriptions.Item label="Card Type">{paymentDetails.cardType}</Descriptions.Item>
-                <Descriptions.Item label="Order Info">{paymentDetails.orderInfo}</Descriptions.Item>
-              </Descriptions>
-            </Col>
-          </Row>
-        </Card>
+          <Card
+            title="Payment Details"
+            bordered={false}
+            style={{ width: '100%', maxWidth: '600px', textAlign: 'center', marginTop: '20px' }}
+          >
+            <Row justify="center">
+              <Col>
+                <Descriptions column={1} bordered>
+                  <Descriptions.Item label="Amount">{formatAmount(paymentDetails.amount)}</Descriptions.Item>
+                  <Descriptions.Item label="Bank Code">{paymentDetails.bankCode || 'N/A'}</Descriptions.Item>
+                  <Descriptions.Item label="Transaction No">{paymentDetails.transactionNo || 'N/A'}</Descriptions.Item>
+                  <Descriptions.Item label="Transaction Status">{paymentDetails.transactionStatus || 'N/A'}</Descriptions.Item>
+                  <Descriptions.Item label="Pay Date">{formatPayDate(paymentDetails.payDate)}</Descriptions.Item>
+                  <Descriptions.Item label="Card Type">{paymentDetails.cardType || 'N/A'}</Descriptions.Item>
+                  <Descriptions.Item label="Order Info">{paymentDetails.orderInfo || 'N/A'}</Descriptions.Item>
+                </Descriptions>
+              </Col>
+            </Row>
+          </Card>
+        </Result>
       )}
     </div>
   );
