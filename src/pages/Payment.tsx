@@ -77,7 +77,7 @@ const Payment = () => {
         console.log('API Response>>>:', response);
         setApiResponse(response); // Lưu kết quả từ API
 
-        // Kiểm tra nếu response có message và hiển thị thông báo
+       
         if (response) {
           notification.success({
             message: 'Payment Success',

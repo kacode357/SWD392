@@ -362,7 +362,7 @@ const createPaymentApi = async (params: { vnp_Amount: string; vnp_BankCode: stri
   const queryString = new URLSearchParams(params).toString();
   const URL_API = `/api/payment/createpayment?${queryString}`;
   const response = await defaultAxiosInstance.get(URL_API);
-  return response.data;
+  return response;
 };
 
 export {
