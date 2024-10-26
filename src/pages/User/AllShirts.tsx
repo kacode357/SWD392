@@ -1,55 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Skeleton, Row, Col, Pagination } from 'antd';
-import { useNavigate } from 'react-router-dom';
 import { getShirtByMultipleNamesApi } from '../../util/api';
 import ShoppingOptions from '../../components/Menu/ShoppingOptions';
 
 const AllShirts: React.FC = () => {
-    const navigate = useNavigate();
     const [shirts, setShirts] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
+
+    // Các state cho bộ lọc
     const [selectedClub, setSelectedClub] = useState<string>('');
     const [selectedSession, setSelectedSession] = useState<string>('');
     const [selectedPlayer, setSelectedPlayer] = useState<string>('');
     const [selectedType, setSelectedType] = useState<string>('');
     const pageSize = 10;
 
+    // Hàm fetch dữ liệu dựa trên các bộ lọc
+    const fetchShirts = async () => {
+        try {
+            setLoading(true);
+            const data = {
+                pageNum: currentPage,
+                pageSize: pageSize,
+                nameShirt: '',
+                nameClub: selectedClub,
+                nameSeason: selectedSession,
+                namePlayer: selectedPlayer,
+                typeShirt: selectedType,
+                status: 1,
+            };
+            const result = await getShirtByMultipleNamesApi(data);
+            setShirts(result.pageData);
+            setTotalItems(result.totalItems);
+        } catch (error) {
+            console.error('Error fetching shirts', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Gọi lại fetchShirts mỗi khi một bộ lọc hoặc trang hiện tại thay đổi
     useEffect(() => {
-        const fetchShirts = async () => {
-            try {
-                setLoading(true);
-                const data = {
-                    pageNum: currentPage,
-                    pageSize: pageSize,
-                    nameShirt: '',
-                    nameClub: selectedClub,
-                    nameSeason: selectedSession,
-                    namePlayer: selectedPlayer,
-                    typeShirt: selectedType,
-                    status: 1,
-                };
-                const result = await getShirtByMultipleNamesApi(data);
-                setShirts(result.pageData);
-                setTotalItems(result.totalItems);
-            } catch (error) {
-                console.error('Error fetching shirts', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchShirts();
-    }, [currentPage, selectedClub, selectedSession, selectedPlayer, selectedType]);
-
-    const handleCardClick = (id: number) => {
-        navigate(`/listshirt/shirt-details/${id}`);
-    };
-
-    const formatPrice = (price: number | null | undefined) => {
-        return price ? `$${new Intl.NumberFormat().format(price)}` : 'Liên hệ';
-    };
+    }, [selectedClub, selectedSession, selectedPlayer, selectedType, currentPage]);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -82,14 +76,7 @@ const AllShirts: React.FC = () => {
                                 <Col key={shirt.id} xs={24} sm={12} md={8} lg={6}>
                                     <Card
                                         hoverable
-                                        onClick={() => handleCardClick(shirt.id)}
-                                        cover={
-                                            <img
-                                                alt={shirt.name}
-                                                src={shirt.urlImg}
-                                                style={{ height: '300px', objectFit: 'cover' }}
-                                            />
-                                        }
+                                        cover={<img alt={shirt.name} src={shirt.urlImg} style={{ height: '300px', objectFit: 'cover' }} />}
                                         style={{ width: '100%', position: 'relative' }}
                                     >
                                         <Card.Meta
@@ -104,32 +91,15 @@ const AllShirts: React.FC = () => {
                                                 </>
                                             }
                                         />
-                                        <div
-                                            style={{
-                                                position: 'absolute',
-                                                bottom: '10px',
-                                                right: '10px',
-                                                backgroundColor: '#fff',
-                                                padding: '5px 10px',
-                                                borderRadius: '5px',
-                                                fontWeight: 'bold',
-                                                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                                            }}
-                                        >
-                                            {formatPrice(shirt.price)}
+                                        <div style={{ position: 'absolute', bottom: '10px', right: '10px', backgroundColor: '#fff', padding: '5px 10px', borderRadius: '5px', fontWeight: 'bold', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
+                                            ${shirt.price}
                                         </div>
                                     </Card>
                                 </Col>
                             ))}
                     </Row>
                     <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                        <Pagination
-                            current={currentPage}
-                            pageSize={pageSize}
-                            total={totalItems}
-                            onChange={handlePageChange}
-                            showSizeChanger={false}
-                        />
+                        <Pagination current={currentPage} pageSize={pageSize} total={totalItems} onChange={handlePageChange} showSizeChanger={false} />
                     </div>
                 </div>
             </div>
