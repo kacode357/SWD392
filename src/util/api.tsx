@@ -364,8 +364,13 @@ const createPaymentApi = async (params: { vnp_Amount: string; vnp_BankCode: stri
   const response = await defaultAxiosInstance.get(URL_API);
   return response;
 };
-
+const getPaymentByCurrentUserApi = async () => {
+  const URL_API = '/api/payment/paymentbycurrentuser';
+  const response = await defaultAxiosInstance.get(URL_API);
+  return response.data;
+};
 export {
+  getPaymentByCurrentUserApi,
   createPaymentApi,
   getPaymentStatusApi,
   getUrlPaymentApi,

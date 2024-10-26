@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { notification, Spin, Card, Descriptions, Row, Col, Result, Button } from 'antd';
+import { notification, Spin, Card, Descriptions, Result, Button } from 'antd';
 import { createPaymentApi } from '../util/api';
 import { CheckCircleOutlined } from '@ant-design/icons';
 
@@ -112,34 +112,31 @@ const Payment = () => {
   };
 
   return (
-    <div className="py-20 flex justify-center items-center min-h-screen">
+    <div className="min-h-screen flex justify-center items-center py-10 bg-gray-100">
       {loading ? (
         <Spin size="large" />
       ) : (
-        <Row justify="center" align="middle">
-          <Col xs={24} sm={24} md={12} lg={12}>
-            <Card
-              title="Payment Details"
-              bordered={false}
-              style={{ width: '100%', maxWidth: '600px', textAlign: 'left', marginTop: '20px' }}
-            >
+        <div className="flex flex-col md:flex-row justify-center w-full px-4">
+          <div className="md:w-6/12 w-full p-4">
+            <Card className="shadow-lg" title="Payment Details">
               <Descriptions column={1} bordered>
                 <Descriptions.Item label="Amount">{formatAmount(paymentDetails.amount)}</Descriptions.Item>
                 <Descriptions.Item label="Bank Code">{paymentDetails.bankCode || 'N/A'}</Descriptions.Item>
-                <Descriptions.Item label="Transaction No">{paymentDetails.transactionNo || 'N/A'}</Descriptions.Item>
-                <Descriptions.Item label="Transaction Status">{paymentDetails.transactionStatus || 'N/A'}</Descriptions.Item>
                 <Descriptions.Item label="Pay Date">{formatPayDate(paymentDetails.payDate)}</Descriptions.Item>
                 <Descriptions.Item label="Card Type">{paymentDetails.cardType || 'N/A'}</Descriptions.Item>
                 <Descriptions.Item label="Order Info">{paymentDetails.orderInfo || 'N/A'}</Descriptions.Item>
               </Descriptions>
             </Card>
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={12}>
+          </div>
+
+          <div className="md:w-4/12 w-full p-4">
             <Result
               status="success"
-              icon={<CheckCircleOutlined style={{ color: '#52c41a' }} />} 
+              icon={<CheckCircleOutlined style={{ color: '#52c41a' }} />}
               title="Payment Success!"
-              subTitle={`Your payment of ${formatAmount(paymentDetails.amount)} was successful on ${formatPayDate(paymentDetails.payDate)}.`}
+              subTitle={`Your payment of ${formatAmount(paymentDetails.amount)} was successful on ${formatPayDate(
+                paymentDetails.payDate
+              )}.`}
               extra={[
                 <Button type="primary" key="dashboard" href="/dashboard">
                   Go to Dashboard
@@ -149,8 +146,8 @@ const Payment = () => {
                 </Button>,
               ]}
             />
-          </Col>
-        </Row>
+          </div>
+        </div>
       )}
     </div>
   );

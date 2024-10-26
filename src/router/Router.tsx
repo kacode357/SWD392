@@ -28,6 +28,7 @@ import ListShirtPage from "../pages/User/PageSearchShirt";
 import AllShirts from "../pages/User/AllShirts";
 
 import Payment from "../pages/Payment";
+import HistoryPayment from "../pages/User/HistoryPayment";
 
 // Define routes with role-based access
 const router = createBrowserRouter([
@@ -55,6 +56,7 @@ const router = createBrowserRouter([
 
       // User routes
       { path: "user/my-profile", element: <PrivateRoute element={MyProfile} allowedRoles={[ROLES.USER, ROLES.STAFF]} /> },
+      { path: "user/payment-history", element: <PrivateRoute element={HistoryPayment} allowedRoles={[ROLES.USER]} /> },
       { path: "user/setting", element: <PrivateRoute element={SettingUser} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
 
       // Public routes
