@@ -107,7 +107,7 @@ const handleErrorByNotification = (errors: AxiosError<ErrorResponse>) => {
   }
 
   // Check if message is present and not null/undefined before showing notification
-  if (message && message !== "Request failed with status code 404") {
+  if (message && message !== "Request failed with status code 404" || message !== "Cart null!.") {
     notification.error({
       message: "Error",
       description: message,
