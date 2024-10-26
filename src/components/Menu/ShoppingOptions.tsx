@@ -4,15 +4,19 @@ import { getShirtByMultipleNamesApi } from '../../util/api';
 
 const { Panel } = Collapse;
 
-interface ShirtData {
+interface Shirt {
+    id: string;
     clubName: string;
     sessionName: string;
     fullName: string;
     typeShirtName: string;
+    urlImg: string;
+    price: number;
 }
 
 interface ApiResponse {
-    pageData: ShirtData[];
+    pageData: Shirt[];
+    totalItems: number;
 }
 
 interface ShoppingOptionsProps {
@@ -28,11 +32,6 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
     onPlayerChange,
     onTypeChange,
 }) => {
-    const [, setClubList] = useState<string[]>([]);
-    const [, setSessionList] = useState<string[]>([]);
-    const [, setPlayerList] = useState<string[]>([]);
-    const [, setTypeList] = useState<string[]>([]);
-
     const [filteredClubList, setFilteredClubList] = useState<string[]>([]);
     const [filteredSessionList, setFilteredSessionList] = useState<string[]>([]);
     const [filteredPlayerList, setFilteredPlayerList] = useState<string[]>([]);
@@ -65,11 +64,6 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
                 const players = Array.from(new Set(pageData.map((shirt) => shirt.fullName).filter(Boolean)));
                 const types = Array.from(new Set(pageData.map((shirt) => shirt.typeShirtName).filter(Boolean)));
 
-                setClubList(clubs);
-                setSessionList(sessions);
-                setPlayerList(players);
-                setTypeList(types);
-
                 setFilteredClubList(clubs);
                 setFilteredSessionList(sessions);
                 setFilteredPlayerList(players);
@@ -82,63 +76,28 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
         fetchData();
     }, []);
 
-    // Cập nhật danh sách đã lọc
-    const updateFilteredLists = async () => {
-        try {
-            const data = {
-                pageNum: 1,
-                pageSize: 1000,
-                nameShirt: '',
-                nameClub: selectedClub || '',
-                nameSeason: selectedSession || '',
-                namePlayer: selectedPlayer || '',
-                typeShirt: selectedType || '',
-                status: 1,
-            };
-
-            const result: ApiResponse = await getShirtByMultipleNamesApi(data);
-            const pageData = result.pageData;
-
-            const relatedClubs = Array.from(new Set(pageData.map((shirt) => shirt.clubName).filter(Boolean)));
-            const relatedSessions = Array.from(new Set(pageData.map((shirt) => shirt.sessionName).filter(Boolean)));
-            const relatedPlayers = Array.from(new Set(pageData.map((shirt) => shirt.fullName).filter(Boolean)));
-            const relatedTypes = Array.from(new Set(pageData.map((shirt) => shirt.typeShirtName).filter(Boolean)));
-
-            setFilteredClubList(relatedClubs);
-            setFilteredSessionList(relatedSessions);
-            setFilteredPlayerList(relatedPlayers);
-            setFilteredTypeList(relatedTypes);
-        } catch (error) {
-            console.error('Error updating filtered lists', error);
-        }
-    };
-
-    useEffect(() => {
-        updateFilteredLists();
-    }, [selectedClub, selectedSession, selectedPlayer, selectedType]);
-
     const handleClubChange = (e: any) => {
-        const selectedClub = e.target.value;
-        setSelectedClub(selectedClub);
-        onClubChange(selectedClub);
+        const club = e.target.value || '';
+        setSelectedClub(club);
+        onClubChange(club);
     };
 
     const handleSessionChange = (e: any) => {
-        const selectedSession = e.target.value;
-        setSelectedSession(selectedSession);
-        onSessionChange(selectedSession);
+        const session = e.target.value || '';
+        setSelectedSession(session);
+        onSessionChange(session);
     };
 
     const handlePlayerChange = (e: any) => {
-        const selectedPlayer = e.target.value;
-        setSelectedPlayer(selectedPlayer);
-        onPlayerChange(selectedPlayer);
+        const player = e.target.value || '';
+        setSelectedPlayer(player);
+        onPlayerChange(player);
     };
 
     const handleTypeChange = (e: any) => {
-        const selectedType = e.target.value;
-        setSelectedType(selectedType);
-        onTypeChange(selectedType);
+        const type = e.target.value || '';
+        setSelectedType(type);
+        onTypeChange(type);
     };
 
     return (
@@ -149,7 +108,7 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
                 {/* Club Selection */}
                 <Panel header="Club" key="1">
                     {selectedClub ? (
-                        <Tag closable onClose={() => setSelectedClub(null)} style={{ fontSize: '14px', padding: '5px 10px' }}>
+                        <Tag closable onClose={() => handleClubChange({ target: { value: '' } })} style={{ fontSize: '14px', padding: '5px 10px' }}>
                             <strong>Team:</strong> {selectedClub}
                         </Tag>
                     ) : (
@@ -166,7 +125,7 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
                 {/* Session Selection */}
                 <Panel header="Session" key="2">
                     {selectedSession ? (
-                        <Tag closable onClose={() => setSelectedSession(null)} style={{ fontSize: '14px', padding: '5px 10px' }}>
+                        <Tag closable onClose={() => handleSessionChange({ target: { value: '' } })} style={{ fontSize: '14px', padding: '5px 10px' }}>
                             <strong>Session:</strong> {selectedSession}
                         </Tag>
                     ) : (
@@ -183,7 +142,7 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
                 {/* Player Selection */}
                 <Panel header="Player" key="3">
                     {selectedPlayer ? (
-                        <Tag closable onClose={() => setSelectedPlayer(null)} style={{ fontSize: '14px', padding: '5px 10px' }}>
+                        <Tag closable onClose={() => handlePlayerChange({ target: { value: '' } })} style={{ fontSize: '14px', padding: '5px 10px' }}>
                             <strong>Player:</strong> {selectedPlayer}
                         </Tag>
                     ) : (
@@ -200,7 +159,7 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
                 {/* Type Selection */}
                 <Panel header="Type" key="4">
                     {selectedType ? (
-                        <Tag closable onClose={() => setSelectedType(null)} style={{ fontSize: '14px', padding: '5px 10px' }}>
+                        <Tag closable onClose={() => handleTypeChange({ target: { value: '' } })} style={{ fontSize: '14px', padding: '5px 10px' }}>
                             <strong>Type:</strong> {selectedType}
                         </Tag>
                     ) : (
