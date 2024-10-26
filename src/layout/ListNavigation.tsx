@@ -1,12 +1,19 @@
 import React from 'react';
 import { Button, Dropdown } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 import ClubMenuComponent from '../components/Menu/ClubMenu';
 import PlayerMenuComponent from '../components/Menu/PlayerMenu';
-import SessionComponent from '../components/Menu/SessionMenu'; 
+import SessionComponent from '../components/Menu/SessionMenu';
 
 const NavigationComponent: React.FC = () => {
+    const navigate = useNavigate(); // Sử dụng useNavigate để điều hướng
+
+    const handleAllShirtsClick = () => {
+        navigate('/allshirts'); // Điều hướng đến trang AllShirts
+    };
+
     return (
         <div style={{ position: 'relative' }}>
             <nav
@@ -23,8 +30,8 @@ const NavigationComponent: React.FC = () => {
                     }}
                 >
                     <li>
-                        <Button type="text" style={{ color: 'white' }}>
-                            LATEST
+                        <Button type="text" style={{ color: 'white' }} onClick={handleAllShirtsClick}>
+                            ALL SHIRTS
                         </Button>
                     </li>
                     <li>
@@ -38,11 +45,11 @@ const NavigationComponent: React.FC = () => {
                         </Button>
                     </li>
                     <li>
-                     <Dropdown overlay={<SessionComponent />} trigger={['hover']}>
+                        <Dropdown overlay={<SessionComponent />} trigger={['hover']}>
                             <Button type="text" style={{ color: 'white' }}>
                                 SESSION <DownOutlined />
                             </Button>
-                        </Dropdown> 
+                        </Dropdown>
                     </li>
                     <li>
                         <Dropdown overlay={<ClubMenuComponent />} trigger={['hover']}>
