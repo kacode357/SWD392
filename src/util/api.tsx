@@ -342,18 +342,27 @@ const deleteCartApi = async (orderId: string, status: 0) => {
   const response = await defaultAxiosInstance.delete(URL_API);
   return response.data;
 };
-
-
-
 const deleteItemInCartApi = async (payload: { orderId: string; shirtSizeId: number; }) => {
   const URL_API = `/api/order/deteleitemincart`;
   const response = await defaultAxiosInstance.post(URL_API, payload);
   return response.data;
 };
+const getUrlPaymentApi = async (payload: { orderId: string; amount: number; createDate: string; }) => {
+  const URL_API = `/api/payment/geturlpayment`;
+  const response = await axiosWithoutLoading.post(URL_API, payload);
+  return response.data;
+};
+const getPaymentStatusApi = async (params: { vnp_Amount: string; vnp_BankCode: string; vnp_BankTranNo: string; vnp_CardType: string; vnp_OrderInfo: string; vnp_PayDate: string; vnp_ResponseCode: string; vnp_TmnCode: string; vnp_TransactionNo: string; vnp_TransactionStatus: string; vnp_TxnRef: string; vnp_SecureHash: string; }) => {
+  const queryString = new URLSearchParams(params).toString();
+  const URL_API = `/api/payment/status?${queryString}`;
+  const response = await defaultAxiosInstance.get(URL_API);
+  return response.data;
+};
 
 export {
+  getPaymentStatusApi,
+  getUrlPaymentApi,
   deleteItemInCartApi,
-
   getPlayerApi,
   getTypeShirtApi,
   getClubApi,

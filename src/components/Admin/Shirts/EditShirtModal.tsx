@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Form, Input, Button, Select, message } from "antd";
-import { getShirtByIdApi, updateShirtApi, getTypeShirtApi, getPlayerApi } from "../../../util/api"; // Giả sử có API tương ứng
-import FileUploader from "../../../util/FileUploader"; // Import FileUploader component
+import { Modal, Form, Input, Button, Select, message, InputNumber, DatePicker } from "antd";
+import { getShirtByIdApi, updateShirtApi, getTypeShirtApi, getPlayerApi } from "../../../util/api"; 
+import FileUploader from "../../../util/FileUploader"; 
 
 const { Option } = Select;
 
@@ -17,9 +17,8 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
   const [loading, setLoading] = useState(false);
   const [typeShirts, setTypeShirts] = useState([]);
   const [players, setPlayers] = useState([]);
-  const [imageUrl, setImageUrl] = useState<string | null>(null); // Store uploaded image URL
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-  // Fetch type shirts for selection
   const fetchTypeShirts = async (keyword = "") => {
     const data = {
       pageNum: 1,
@@ -28,11 +27,9 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
       status: true,
     };
     const response = await getTypeShirtApi(data);
-    console.log('TypeShirts:', response.pageData);
     setTypeShirts(response.pageData);
   };
 
-  // Fetch players for selection
   const fetchPlayers = async (keyword = "") => {
     const data = {
       pageNum: 1,
@@ -46,23 +43,20 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
 
   useEffect(() => {
     if (shirtId && visible) {
-      // Lấy thông tin áo để chỉnh sửa khi mở modal
       getShirtByIdApi(shirtId).then((shirt) => {
-        console.log('EditShirtModalProps:', shirt);
         form.setFieldsValue({
           name: shirt.name,
+          number: shirt.number,
+          price: shirt.price,
+       
           description: shirt.description,
-          sessionId: shirt.sessionId,
           typeShirtId: shirt.typeShirtId,
           playerId: shirt.playerId,
-          typeShirtName: shirt.typeShirtName,
-          fullName : shirt.fullName,
-          clubId: shirt.clubId,
         });
-        setImageUrl(shirt.urlImg || null); // Lấy ảnh nếu có và set URL ảnh
+        setImageUrl(shirt.urlImg || null);
       });
-      fetchTypeShirts(); // Fetch type shirts on modal open
-      fetchPlayers();    // Fetch players on modal open
+      fetchTypeShirts();
+      fetchPlayers();
     }
   }, [shirtId, visible]);
 
@@ -76,11 +70,13 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
       setLoading(true);
       await updateShirtApi(shirtId, {
         ...values,
-        urlImg: imageUrl, // Pass the uploaded image URL
-      }); // Cập nhật thông tin áo
+        urlImg: imageUrl,
+        status: 1,
+        date : new Date().toISOString()
+      });
       message.success("Shirt updated successfully");
-      refreshShirts(); // Làm mới danh sách áo
-      onClose(); // Đóng modal
+      refreshShirts();
+      onClose();
     } catch (error) {
       message.error("Failed to update shirt");
     } finally {
@@ -88,7 +84,6 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
     }
   };
 
-  // Callback when image upload succeeds
   const handleImageUploadSuccess = (url: string) => {
     setImageUrl(url);
     message.success("Image uploaded successfully");
@@ -154,6 +149,24 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
             ))}
           </Select>
         </Form.Item>
+
+        <Form.Item
+          name="number"
+          label="Shirt Number"
+          rules={[{ required: true, message: "Please enter shirt number" }]}
+        >
+          <InputNumber min={0} />
+        </Form.Item>
+
+        <Form.Item
+          name="price"
+          label="Price"
+          rules={[{ required: true, message: "Please enter price" }]}
+        >
+          <InputNumber min={0} />
+        </Form.Item>
+
+   
 
         <Form.Item
           name="description"
