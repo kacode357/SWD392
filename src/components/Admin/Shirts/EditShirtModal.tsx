@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Form, Input, Button, Select, message, InputNumber, DatePicker } from "antd";
+import { Modal, Form, Input, Button, Select, message, InputNumber } from "antd";
 import { getShirtByIdApi, updateShirtApi, getTypeShirtApi, getPlayerApi } from "../../../util/api"; 
 import FileUploader from "../../../util/FileUploader"; 
 
