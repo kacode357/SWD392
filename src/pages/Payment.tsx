@@ -78,10 +78,10 @@ const Payment = () => {
         setApiResponse(response); // Lưu kết quả từ API
 
         // Kiểm tra nếu response có message và hiển thị thông báo
-        if (response?.message) {
+        if (response) {
           notification.success({
             message: 'Payment Success',
-            description: response.message,
+            description: 'Your payment was successful.',
           });
         }
       } catch (error) {
