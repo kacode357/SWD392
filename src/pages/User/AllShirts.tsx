@@ -30,6 +30,7 @@ const AllShirts: React.FC = () => {
                 nameSeason: selectedSession,
                 namePlayer: selectedPlayer,
                 typeShirt: selectedType,
+                nameTypeShirt: '',
                 status: 1,
             };
             const result = await getShirtByMultipleNamesApi(data);

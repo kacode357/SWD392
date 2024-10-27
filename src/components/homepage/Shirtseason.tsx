@@ -16,6 +16,7 @@ const Shirtseason: React.FC = () => {
                     nameClub: '',
                     nameSeason: '',
                     namePlayer: '',
+                    nameTypeShirt : '',
                     status: 1
                 };
                 const response = await getShirtByMultipleNamesApi(data);

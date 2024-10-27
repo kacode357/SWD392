@@ -23,5 +23,6 @@ export const sidebarPaths: string[] = [
     '/staff/manager-type-shirt',
     '/staff/manager-shirt',
     '/staff/manager-shirt-size',
+    '/user/payment-history',
 
 ];

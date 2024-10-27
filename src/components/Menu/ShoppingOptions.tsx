@@ -56,7 +56,7 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
                 status: 1,
             };
 
-            const result: ApiResponse = await getShirtByMultipleNamesApi(data);
+            const result: ApiResponse = await getShirtByMultipleNamesApi(data as any);
             const pageData = result.pageData;
 
             // Tạo danh sách liên quan dựa trên dữ liệu trả về từ API
@@ -108,7 +108,6 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
         <div style={{ padding: '16px', border: '1px solid #d9d9d9', borderRadius: '4px' }}>
             <h3>Shopping Options</h3>
             <Collapse defaultActiveKey={['1', '2', '3', '4']}>
-
                 {/* Club Selection */}
                 <Panel header="Club" key="1">
                     {selectedClub ? (
@@ -176,7 +175,6 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
                         </Radio.Group>
                     )}
                 </Panel>
-
             </Collapse>
         </div>
     );

@@ -252,7 +252,7 @@ const updateShirtApi = async (id: number, data: { typeShirtId: number; playerId:
   const response = await defaultAxiosInstance.put(URL_API, data);
   return response.data;
 };
-const getShirtByMultipleNamesApi = async (data: { pageNum: number; pageSize: number; nameShirt: string; nameClub: string; nameSeason: string; namePlayer: string; status: number }) => {
+const getShirtByMultipleNamesApi = async (data: { pageNum: number; pageSize: number; nameShirt: string; nameClub: string; nameSeason: string; namePlayer: string;nameTypeShirt  :string ;status: number }) => {
   const URL_API = '/api/shirt/searchbymutilname';
   const response = await axiosWithoutLoading.post(URL_API, data);
   return response.data;
@@ -364,8 +364,13 @@ const createPaymentApi = async (params: { vnp_Amount: string; vnp_BankCode: stri
   const response = await defaultAxiosInstance.get(URL_API);
   return response;
 };
-
+const getPaymentByCurrentUserApi = async () => {
+  const URL_API = '/api/payment/paymentbycurrentuser';
+  const response = await defaultAxiosInstance.get(URL_API);
+  return response.data;
+};
 export {
+  getPaymentByCurrentUserApi,
   createPaymentApi,
   getPaymentStatusApi,
   getUrlPaymentApi,
