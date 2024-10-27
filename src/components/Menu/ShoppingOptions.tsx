@@ -42,40 +42,43 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
     const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
     const [selectedType, setSelectedType] = useState<string | null>(null);
 
-    // Lấy danh sách ban đầu
+    // Hàm fetch và cập nhật các danh sách đã lọc
+    const updateFilteredLists = async () => {
+        try {
+            const data = {
+                pageNum: 1,
+                pageSize: 1000,
+                nameShirt: '',
+                nameClub: selectedClub || '',
+                nameSeason: selectedSession || '',
+                namePlayer: selectedPlayer || '',
+                typeShirt: selectedType || '',
+                status: 1,
+            };
+
+            const result: ApiResponse = await getShirtByMultipleNamesApi(data as any);
+            const pageData = result.pageData;
+
+            // Tạo danh sách liên quan dựa trên dữ liệu trả về từ API
+            const relatedClubs = Array.from(new Set(pageData.map((shirt) => shirt.clubName).filter(Boolean)));
+            const relatedSessions = Array.from(new Set(pageData.map((shirt) => shirt.sessionName).filter(Boolean)));
+            const relatedPlayers = Array.from(new Set(pageData.map((shirt) => shirt.fullName).filter(Boolean)));
+            const relatedTypes = Array.from(new Set(pageData.map((shirt) => shirt.typeShirtName).filter(Boolean)));
+
+            // Cập nhật danh sách lọc dựa trên lựa chọn hiện tại
+            setFilteredClubList(relatedClubs);
+            setFilteredSessionList(relatedSessions);
+            setFilteredPlayerList(relatedPlayers);
+            setFilteredTypeList(relatedTypes);
+        } catch (error) {
+            console.error('Error updating filtered lists', error);
+        }
+    };
+
+    // Cập nhật danh sách đã lọc khi bất kỳ bộ lọc nào thay đổi
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = {
-                    pageNum: 1,
-                    pageSize: 1000,
-                    nameShirt: '',
-                    nameClub: '',
-                    nameSeason: '',
-                    namePlayer: '',
-                    nameTypeShirt: '',
-                    status: 1,
-                };
-
-                const result: ApiResponse = await getShirtByMultipleNamesApi(data);
-                const pageData = result.pageData;
-
-                const clubs = Array.from(new Set(pageData.map((shirt) => shirt.clubName).filter(Boolean)));
-                const sessions = Array.from(new Set(pageData.map((shirt) => shirt.sessionName).filter(Boolean)));
-                const players = Array.from(new Set(pageData.map((shirt) => shirt.fullName).filter(Boolean)));
-                const types = Array.from(new Set(pageData.map((shirt) => shirt.typeShirtName).filter(Boolean)));
-
-                setFilteredClubList(clubs);
-                setFilteredSessionList(sessions);
-                setFilteredPlayerList(players);
-                setFilteredTypeList(types);
-            } catch (error) {
-                console.error('Error fetching data', error);
-            }
-        };
-
-        fetchData();
-    }, []);
+        updateFilteredLists();
+    }, [selectedClub, selectedSession, selectedPlayer, selectedType]);
 
     const handleClubChange = (e: any) => {
         const club = e.target.value || '';
@@ -105,7 +108,6 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
         <div style={{ padding: '16px', border: '1px solid #d9d9d9', borderRadius: '4px' }}>
             <h3>Shopping Options</h3>
             <Collapse defaultActiveKey={['1', '2', '3', '4']}>
-
                 {/* Club Selection */}
                 <Panel header="Club" key="1">
                     {selectedClub ? (
@@ -173,7 +175,6 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
                         </Radio.Group>
                     )}
                 </Panel>
-
             </Collapse>
         </div>
     );

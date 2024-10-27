@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Skeleton, Row, Col, Pagination } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import { getShirtByMultipleNamesApi } from '../../util/api';
 import ShoppingOptions from '../../components/Menu/ShoppingOptions';
 
@@ -8,6 +9,7 @@ const AllShirts: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
+    const navigate = useNavigate();
 
     // Các state cho bộ lọc
     const [selectedClub, setSelectedClub] = useState<string>('');
@@ -77,6 +79,7 @@ const AllShirts: React.FC = () => {
                                 <Col key={shirt.id} xs={24} sm={12} md={8} lg={6}>
                                     <Card
                                         hoverable
+                                        onClick={() => navigate(`/listshirt/shirt-details/${shirt.id}`)}
                                         cover={<img alt={shirt.name} src={shirt.urlImg} style={{ height: '300px', objectFit: 'cover' }} />}
                                         style={{ width: '100%', position: 'relative' }}
                                     >
