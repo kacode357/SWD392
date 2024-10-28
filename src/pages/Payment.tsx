@@ -3,8 +3,6 @@ import { notification, Spin, Card, Descriptions, Result, Button } from "antd";
 import { createPaymentApi } from "../util/api";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { CartContext } from "../context/cart.context";
-import { firestore } from "../config/firebaseConfig"; // Import từ file firebase.js của bạn
-import { collection, addDoc } from "firebase/firestore";
 
 const Payment = () => {
   interface PaymentDetails {
@@ -77,35 +75,17 @@ const Payment = () => {
           vnp_TxnRef: newPaymentDetails.txnRef || "",
           vnp_SecureHash: newPaymentDetails.secureHash || "",
         });
+        console.log("API Response>>>:", response);
 
         if (response) {
           notification.success({
             message: "Payment Success",
             description: "Your payment was successful.",
           });
-
-          // Lưu vào Firestore
-          await addDoc(collection(firestore, 'payments'), {
-            amount: newPaymentDetails.amount,
-            bankCode: newPaymentDetails.bankCode,
-            bankTranNo: newPaymentDetails.bankTranNo,
-            cardType: newPaymentDetails.cardType,
-            orderInfo: newPaymentDetails.orderInfo,
-            payDate: newPaymentDetails.payDate,
-            responseCode: newPaymentDetails.responseCode,
-            tmnCode: newPaymentDetails.tmnCode,
-            transactionNo: newPaymentDetails.transactionNo,
-            transactionStatus: newPaymentDetails.transactionStatus,
-            txnRef: newPaymentDetails.txnRef,
-            secureHash: newPaymentDetails.secureHash,
-            createdAt: new Date(),
-          });
-
-          console.log("Payment details saved to Firestore.");
         }
-
       } catch (error) {
         console.error("Error fetching payment API:", error);
+
         notification.error({
           message: "Payment Failed",
           description:
