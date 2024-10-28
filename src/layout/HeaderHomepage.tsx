@@ -126,7 +126,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
                   >
                     <Avatar icon={<UserOutlined />} />
                     <span style={{ color: "white", marginLeft: "10px" }}>
-                      aaHello, {auth.user.name}
+                      Hello, {auth.user.name}
                     </span>
                   </div>
                 </Dropdown>

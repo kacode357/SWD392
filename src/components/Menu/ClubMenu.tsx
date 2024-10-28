@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Menu, Skeleton } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
-import { searchClientClubApi } from '../../util/api'; // Import API
+import { getAllClubApi } from '../../util/api'; // Import API
 
 interface Club {
     id: number;
@@ -20,7 +20,7 @@ const ClubMenuComponent: React.FC = () => {
             try {
                 setLoading(true);
                 const data = { pageNum: 1, pageSize: 10, keyWord: '', status: true };
-                const result = await searchClientClubApi(data);
+                const result = await getAllClubApi(data);
 
                 if (result && Array.isArray(result.pageData)) {
                     setClubs(result.pageData);
