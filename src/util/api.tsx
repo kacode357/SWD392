@@ -1,5 +1,5 @@
 import { defaultAxiosInstance, axiosWithoutLoading } from './axios.customize';
-
+//Helo
 const createUserApi = async (data: { email: string, password: string, userName: string, dob: string, address: string, phoneNumber: string, gender: string, imgUrl: string }) => {
   const URL_API = '/api/user';
   const response = await defaultAxiosInstance.post(URL_API, data);
