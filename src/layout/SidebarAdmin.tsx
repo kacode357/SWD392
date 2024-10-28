@@ -16,6 +16,7 @@ const AdminSidebar: React.FC = () => {
     { key: '/admin/manager-type-shirt', icon: <UserOutlined />, label: 'Manager Type Shirt' },
     { key: '/admin/manager-shirt', icon: <UserOutlined />, label: 'Manager Shirt' },
     { key: '/admin/manager-shirt-size', icon: <UserOutlined />, label: 'Manager Shirt Size' },
+    { key: '/admin/manager-order', icon: <UserOutlined />, label: 'Manager Order' },
   ];
 
   return (

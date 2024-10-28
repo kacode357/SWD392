@@ -232,7 +232,7 @@ body {
 }
 
 .custom-button:hover {
-  background-color: black;
+  background-color: black !important; 
   color: white;
 }
 .text-primary {

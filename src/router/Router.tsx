@@ -30,6 +30,7 @@ import AllShirts from "../pages/User/AllShirts";
 import Payment from "../pages/Payment";
 import HistoryPayment from "../pages/User/HistoryPayment";
 import ManagerOrder from "../pages/Admin/ManagerOrder";
+import OrdersHistory from "../pages/User/OrdersHistory";
 
 // Define routes with role-based access
 const router = createBrowserRouter([
@@ -45,6 +46,7 @@ const router = createBrowserRouter([
       { path: "admin/manager-type-shirt", element: <PrivateRoute element={ManagerTypeShirt} allowedRoles={[ROLES.ADMIN]} /> },
       { path: "admin/manager-shirt", element: <PrivateRoute element={ManagerShirt} allowedRoles={[ROLES.ADMIN]} /> },
       { path: "admin/manager-shirt-size", element: <PrivateRoute element={ManagerShirtSize} allowedRoles={[ROLES.ADMIN]} /> },
+      { path: "admin/manager-order", element: <PrivateRoute element={ManagerOrder} allowedRoles={[ROLES.ADMIN]} /> },
 
       // Staff routes
       { path: "staff/manager-club", element: <PrivateRoute element={ManagerClub} allowedRoles={[ROLES.STAFF]} /> },
@@ -60,7 +62,7 @@ const router = createBrowserRouter([
       // User routes
       { path: "user/my-profile", element: <PrivateRoute element={MyProfile} allowedRoles={[ROLES.USER, ROLES.STAFF]} /> },
       { path: "user/payment-history", element: <PrivateRoute element={HistoryPayment} allowedRoles={[ROLES.USER]} /> },
-      
+      { path: "user/order-history", element: <PrivateRoute element={OrdersHistory} allowedRoles={[ROLES.USER]} /> },
       { path: "user/setting", element: <PrivateRoute element={SettingUser} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
 
       // Public routes

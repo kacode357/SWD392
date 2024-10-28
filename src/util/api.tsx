@@ -375,8 +375,20 @@ const updateOrderApi = async (id: string, data: { userId: string; totalPrice: nu
   const response = await defaultAxiosInstance.put(URL_API, data);
   return response.data;
 };
+const changePasswordApi = async (data: { currentPassword: string; newPassword: string; }) => {
+  const URL_API = `/api/user/change-password`;
+  const response = await defaultAxiosInstance.post(URL_API, data);
+  return response.data;
+};
+const searchOrderByCurrentUserApi = async (data: { pageNum: number; pageSize: number; status: number | null; }) => {
+  const URL_API = `/api/order/searchbycurrentuser`;
+  const response = await defaultAxiosInstance.post(URL_API, data);
+  return response.data;
+};
 
 export {
+  searchOrderByCurrentUserApi,
+  changePasswordApi,
   updateOrderApi,
   paymentByCurrentUserApi,
   createPaymentApi,

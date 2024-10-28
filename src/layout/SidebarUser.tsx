@@ -8,8 +8,8 @@ const UserSidebar: React.FC = () => {
   const location = useLocation();
 
   const menuItems = [
-    { key: '/user/payment-history', icon: <UserOutlined />, label: 'Payment History' },
-
+    { key: '/user/order-history', icon: <UserOutlined />, label: 'History Order' },
+    { key: '/user/payment-history', icon: <UserOutlined />, label: 'History Payment' },
     { key: '/user/setting', icon: <SettingOutlined />, label: 'Setting' },
   ];
 

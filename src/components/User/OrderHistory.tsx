@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Table, Input, Space, Row, Col } from "antd";
-import { searchOrderApi } from "../../../util/api";
+import { Table, Input, Space, Row, Col, Modal, Button } from "antd";
+import { searchOrderByCurrentUserApi } from "../../util/api";
 import moment from "moment";
 import { ReloadOutlined } from "@ant-design/icons";
-import StatusTag from "../../../constants/StatusTag";
-import UpdateStatusComponent from "./UpdateStatusComponent"; // Import the new component
-import StatusFlow from "../../StepsStatus/StepsOrderAdmin";
+import StatusTag from "../../constants/StatusTag";
+import StatusFlow from "../StepsStatus/StepsOrderAdmin";
+
 const { Search } = Input;
 
 const OrdersComponent: React.FC = () => {
@@ -17,16 +17,16 @@ const OrdersComponent: React.FC = () => {
     total: 0,
   });
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const fetchOrders = async (page = 1, pageSize = 10, keyword = "") => {
+  const fetchOrders = async (page = 1, pageSize = 10) => {
     setLoading(true);
     const data = {
       pageNum: page,
       pageSize: pageSize,
-      orderId: keyword,
       status: null,
     };
-    const response = await searchOrderApi(data);
+    const response = await searchOrderByCurrentUserApi(data);
     setOrders(response.pageData);
     setPagination({
       current: response.pageInfo.page,
@@ -43,17 +43,29 @@ const OrdersComponent: React.FC = () => {
   const handleTableChange = (pagination: any) => {
     const { current, pageSize } = pagination;
     setPagination((prev) => ({ ...prev, current, pageSize }));
-    fetchOrders(current, pageSize, searchKeyword);
+    fetchOrders(current, pageSize);
   };
 
   const onSearch = (value: string) => {
     setSearchKeyword(value);
-    fetchOrders(1, pagination.pageSize, value);
+    fetchOrders(1, pagination.pageSize);
   };
 
   const handleReset = () => {
     setSearchKeyword("");
-    fetchOrders(1, pagination.pageSize, "");
+    fetchOrders(1, pagination.pageSize);
+  };
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
   };
 
   // Table columns
@@ -88,18 +100,15 @@ const OrdersComponent: React.FC = () => {
       render: (status: number) => <StatusTag status={status} />,
     },
     {
-      title: "Change Status",
-      key: "changeStatus",
-      render: (order: any) => (
-        <UpdateStatusComponent
-          order={order} // Pass the entire order object
-          onStatusUpdated={() => fetchOrders(pagination.current, pagination.pageSize)} // Callback to reload the data
-        />
+      title: "View Detail Order",
+      key: "action",
+      render: () => (
+        <Button type="link" onClick={showModal}>
+          View Details
+        </Button>
       ),
     },
-    
   ];
-  
 
   return (
     <div>
@@ -109,14 +118,17 @@ const OrdersComponent: React.FC = () => {
           <Space className="custom-search">
             <Search
               style={{ width: 400 }}
-              placeholder="Search by keyword"
+              placeholder="CHƯA DÙNG ĐƯỢC"
               onSearch={onSearch}
               enterButton
               allowClear
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
             />
-            <ReloadOutlined onClick={handleReset} style={{ fontSize: "24px", cursor: "pointer" }} />
+            <ReloadOutlined
+              onClick={handleReset}
+              style={{ fontSize: "24px", cursor: "pointer" }}
+            />
           </Space>
         </Col>
       </Row>
@@ -134,6 +146,14 @@ const OrdersComponent: React.FC = () => {
         loading={loading}
         onChange={handleTableChange}
       />
+      <Modal
+        title="Order Details"
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <p>ĐANG CHỜ API</p>
+      </Modal>
     </div>
   );
 };
