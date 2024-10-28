@@ -29,7 +29,7 @@ import AllShirts from "../pages/User/AllShirts";
 
 import Payment from "../pages/Payment";
 import HistoryPayment from "../pages/User/HistoryPayment";
-import TestPushNotification from "../pages/testpushnotification";
+import ManagerOrder from "../pages/Admin/ManagerOrder";
 
 // Define routes with role-based access
 const router = createBrowserRouter([
@@ -54,12 +54,13 @@ const router = createBrowserRouter([
       { path: "staff/manager-type-shirt", element: <PrivateRoute element={ManagerTypeShirt} allowedRoles={[ROLES.STAFF]} /> },
       { path: "staff/manager-shirt", element: <PrivateRoute element={ManagerShirt} allowedRoles={[ROLES.STAFF]} /> },
       { path: "staff/manager-shirt-size", element: <PrivateRoute element={ManagerShirtSize} allowedRoles={[ROLES.STAFF]} /> },
+      { path: "staff/manager-order", element: <PrivateRoute element={ManagerOrder} allowedRoles={[ROLES.STAFF]} /> },
+
 
       // User routes
       { path: "user/my-profile", element: <PrivateRoute element={MyProfile} allowedRoles={[ROLES.USER, ROLES.STAFF]} /> },
       { path: "user/payment-history", element: <PrivateRoute element={HistoryPayment} allowedRoles={[ROLES.USER]} /> },
-      { path: "user/testnotificaton", element: <PrivateRoute element={TestPushNotification} allowedRoles={[ROLES.USER]} /> },
-
+      
       { path: "user/setting", element: <PrivateRoute element={SettingUser} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
 
       // Public routes
@@ -68,10 +69,10 @@ const router = createBrowserRouter([
 
       { path: "payment", element: <PrivateRoute element={Payment} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
 
-
       { path: "listshirt", element: <PrivateRoute element={ListShirtPage} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "clubshirt", element: <PrivateRoute element={ClubShirts} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
-      { path: "allshirts", element: <PrivateRoute element={AllShirts} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
+      { path: "allshirts", element: <PrivateRoute element={AllShirts} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> }, 
+
       { path: "", element: <PrivateRoute element={HomePage} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.MANAGER]} /> },
       { path: "*", element: <NotFound /> },
     ],

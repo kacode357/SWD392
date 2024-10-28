@@ -1,23 +1,52 @@
-import  { useEffect, useState } from 'react';
-import { Table, Tag } from 'antd';
-import { getPaymentByCurrentUserApi } from '../../util/api'; // Đảm bảo import đúng đường dẫn
+import { useEffect, useState } from 'react';
+import { Table, Tag, Input, Button, Space } from 'antd'; 
+import { ReloadOutlined } from '@ant-design/icons'; // Import icon reload
+import { paymentByCurrentUserApi } from '../../util/api';
+import moment from 'moment'; // Import thư viện moment để format ngày
+
+const { Search } = Input;
 
 const HistoryPaymentUser = () => {
   const [payments, setPayments] = useState([]);
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 10, total: 0 });
+  const [searchKey, setSearchKey] = useState(''); 
 
+  const fetchPayments = async (pageNum: number, pageSize: number, keyWord?: string) => {
+    try {
+      const data = await paymentByCurrentUserApi({ pageNum, pageSize, keyWord });
+      setPayments(data.pageData);
+      setPagination({
+        current: data.pageInfo.page,
+        pageSize: data.pageInfo.size,
+        total: data.pageInfo.totalItem,
+      });
+    } catch (error) {
+      console.error('Error fetching payments:', error);
+    }
+  };
+
+  // Chỉ fetch khi tìm kiếm thay đổi hoặc reload
   useEffect(() => {
-    const fetchPayments = async () => {
-      try {
-        const data = await getPaymentByCurrentUserApi();
-        setPayments(data.pageData);
-      } catch (error) {
-        console.error('Error fetching payments:', error);
-      }
-    };
+    fetchPayments(pagination.current, pagination.pageSize, searchKey);
+  }, [searchKey]);
 
-    fetchPayments();
-  }, []);
+  const handleTableChange = (pagination: any) => {
+    setPagination({
+      ...pagination, // Cập nhật lại pagination khi thay đổi trang
+    });
+    fetchPayments(pagination.current, pagination.pageSize, searchKey);
+  };
 
+  const handleSearch = (value: string) => {
+    setSearchKey(value);
+    setPagination({ ...pagination, current: 1 }); // Reset về trang 1 khi có từ khóa tìm kiếm
+  };
+
+  const handleReload = () => {
+    setSearchKey(''); // Xóa từ khóa tìm kiếm
+    fetchPayments(1, pagination.pageSize, ""); // Reset lại về trang đầu tiên và không có từ khóa tìm kiếm
+  };
+  
   const columns = [
     {
       title: 'Order ID',
@@ -33,7 +62,10 @@ const HistoryPaymentUser = () => {
       title: 'Date',
       dataIndex: 'date',
       key: 'date',
-      render: (text: string) => new Date(text).toLocaleDateString(),
+      render: (date: string) => {
+        // Format date từ chuỗi '20241026072817' thành 'DD/MM/YYYY HH:mm:ss'
+        return moment(date, 'YYYYMMDDHHmmss').format('DD/MM/YYYY HH:mm:ss');
+      },
     },
     {
       title: 'Amount',
@@ -64,12 +96,32 @@ const HistoryPaymentUser = () => {
   ];
 
   return (
-    <Table 
-      columns={columns} 
-      dataSource={payments} 
-      rowKey="id" 
-      pagination={{ pageSize: 10 }}
-    />
+    <div>
+      {/* Thêm thanh tìm kiếm và nút reload */}
+      <Space className="custom-search mb-4" >
+        <Search 
+          placeholder="Search by Order ID" 
+          enterButton="Search" 
+          onSearch={handleSearch} 
+          style={{ width: 440 }} 
+          allowClear
+        />
+        <Button 
+          icon={<ReloadOutlined />} 
+          onClick={handleReload} 
+        >
+    
+        </Button>
+      </Space>
+
+      <Table 
+        columns={columns} 
+        dataSource={payments} 
+        rowKey="id" 
+        pagination={pagination}
+        onChange={handleTableChange}
+      />
+    </div>
   );
 };
 

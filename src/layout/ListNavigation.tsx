@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import ClubMenuComponent from '../components/Menu/ClubMenu';
 import PlayerMenuComponent from '../components/Menu/PlayerMenu';
 import SessionComponent from '../components/Menu/SessionMenu';
+import TypeShirtMenu from '../components/Menu/TypeShirtMenu';
 
 const NavigationComponent: React.FC = () => {
     const navigate = useNavigate(); // Sử dụng useNavigate để điều hướng
@@ -34,16 +35,7 @@ const NavigationComponent: React.FC = () => {
                             ALL SHIRTS
                         </Button>
                     </li>
-                    <li>
-                        <Button type="text" style={{ color: 'white' }}>
-                            OFFERS
-                        </Button>
-                    </li>
-                    <li>
-                        <Button type="text" style={{ color: 'white' }}>
-                            EURO 2024
-                        </Button>
-                    </li>
+                 
                     <li>
                         <Dropdown overlay={<SessionComponent />} trigger={['hover']}>
                             <Button type="text" style={{ color: 'white' }}>
@@ -66,23 +58,20 @@ const NavigationComponent: React.FC = () => {
                         </Dropdown>
                     </li>
                     <li>
+                        <Dropdown overlay={<TypeShirtMenu />} trigger={['hover']}>
+                            <Button type="text" style={{ color: 'white' }}>
+                                TYPE SHIRT <DownOutlined />
+                            </Button>
+                        </Dropdown>
+                    </li>
+                    <li>
                         <Button type="text" style={{ color: 'white' }}>
-                            PATCHES & PRINTING
+                            OFFERS
                         </Button>
                     </li>
                     <li>
                         <Button type="text" style={{ color: 'white' }}>
-                            PRODUCTS
-                        </Button>
-                    </li>
-                    <li>
-                        <Button type="text" style={{ color: 'white' }}>
-                            AUTHENTICS
-                        </Button>
-                    </li>
-                    <li>
-                        <Button type="text" style={{ color: 'white' }}>
-                            RETRO
+                            EURO 2024
                         </Button>
                     </li>
                 </ul>

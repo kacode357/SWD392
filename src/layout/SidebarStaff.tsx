@@ -15,6 +15,7 @@ const StaffSidebar: React.FC = () => {
     { key: '/staff/manager-type-shirt', icon: <UserOutlined />, label: 'Manager Type Shirt' },
     { key: '/staff/manager-shirt', icon: <UserOutlined />, label: 'Manager Shirt' },
     { key: '/staff/manager-shirt-size', icon: <UserOutlined />, label: 'Manager Shirt Size' },
+    { key: '/staff/manager-order', icon: <UserOutlined />, label: 'Manager Order' },
     { key: '/user/setting', icon: <SettingOutlined />, label: 'Setting' },
   ];
 

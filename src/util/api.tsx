@@ -87,7 +87,7 @@ const getClubApi = async (data: { pageNum: number; pageSize: number; keyWord: st
 };
 const searchClientClubApi = async (data: { pageNum: number; pageSize: number; keyWord: string; status: boolean }) => {
   const URL_API = '/api/club/search';
-  const response = await axiosWithoutLoading.post(URL_API, data);
+  const response = await defaultAxiosInstance.post(URL_API, data);
   return response.data;
 };
 const getAllClubApi = async (data: { pageNum: number; pageSize: number; keyWord: string; status: boolean }) => {
@@ -292,7 +292,7 @@ const addToCartApi = async (data: { shirtId: number; quantity: number, sizeId: n
   const response = await axiosWithoutLoading.post(URL_API, data);
   return response.data;
 };
-const searchOrderApi = async (data: { pageNum: number; pageSize: number; status: number; date: string }) => {
+const searchOrderApi = async (data: { pageNum: number; pageSize: number; orderId : string ;status: number | null}) => {
   const URL_API = `/api/order/search`;
   const response = await defaultAxiosInstance.post(URL_API, data);
   return response.data;
@@ -364,13 +364,21 @@ const createPaymentApi = async (params: { vnp_Amount: string; vnp_BankCode: stri
   const response = await defaultAxiosInstance.get(URL_API);
   return response;
 };
-const getPaymentByCurrentUserApi = async () => {
-  const URL_API = '/api/payment/paymentbycurrentuser';
-  const response = await defaultAxiosInstance.get(URL_API);
+
+const paymentByCurrentUserApi = async (data: { pageNum: number; pageSize: number; keyWord?: string; status?: boolean; }) => {
+  const URL_API = `/api/payment/paymentbycurrentuser`;
+  const response = await defaultAxiosInstance.post(URL_API, data);
   return response.data;
 };
+const updateOrderApi = async (id: string, data: { userId: string; totalPrice: number; shipPrice: number; deposit: number; date: string; refundStatus: boolean; status: number; }) => {
+  const URL_API = `/api/order?id=${id}`;
+  const response = await defaultAxiosInstance.put(URL_API, data);
+  return response.data;
+};
+
 export {
-  getPaymentByCurrentUserApi,
+  updateOrderApi,
+  paymentByCurrentUserApi,
   createPaymentApi,
   getPaymentStatusApi,
   getUrlPaymentApi,
