@@ -106,8 +106,8 @@ const Shirtdetail: React.FC = () => {
             <img
               src={
                 mainImage &&
-                (mainImage.startsWith("http://") ||
-                  mainImage.startsWith("https://"))
+                  (mainImage.startsWith("http://") ||
+                    mainImage.startsWith("https://"))
                   ? mainImage
                   : "https://m.media-amazon.com/images/I/B1HVVUyLAhL._CLa%7C2140%2C2000%7C51TfbGiVkfL.png%7C0%2C0%2C2140%2C2000%2B0.0%2C0.0%2C2140.0%2C2000.0_AC_UY1000_.png"
               }
@@ -128,12 +128,13 @@ const Shirtdetail: React.FC = () => {
             <p className="text-lg">Player: {shirtData.fullName}</p>
             <p className="text-lg">Number: {shirtData.number}</p>
             <p className="text-lg">Type: {shirtData.typeShirtName}</p>
+            <p className="text-lg">Session: {shirtData.sessionName}</p>
 
             <p className="text-lg">
               Status: {shirtData.status === 1 ? "Available" : "Out of stock"}
             </p>
           </div>
-        
+
           <div className="mt-6 p-4 border rounded-lg shadow-sm bg-white">
             <h2 className="text-xl font-semibold">Size and Quantity</h2>
             <div className="flex flex-wrap mt-2">
@@ -141,16 +142,15 @@ const Shirtdetail: React.FC = () => {
                 <div
                   key={size.sizeId}
                   onClick={() => setSelectedSizeId(size.sizeId)}
-                  className={`cursor-pointer border rounded-lg p-4 m-2 ${
-                    selectedSizeId === size.sizeId
-                      ? "bg-green-500 text-white"
-                      : "bg-gray-200"
-                  }`}
+                  className={`cursor-pointer border rounded-lg p-4 m-2 ${selectedSizeId === size.sizeId
+                    ? "bg-green-500 text-white"
+                    : "bg-gray-200"
+                    }`}
                   style={{ minWidth: "80px", textAlign: "center" }}
                 >
                   <p>{size.sizeName}</p>
                   <p className="text-sm text-gray-600">
-                  Quantity :   {size.quantity} 
+                    Quantity :   {size.quantity}
                   </p>
                 </div>
               ))}
