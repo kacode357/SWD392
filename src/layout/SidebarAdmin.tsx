@@ -1,6 +1,6 @@
 import React from 'react';
 import { Menu } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const AdminSidebar: React.FC = () => {
@@ -17,6 +17,7 @@ const AdminSidebar: React.FC = () => {
     { key: '/admin/manager-shirt', icon: <UserOutlined />, label: 'Manager Shirt' },
     { key: '/admin/manager-shirt-size', icon: <UserOutlined />, label: 'Manager Shirt Size' },
     { key: '/admin/manager-order', icon: <UserOutlined />, label: 'Manager Order' },
+    { key: '/user/setting', icon: <SettingOutlined />, label: 'Setting' },
   ];
 
   return (
