@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { Collapse, notification } from "antd";
-
 import { useNavigate, useParams } from "react-router-dom";
 import { getShirtByIdApi, addToCartApi } from "../../util/api";
 import { CartContext } from "../../context/cart.context";
@@ -15,6 +14,7 @@ const Shirtdetail: React.FC = () => {
   const [mainImage, setMainImage] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedSizeId, setSelectedSizeId] = useState<number | null>(null);
+  const [showSizeError, setShowSizeError] = useState(false); // For size selection error
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,10 +52,7 @@ const Shirtdetail: React.FC = () => {
       return;
     }
     if (!selectedSizeId) {
-      notification.error({
-        message: "Error",
-        description: "Please select a size before adding to basket.",
-      });
+      setShowSizeError(true); // Highlight size selection area
       return;
     }
 
@@ -82,7 +79,7 @@ const Shirtdetail: React.FC = () => {
         description: "Failed to add to basket.",
       });
     }
-  }, [id, quantity, selectedSizeId, updateCart]);
+  }, [id, quantity, selectedSizeId, updateCart, navigate]);
 
   // Early return for loading state
   if (!shirtData) {
@@ -96,18 +93,14 @@ const Shirtdetail: React.FC = () => {
 
       {/* Shirt details */}
       <div className="flex flex-col lg:flex-row items-start p-4 max-w-6xl mx-auto gap-4">
-        {" "}
-        {/* Added gap-4 for spacing */}
         {/* Main Image */}
         <div className="w-full lg:w-1/2 p-4 mt-12 lg:mt-28">
-          {" "}
-          {/* Adjusted margin to align with price */}
           <div className="relative w-full h-80">
             <img
               src={
                 mainImage &&
-                  (mainImage.startsWith("http://") ||
-                    mainImage.startsWith("https://"))
+                (mainImage.startsWith("http://") ||
+                  mainImage.startsWith("https://"))
                   ? mainImage
                   : "https://m.media-amazon.com/images/I/B1HVVUyLAhL._CLa%7C2140%2C2000%7C51TfbGiVkfL.png%7C0%2C0%2C2140%2C2000%2B0.0%2C0.0%2C2140.0%2C2000.0_AC_UY1000_.png"
               }
@@ -115,12 +108,14 @@ const Shirtdetail: React.FC = () => {
             />
           </div>
         </div>
+
         {/* Shirt Information */}
         <div className="w-full lg:w-1/2 p-4">
           <h1 className="text-3xl font-bold mb-4">{shirtData.name}</h1>
           <p className="text-3xl font-semibold text-green-600">
             £{shirtData.price}
           </p>
+
           {/* General Information */}
           <div className="mt-6 p-4 border rounded-lg shadow-sm bg-white">
             <h2 className="text-xl font-semibold">General Information</h2>
@@ -129,19 +124,25 @@ const Shirtdetail: React.FC = () => {
             <p className="text-lg">Number: {shirtData.number}</p>
             <p className="text-lg">Type: {shirtData.typeShirtName}</p>
             <p className="text-lg">Session: {shirtData.sessionName}</p>
-
             <p className="text-lg">
               Status: {shirtData.status === 1 ? "Available" : "Out of stock"}
             </p>
           </div>
 
-          <div className="mt-6 p-4 border rounded-lg shadow-sm bg-white">
+          {/* Size and Quantity */}
+          <div
+            className={`mt-6 p-4 border rounded-lg shadow-sm bg-white ${showSizeError ? "border-red-500" : ""
+              }`}
+          >
             <h2 className="text-xl font-semibold">Size and Quantity</h2>
             <div className="flex flex-wrap mt-2">
               {shirtData.listSize.map((size: any) => (
                 <div
                   key={size.sizeId}
-                  onClick={() => setSelectedSizeId(size.sizeId)}
+                  onClick={() => {
+                    setSelectedSizeId(size.sizeId);
+                    setShowSizeError(false); // Remove error highlight
+                  }}
                   className={`cursor-pointer border rounded-lg p-4 m-2 ${selectedSizeId === size.sizeId
                     ? "bg-green-500 text-white"
                     : "bg-gray-200"
@@ -149,13 +150,15 @@ const Shirtdetail: React.FC = () => {
                   style={{ minWidth: "80px", textAlign: "center" }}
                 >
                   <p>{size.sizeName}</p>
-                  <p className="text-sm text-gray-600">
-                    Quantity :   {size.quantity}
-                  </p>
+                  <p className="text-sm text-gray-600">Quantity : {size.quantity}</p>
                 </div>
               ))}
             </div>
+            {showSizeError && (
+              <p className="text-red-500 mt-2">Please select a size</p>
+            )}
           </div>
+
           {/* Add to Basket */}
           <div className="flex items-center space-x-4 mt-6">
             <input
@@ -172,6 +175,7 @@ const Shirtdetail: React.FC = () => {
               Add to Cart
             </button>
           </div>
+
           {/* Collapse for Additional Info */}
           <Collapse defaultActiveKey={["1"]} className="mt-6">
             <Panel header="Club" key="1">

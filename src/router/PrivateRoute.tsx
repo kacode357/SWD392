@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../context/auth.context';
 import { ROLES } from '../constants/index';
+
 interface PrivateRouteProps {
     element: React.ComponentType;
     allowedRoles: string[];
@@ -37,9 +38,13 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ element: Component, allowed
         return <Navigate to="/admin/manager-user" replace />;
     }
 
+    // Nếu người dùng là staff nhưng truy cập vào trang không dành cho staff, điều hướng về trang staff
+    if (userRole === ROLES.STAFF && !allowedRoles.includes(ROLES.STAFF)) {
+        return <Navigate to="/staff/manager-session" replace />;
+    }
+
     // Điều hướng người dùng không có quyền về trang chủ
     return <Navigate to="/" replace />;
 };
-
 
 export default PrivateRoute;

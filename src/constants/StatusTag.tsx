@@ -41,7 +41,16 @@ const getStatusColor = (status: number): string => {
 };
 
 const StatusTag: React.FC<StatusTagProps> = ({ status }) => {
-  return <Tag color={getStatusColor(status)}>{formatStatus(status)}</Tag>;
+  const tagStyle: React.CSSProperties = {
+    width: "100px", // Set your desired fixed width
+    textAlign: "center",
+  };
+
+  return (
+    <Tag color={getStatusColor(status)} style={tagStyle}>
+      {formatStatus(status)}
+    </Tag>
+  );
 };
 
 export default StatusTag;

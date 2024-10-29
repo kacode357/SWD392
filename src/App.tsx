@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Layout } from "antd";
 import { Outlet, useLocation } from "react-router-dom";
-import AppHeader from "./layout/HeaderHomepage";
+import HeaderJomePage from "./layout/HeaderHomepage";
 import HeaderAdmin from "./layout/HeaderAdmin";
-import HeaderHomepage from "./layout/HeaderUser";
+import HeaderUser from "./layout/HeaderUser";
+import HeaderStaff from "./layout/HeaderStaff"; // Import HeaderStaff
 import UserSidebar from "./layout/SidebarUser";
 import AdminSidebar from "./layout/SidebarAdmin";
 import ManagerSidebar from "./layout/SidebarManager";
@@ -83,7 +84,6 @@ const App: React.FC = () => {
   const renderHeader = () => {
     if (hideHeader) return null;
 
-
     if (isAdminPath) {
       return (
         <HeaderAdmin
@@ -94,27 +94,28 @@ const App: React.FC = () => {
       );
     }
 
-
     if (isUserPath) {
       return (
-        <HeaderHomepage
+        <HeaderUser
           collapsed={collapsed}
           setCollapsed={setCollapsed}
           loading={appLoading}
         />
       );
     }
-    if (isAdminPath || isUserPath || isStaffPath) {
+
+    if (isStaffPath) {
       return (
-        <HeaderHomepage
+        <HeaderStaff
           collapsed={collapsed}
           setCollapsed={setCollapsed}
           loading={appLoading}
         />
       );
     }
+
     return (
-      <AppHeader
+      <HeaderJomePage
         collapsed={collapsed}
         setCollapsed={setCollapsed}
         loading={appLoading}
