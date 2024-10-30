@@ -57,7 +57,7 @@ const Setting: React.FC = () => {
     setImageUploading(true); // Start image uploading state
     try {
       setImageUrl(url);
-      message.success("Image uploaded successfully");
+  
     } finally {
       setImageUploading(false); // End image uploading state
     }
