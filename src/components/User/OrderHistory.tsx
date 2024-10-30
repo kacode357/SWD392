@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Input, Space, Row, Col, Modal, Button } from "antd";
+import { Table, Input, Space, Row, Col, Modal, Button, List, Image } from "antd";
 import { searchOrderByCurrentUserApi } from "../../util/api";
 import moment from "moment";
 import { ReloadOutlined } from "@ant-design/icons";
@@ -18,22 +18,29 @@ const OrdersComponent: React.FC = () => {
   });
   const [searchKeyword, setSearchKeyword] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedOrderDetails, setSelectedOrderDetails] = useState<any[]>([]);
 
-  const fetchOrders = async (page = 1, pageSize = 10) => {
+  const fetchOrders = async (page = 1, pageSize = 10, keyword = "") => {
     setLoading(true);
     const data = {
       pageNum: page,
-      pageSize: pageSize,
+      pageSize,
+      orderId: keyword || "", // Filtering by order ID or keyword if available
       status: null,
     };
-    const response = await searchOrderByCurrentUserApi(data);
-    setOrders(response.pageData);
-    setPagination({
-      current: response.pageInfo.page,
-      pageSize: response.pageInfo.size,
-      total: response.pageInfo.totalItem,
-    });
-    setLoading(false);
+    try {
+      const response = await searchOrderByCurrentUserApi(data);
+      setOrders(response.pageData || []);
+      setPagination({
+        current: response.pageInfo.page,
+        pageSize: response.pageInfo.size,
+        total: response.pageInfo.totalItem,
+      });
+    } catch (error) {
+      console.error("Failed to fetch orders:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -43,12 +50,12 @@ const OrdersComponent: React.FC = () => {
   const handleTableChange = (pagination: any) => {
     const { current, pageSize } = pagination;
     setPagination((prev) => ({ ...prev, current, pageSize }));
-    fetchOrders(current, pageSize);
+    fetchOrders(current, pageSize, searchKeyword);
   };
 
   const onSearch = (value: string) => {
     setSearchKeyword(value);
-    fetchOrders(1, pagination.pageSize);
+    fetchOrders(1, pagination.pageSize, value);
   };
 
   const handleReset = () => {
@@ -56,7 +63,8 @@ const OrdersComponent: React.FC = () => {
     fetchOrders(1, pagination.pageSize);
   };
 
-  const showModal = () => {
+  const showModal = (orderDetails: any[]) => {
+    setSelectedOrderDetails(orderDetails);
     setIsModalVisible(true);
   };
 
@@ -77,7 +85,7 @@ const OrdersComponent: React.FC = () => {
     },
     {
       title: "Customer Name",
-      dataIndex: "userUserName",
+      dataIndex: "userName",
       key: "userUserName",
     },
     {
@@ -102,8 +110,8 @@ const OrdersComponent: React.FC = () => {
     {
       title: "View Detail Order",
       key: "action",
-      render: () => (
-        <Button type="link" onClick={showModal}>
+      render: (_: any, record: any) => (
+        <Button type="link" onClick={() => showModal(record.orderDetails)}>
           View Details
         </Button>
       ),
@@ -118,7 +126,7 @@ const OrdersComponent: React.FC = () => {
           <Space className="custom-search">
             <Search
               style={{ width: 400 }}
-              placeholder="CHƯA DÙNG ĐƯỢC"
+              placeholder="Search Orders"
               onSearch={onSearch}
               enterButton
               allowClear
@@ -151,8 +159,24 @@ const OrdersComponent: React.FC = () => {
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
+        width={800}
       >
-        <p>ĐANG CHỜ API</p>
+        <List
+          itemLayout="vertical"
+          dataSource={selectedOrderDetails}
+          renderItem={(item) => (
+            <List.Item>
+              <List.Item.Meta
+                avatar={<Image width={100} src={item.shirtUrlImg} />}
+                title={item.shirtName}
+                description={item.shirtDescription}
+              />
+              <p>Size: {item.sizeName} ({item.sizeDescription})</p>
+              <p>Price: {item.price.toLocaleString()} VNĐ</p>
+              <p>Quantity: {item.quantity}</p>
+            </List.Item>
+          )}
+        />
       </Modal>
     </div>
   );

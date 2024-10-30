@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Input, Space, Row, Col } from "antd";
+import { Table, Input, Space, Row, Col, Modal, Button, List, Image } from "antd";
 import { searchOrderApi } from "../../../util/api";
 import moment from "moment";
 import { ReloadOutlined } from "@ant-design/icons";
@@ -17,6 +17,8 @@ const OrdersComponent: React.FC = () => {
     total: 0,
   });
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedOrderDetails, setSelectedOrderDetails] = useState<any[]>([]);
 
   const fetchOrders = async (page = 1, pageSize = 10, keyword = "") => {
     setLoading(true);
@@ -56,6 +58,19 @@ const OrdersComponent: React.FC = () => {
     fetchOrders(1, pagination.pageSize, "");
   };
 
+  const showModal = (orderDetails: any[]) => {
+    setSelectedOrderDetails(orderDetails);
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   // Table columns
   const columns = [
     {
@@ -65,7 +80,7 @@ const OrdersComponent: React.FC = () => {
     },
     {
       title: "Customer Name",
-      dataIndex: "userUserName",
+      dataIndex: "userName",
       key: "userUserName",
     },
     {
@@ -88,6 +103,15 @@ const OrdersComponent: React.FC = () => {
       render: (status: number) => <StatusTag status={status} />,
     },
     {
+      title: "View Details",
+      key: "viewDetails",
+      render: (order: any) => (
+        <Button type="link" onClick={() => showModal(order.orderDetails)}>
+          View Details
+        </Button>
+      ),
+    },
+    {
       title: "Change Status",
       key: "changeStatus",
       render: (order: any) => (
@@ -97,9 +121,8 @@ const OrdersComponent: React.FC = () => {
         />
       ),
     },
-    
+   
   ];
-  
 
   return (
     <div>
@@ -134,6 +157,30 @@ const OrdersComponent: React.FC = () => {
         loading={loading}
         onChange={handleTableChange}
       />
+      <Modal
+        title="Order Details"
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        width={800}
+      >
+        <List
+          itemLayout="vertical"
+          dataSource={selectedOrderDetails}
+          renderItem={(item) => (
+            <List.Item>
+              <List.Item.Meta
+                avatar={<Image width={100} src={item.shirtUrlImg} />}
+                title={item.shirtName}
+                description={item.shirtDescription}
+              />
+              <p>Size: {item.sizeName} ({item.sizeDescription})</p>
+              <p>Price: {item.price.toLocaleString()} VNĐ</p>
+              <p>Quantity: {item.quantity}</p>
+            </List.Item>
+          )}
+        />
+      </Modal>
     </div>
   );
 };

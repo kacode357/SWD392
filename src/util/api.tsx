@@ -380,8 +380,8 @@ const changePasswordApi = async (data: { currentPassword: string; newPassword: s
   const response = await defaultAxiosInstance.post(URL_API, data);
   return response.data;
 };
-const searchOrderByCurrentUserApi = async (data: { pageNum: number; pageSize: number; status: number | null; }) => {
-  const URL_API = `/api/order/searchbycurrentuser`;
+const searchOrderByCurrentUserApi = async (data: { pageNum: number; pageSize: number;orderId : string ;status: number | null; }) => {
+  const URL_API = `/api/order/user/search`;
   const response = await defaultAxiosInstance.post(URL_API, data);
   return response.data;
 };
