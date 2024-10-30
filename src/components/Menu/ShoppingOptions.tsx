@@ -23,26 +23,21 @@ interface ShoppingOptionsProps {
     onClubChange: (club: string) => void;
     onSessionChange: (session: string) => void;
     onPlayerChange: (player: string) => void;
-    onTypeChange: (type: string) => void;
 }
 
 const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
     onClubChange,
     onSessionChange,
     onPlayerChange,
-    onTypeChange,
 }) => {
     const [filteredClubList, setFilteredClubList] = useState<string[]>([]);
     const [filteredSessionList, setFilteredSessionList] = useState<string[]>([]);
     const [filteredPlayerList, setFilteredPlayerList] = useState<string[]>([]);
-    const [filteredTypeList, setFilteredTypeList] = useState<string[]>([]);
 
     const [selectedClub, setSelectedClub] = useState<string | null>(null);
     const [selectedSession, setSelectedSession] = useState<string | null>(null);
     const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
-    const [selectedType, setSelectedType] = useState<string | null>(null);
 
-    // Hàm fetch và cập nhật các danh sách đã lọc
     const updateFilteredLists = async () => {
         try {
             const data = {
@@ -52,33 +47,27 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
                 nameClub: selectedClub || '',
                 nameSeason: selectedSession || '',
                 namePlayer: selectedPlayer || '',
-                typeShirt: selectedType || '',
                 status: 1,
             };
 
             const result: ApiResponse = await getShirtByMultipleNamesApi(data as any);
             const pageData = result.pageData;
 
-            // Tạo danh sách liên quan dựa trên dữ liệu trả về từ API
             const relatedClubs = Array.from(new Set(pageData.map((shirt) => shirt.clubName).filter(Boolean)));
             const relatedSessions = Array.from(new Set(pageData.map((shirt) => shirt.sessionName).filter(Boolean)));
             const relatedPlayers = Array.from(new Set(pageData.map((shirt) => shirt.fullName).filter(Boolean)));
-            const relatedTypes = Array.from(new Set(pageData.map((shirt) => shirt.typeShirtName).filter(Boolean)));
 
-            // Cập nhật danh sách lọc dựa trên lựa chọn hiện tại
             setFilteredClubList(relatedClubs);
             setFilteredSessionList(relatedSessions);
             setFilteredPlayerList(relatedPlayers);
-            setFilteredTypeList(relatedTypes);
         } catch (error) {
             console.error('Error updating filtered lists', error);
         }
     };
 
-    // Cập nhật danh sách đã lọc khi bất kỳ bộ lọc nào thay đổi
     useEffect(() => {
         updateFilteredLists();
-    }, [selectedClub, selectedSession, selectedPlayer, selectedType]);
+    }, [selectedClub, selectedSession, selectedPlayer]);
 
     const handleClubChange = (e: any) => {
         const club = e.target.value || '';
@@ -98,24 +87,28 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
         onPlayerChange(player);
     };
 
-    const handleTypeChange = (e: any) => {
-        const type = e.target.value || '';
-        setSelectedType(type);
-        onTypeChange(type);
-    };
-
     return (
         <div style={{ padding: '16px', border: '1px solid #d9d9d9', borderRadius: '4px' }}>
             <h3>Shopping Options</h3>
-            <Collapse defaultActiveKey={['1', '2', '3', '4']}>
+            <Collapse defaultActiveKey={['1', '2', '3']}>
                 {/* Club Selection */}
                 <Panel header="Club" key="1">
                     {selectedClub ? (
-                        <Tag closable onClose={() => handleClubChange({ target: { value: '' } })} style={{ fontSize: '14px', padding: '5px 10px' }}>
+                        <Tag
+                            closable
+                            onClose={() => handleClubChange({ target: { value: '' } })}
+                            style={{
+                                fontSize: '14px',
+                                padding: '5px 10px',
+                                maxWidth: '100%',
+                                whiteSpace: 'normal',
+                                wordWrap: 'break-word',
+                            }}
+                        >
                             <strong>Team:</strong> {selectedClub}
                         </Tag>
                     ) : (
-                        <Radio.Group onChange={handleClubChange} value={selectedClub}>
+                        <Radio.Group onChange={handleClubChange} value={selectedClub} style={{ maxHeight: '150px', overflowY: 'auto' }}>
                             {filteredClubList.map((club, index) => (
                                 <Radio key={index} value={club} style={{ display: 'block', marginBottom: '8px' }}>
                                     {club}
@@ -128,11 +121,21 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
                 {/* Session Selection */}
                 <Panel header="Session" key="2">
                     {selectedSession ? (
-                        <Tag closable onClose={() => handleSessionChange({ target: { value: '' } })} style={{ fontSize: '14px', padding: '5px 10px' }}>
+                        <Tag
+                            closable
+                            onClose={() => handleSessionChange({ target: { value: '' } })}
+                            style={{
+                                fontSize: '14px',
+                                padding: '5px 10px',
+                                maxWidth: '100%',
+                                whiteSpace: 'normal',
+                                wordWrap: 'break-word',
+                            }}
+                        >
                             <strong>Session:</strong> {selectedSession}
                         </Tag>
                     ) : (
-                        <Radio.Group onChange={handleSessionChange} value={selectedSession}>
+                        <Radio.Group onChange={handleSessionChange} value={selectedSession} style={{ maxHeight: '150px', overflowY: 'auto' }}>
                             {filteredSessionList.map((session, index) => (
                                 <Radio key={index} value={session} style={{ display: 'block', marginBottom: '8px' }}>
                                     {session}
@@ -145,31 +148,24 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
                 {/* Player Selection */}
                 <Panel header="Player" key="3">
                     {selectedPlayer ? (
-                        <Tag closable onClose={() => handlePlayerChange({ target: { value: '' } })} style={{ fontSize: '14px', padding: '5px 10px' }}>
+                        <Tag
+                            closable
+                            onClose={() => handlePlayerChange({ target: { value: '' } })}
+                            style={{
+                                fontSize: '14px',
+                                padding: '5px 10px',
+                                maxWidth: '100%',
+                                whiteSpace: 'normal',
+                                wordWrap: 'break-word',
+                            }}
+                        >
                             <strong>Player:</strong> {selectedPlayer}
                         </Tag>
                     ) : (
-                        <Radio.Group onChange={handlePlayerChange} value={selectedPlayer}>
+                        <Radio.Group onChange={handlePlayerChange} value={selectedPlayer} style={{ maxHeight: '150px', overflowY: 'auto' }}>
                             {filteredPlayerList.map((player, index) => (
                                 <Radio key={index} value={player} style={{ display: 'block', marginBottom: '8px' }}>
                                     {player}
-                                </Radio>
-                            ))}
-                        </Radio.Group>
-                    )}
-                </Panel>
-
-                {/* Type Selection */}
-                <Panel header="Type" key="4">
-                    {selectedType ? (
-                        <Tag closable onClose={() => handleTypeChange({ target: { value: '' } })} style={{ fontSize: '14px', padding: '5px 10px' }}>
-                            <strong>Type:</strong> {selectedType}
-                        </Tag>
-                    ) : (
-                        <Radio.Group onChange={handleTypeChange} value={selectedType}>
-                            {filteredTypeList.map((type, index) => (
-                                <Radio key={index} value={type} style={{ display: 'block', marginBottom: '8px' }}>
-                                    {type}
                                 </Radio>
                             ))}
                         </Radio.Group>
