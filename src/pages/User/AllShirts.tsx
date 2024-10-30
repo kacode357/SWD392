@@ -15,8 +15,8 @@ const AllShirts: React.FC = () => {
     const [selectedClub, setSelectedClub] = useState<string>('');
     const [selectedSession, setSelectedSession] = useState<string>('');
     const [selectedPlayer, setSelectedPlayer] = useState<string>('');
-    const [selectedType, setSelectedType] = useState<string>('');
-    const pageSize = 10;
+
+    const pageSize = 12; // Hiển thị 12 áo mỗi trang
 
     // Hàm fetch dữ liệu dựa trên các bộ lọc
     const fetchShirts = async () => {
@@ -29,7 +29,6 @@ const AllShirts: React.FC = () => {
                 nameClub: selectedClub,
                 nameSeason: selectedSession,
                 namePlayer: selectedPlayer,
-                typeShirt: selectedType,
                 nameTypeShirt: '',
                 status: 1,
             };
@@ -46,7 +45,7 @@ const AllShirts: React.FC = () => {
     // Gọi lại fetchShirts mỗi khi một bộ lọc hoặc trang hiện tại thay đổi
     useEffect(() => {
         fetchShirts();
-    }, [selectedClub, selectedSession, selectedPlayer, selectedType, currentPage]);
+    }, [selectedClub, selectedSession, selectedPlayer, currentPage]);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -60,7 +59,6 @@ const AllShirts: React.FC = () => {
                         onClubChange={(club) => { setSelectedClub(club); setCurrentPage(1); }}
                         onSessionChange={(session) => { setSelectedSession(session); setCurrentPage(1); }}
                         onPlayerChange={(player) => { setSelectedPlayer(player); setCurrentPage(1); }}
-                        onTypeChange={(type) => { setSelectedType(type); setCurrentPage(1); }}
                     />
                 </div>
                 <div style={{ flex: 1 }}>
@@ -103,7 +101,13 @@ const AllShirts: React.FC = () => {
                             ))}
                     </Row>
                     <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                        <Pagination current={currentPage} pageSize={pageSize} total={totalItems} onChange={handlePageChange} showSizeChanger={false} />
+                        <Pagination
+                            current={currentPage}
+                            pageSize={pageSize}
+                            total={totalItems}
+                            onChange={handlePageChange}
+                            showSizeChanger={false}
+                        />
                     </div>
                 </div>
             </div>
