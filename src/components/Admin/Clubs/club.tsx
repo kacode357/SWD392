@@ -22,7 +22,7 @@ interface Club {
 
 const ClubComponent: React.FC = () => {
   const [clubs, setClubs] = useState<Club[]>([]);
-  const [loading, setLoading] = useState(false);
+ 
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 5,
@@ -36,7 +36,7 @@ const ClubComponent: React.FC = () => {
 
   // Fetch clubs from API
   const fetchClubs = async (page = 1, pageSize = 10, keyword = "", isDeleted = false) => {
-    setLoading(true);
+  
     const data = {
       pageNum: page,
       pageSize: pageSize,
@@ -50,7 +50,7 @@ const ClubComponent: React.FC = () => {
       pageSize: response.pageInfo.size,
       total: response.pageInfo.totalItem,
     });
-    setLoading(false);
+   
   };
 
   useEffect(() => {
@@ -188,7 +188,7 @@ const ClubComponent: React.FC = () => {
               showSizeChanger: true,
               showQuickJumper: true,
             }}
-            loading={loading}
+            
             onChange={handleTableChange}
           />
         </TabPane>
@@ -222,7 +222,7 @@ const ClubComponent: React.FC = () => {
               showSizeChanger: true,
               showQuickJumper: true,
             }}
-            loading={loading}
+           
             onChange={handleTableChange}
           />
         </TabPane>
