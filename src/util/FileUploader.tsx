@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, Image, message } from 'antd';
+import { Upload, Image, message, Progress } from 'antd';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { storage } from '../config/firebaseConfig';
 import type { UploadFile, UploadProps } from 'antd';
@@ -20,6 +20,7 @@ const getBase64 = (file: File): Promise<string> =>
 
 const FileUploader: React.FC<FileUploaderProps> = ({ onUploadSuccess, defaultImage }) => {
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -55,6 +56,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUploadSuccess, defaultIma
     }
 
     setUploading(true);
+    setUploadProgress(0);
 
     try {
       const storageRef = ref(storage, `images/${file.name}`);
@@ -63,8 +65,13 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUploadSuccess, defaultIma
       uploadTask.on(
         'state_changed',
         (snapshot) => {
-          // Optional: Update progress if needed
-          console.log('Upload progress:', (snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setUploadProgress(progress); // Update upload progress state
+          message.open({
+            key: 'uploadProgress',
+            content: `Uploading: ${Math.round(progress)}%`,
+            duration: 0, // Keep message open until upload completes
+          });
         },
         (error) => {
           message.error('Upload error');
@@ -75,6 +82,9 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUploadSuccess, defaultIma
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
           onUploadSuccess(downloadURL);
           setUploading(false);
+          setUploadProgress(0);
+          message.destroy('uploadProgress'); // Close the progress message
+          message.success('Upload completed successfully!');
         }
       );
     } catch (error) {
@@ -104,6 +114,13 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUploadSuccess, defaultIma
       <Upload {...uploadProps}>
         {fileList.length >= 1 ? null : <div>Upload</div>}
       </Upload>
+      {uploading && (
+        <Progress
+          percent={Math.round(uploadProgress)}
+          status="active"
+          style={{ marginTop: 8 }}
+        />
+      )}
       {previewImage && (
         <Image
           wrapperStyle={{ display: 'none' }}

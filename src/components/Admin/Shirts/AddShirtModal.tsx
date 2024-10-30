@@ -22,7 +22,7 @@ const AddShirtModal: React.FC<AddShirtModalProps> = ({ visible, onClose, refresh
   const fetchTypeShirts = async (keyword = "") => {
     const data = {
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 1000,
       keyWord: keyword,
       status: true,
     };
@@ -34,7 +34,7 @@ const AddShirtModal: React.FC<AddShirtModalProps> = ({ visible, onClose, refresh
   const fetchPlayers = async (keyword = "") => {
     const data = {
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 1000,
       keyWord: keyword,
       status: true,
     };
