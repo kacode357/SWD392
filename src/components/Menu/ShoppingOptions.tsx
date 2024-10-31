@@ -105,7 +105,7 @@ const ShoppingOptions: React.FC<ShoppingOptionsProps> = ({
                                 wordWrap: 'break-word',
                             }}
                         >
-                            <strong>Team:</strong> {selectedClub}
+                            <strong>Club:</strong> {selectedClub}
                         </Tag>
                     ) : (
                         <Radio.Group onChange={handleClubChange} value={selectedClub} style={{ maxHeight: '150px', overflowY: 'auto' }}>

@@ -63,9 +63,9 @@ const ListShirtPage: React.FC = () => {
   const handlePlayerChange = (player: string) => updateQueryParam("nameplayer", player);
   const handleTypeChange = (type: string) => updateQueryParam("nametypeshirt", type);
 
-  // Format price with commas
+  // Format price in VND
   const formatPrice = (price: number | null | undefined) => {
-    return price ? `$${new Intl.NumberFormat().format(price)}` : "Liên hệ";
+    return price ? `${new Intl.NumberFormat().format(price)} ₫` : "Liên hệ";
   };
 
   const handleCardClick = (id: number) => {
@@ -155,20 +155,25 @@ const ListShirtPage: React.FC = () => {
                       />
                       <span>{shirt.clubName}</span>
                     </div>
-                    <div
-                      style={{
-                        position: "absolute",
-                        bottom: "10px",
-                        right: "10px",
-                        backgroundColor: "#fff",
-                        padding: "5px 10px",
-                        borderRadius: "5px",
-                        fontWeight: "bold",
-                        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-                      }}
-                    >
-                      {formatPrice(shirt.price)}
+                    <div className="pt-5">
+                      <div
+                        style={{
+                          position: "absolute",
+                          bottom: "10px",
+                          right: "10px",
+                          backgroundColor: "#fff",
+                          padding: "5px 10px",
+                          borderRadius: "5px",
+                          fontWeight: "bold",
+                          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+
+                        }}
+                      >
+
+                        {formatPrice(shirt.price)}
+                      </div>
                     </div>
+
                   </Card>
                 </Col>
               ))}

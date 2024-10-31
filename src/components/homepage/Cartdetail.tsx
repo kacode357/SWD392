@@ -198,7 +198,7 @@ const Cartdetail: React.FC = () => {
                     </Title>
                     <Text>Kích thước: {item.sizeName}</Text>
                     <br />
-                    <Text>Giá mỗi chiếc: £{item.shirtPrice}</Text>
+                    <Text>Giá mỗi chiếc: {item.shirtPrice.toLocaleString()}₫</Text>
                     <br />
                     <Text>Số lượng: </Text>
                     <Input
@@ -216,7 +216,6 @@ const Cartdetail: React.FC = () => {
                       style={{ width: "80px" }}
                     />
                     <br />
-                    <Text>Tổng giá: £{item.price}</Text>
                   </div>
 
                   {/* Nút cập nhật số lượng */}
@@ -266,7 +265,7 @@ const Cartdetail: React.FC = () => {
             <Title level={3}>Tổng đơn hàng</Title>
             <div style={{ marginBottom: "16px" }}>
               <Text strong>Tổng tiền: </Text>
-              <Text>£{totalPrice}</Text>
+              <Text>{totalPrice.toLocaleString()}₫</Text>
             </div>
             <Button type="primary" size="large" block onClick={handlePayment}>
               Thanh toán
