@@ -119,13 +119,29 @@ const Shirtdetail: React.FC = () => {
           {/* General Information */}
           <div className="mt-6 p-4 border rounded-lg shadow-sm bg-white">
             <h2 className="text-xl font-semibold">General Information</h2>
-            <p className="text-lg mt-2">Shirt Name: {shirtData.name}</p>
-            <p className="text-lg">Player: {shirtData.fullName}</p>
-            <p className="text-lg">Number: {shirtData.number}</p>
-            <p className="text-lg">Type: {shirtData.typeShirtName}</p>
-            <p className="text-lg">Session: {shirtData.sessionName}</p>
+            <p className="text-lg mt-2">
+              <span className="font-semibold">Shirt Name:</span> {shirtData.name}
+            </p>
             <p className="text-lg">
-              Status: {shirtData.status === 1 ? "Available" : "Out of stock"}
+              <span className="font-semibold">Player:</span>
+              <span
+                className="cursor-pointer hover:font-bold transition-all duration-200"
+                onClick={() => navigate(`/listshirt?nameplayer=${encodeURIComponent(shirtData.fullName)}`)}
+              >
+                {shirtData.fullName}
+              </span>
+            </p>
+            <p className="text-lg">
+              <span className="font-semibold">Number:</span> {shirtData.number}
+            </p>
+            <p className="text-lg">
+              <span className="font-semibold">Type:</span> {shirtData.typeShirtName}
+            </p>
+            <p className="text-lg">
+              <span className="font-semibold">Session:</span> {shirtData.sessionName}
+            </p>
+            <p className="text-lg">
+              <span className="font-semibold">Status:</span> {shirtData.status === 1 ? "Available" : "Out of stock"}
             </p>
           </div>
 
@@ -147,7 +163,7 @@ const Shirtdetail: React.FC = () => {
                       setShowSizeError(false); // Xóa thông báo lỗi nếu có
                     }
                   }}
-                  
+
                   className={`cursor-pointer border rounded-lg p-4 m-2 ${selectedSizeId === size.sizeId
                     ? "bg-green-500 text-white"
                     : "bg-gray-200"
