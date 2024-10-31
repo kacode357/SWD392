@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
   getCartDetailApi,
+  getCartDetailApiWithoutLoading, // Thêm API mới
   updateCartApi,
-  deleteCartApi,
   deleteItemInCartApi,
   getUrlPaymentApi,
-} from "../../util/api"; // Import API deleteItemInCartApi
-import { Row, Col, Image, Typography, Button, Input, notification } from "antd";
+} from "../../util/api";
+import { Row, Col, Image, Typography, Button, notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../../context/cart.context";
 
@@ -14,8 +14,7 @@ const { Title, Text } = Typography;
 
 const Cartdetail: React.FC = () => {
   const [cartData, setCartData] = useState<any>(null);
-  const [editedQuantities, setEditedQuantities] = useState<any>({});
-  const { updateCart } = useContext(CartContext); // Sử dụng CartContext để cập nhật giỏ hàng
+  const { updateCart } = useContext(CartContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -64,13 +63,8 @@ const Cartdetail: React.FC = () => {
         return;
       }
       await updateCartApi({ orderId, shirtSizeId, quantity });
-      notification.success({
-        message: "Cập nhật thành công",
-        description: `Số lượng sản phẩm đã được cập nhật.`,
-      });
-      const updatedCartData = await getCartDetailApi();
+      const updatedCartData = await getCartDetailApiWithoutLoading(); // Gọi API không có loading
       setCartData(updatedCartData);
-      setEditedQuantities({}); // Reset lại trạng thái sau khi cập nhật
     } catch (error) {
       console.error("Error updating cart quantity:", error);
       notification.error({
@@ -82,42 +76,15 @@ const Cartdetail: React.FC = () => {
 
   // Hàm xử lý khi thay đổi số lượng sản phẩm
   const handleQuantityChange = (shirtSizeId: number, newQuantity: number) => {
-    setEditedQuantities({
-      ...editedQuantities,
-      [shirtSizeId]: newQuantity,
-    });
-  };
-
-  // Hàm xóa sản phẩm khỏi giỏ hàng
-  const handleDeleteCart = async () => {
-    try {
-      await deleteCartApi(orderId, 0); // Gọi API xóa giỏ hàng với status = 0
-      notification.success({
-        message: "Xóa thành công",
-        description: "Giỏ hàng đã được xóa.",
-      });
-      updateCart(); // Cập nhật lại giỏ hàng trong context
-      const updatedCartData = await getCartDetailApi(); // Fetch lại giỏ hàng sau khi xóa thành công
-      setCartData(updatedCartData);
-    } catch (error) {
-      console.error("Error deleting cart:", error);
-      notification.error({
-        message: "Lỗi xóa giỏ hàng",
-        description: "Xóa giỏ hàng không thành công.",
-      });
-    }
+    handleUpdateQuantity(shirtSizeId, newQuantity);
   };
 
   // Hàm xóa từng sản phẩm nhỏ trong giỏ hàng
   const handleDeleteItem = async (shirtSizeId: number) => {
     try {
       await deleteItemInCartApi({ orderId, shirtSizeId });
-      notification.success({
-        message: "Xóa thành công",
-        description: "Sản phẩm đã được xóa khỏi giỏ hàng.",
-      });
-      updateCart(); // Cập nhật lại giỏ hàng trong context
-      const updatedCartData = await getCartDetailApi(); // Fetch lại giỏ hàng sau khi xóa thành công
+      updateCart();
+      const updatedCartData = await getCartDetailApiWithoutLoading(); // Gọi API không có loading
       setCartData(updatedCartData);
     } catch (error) {
       console.error("Error deleting item:", error);
@@ -127,6 +94,7 @@ const Cartdetail: React.FC = () => {
       });
     }
   };
+
   // Hàm thanh toán
   const handlePayment = async () => {
     try {
@@ -136,7 +104,6 @@ const Cartdetail: React.FC = () => {
         createDate: new Date().toISOString(),
       };
       const response = await getUrlPaymentApi(payload);
-      console.log(response.url);
       if (response) {
         window.location.href = response.url;
       }
@@ -160,9 +127,6 @@ const Cartdetail: React.FC = () => {
         }}
       >
         <Title level={2}>Giỏ hàng của bạn</Title>
-        <Button type="primary" danger onClick={handleDeleteCart}>
-          Xóa toàn bộ giỏ hàng
-        </Button>
       </div>
 
       <Row gutter={[16, 16]}>
@@ -198,48 +162,29 @@ const Cartdetail: React.FC = () => {
                     </Title>
                     <Text>Kích thước: {item.sizeName}</Text>
                     <br />
-                    <Text>Giá mỗi chiếc: {item.shirtPrice.toLocaleString()}₫</Text>
+                    <Text>Giá mỗi chiếc: £{item.shirtPrice}</Text>
                     <br />
                     <Text>Số lượng: </Text>
-                    <Input
-                      type="number"
-                      value={
-                        editedQuantities[item.shirtSizeId] ?? item.quantity
-                      }
-                      min={1}
-                      onChange={(e) =>
-                        handleQuantityChange(
-                          item.shirtSizeId,
-                          Number(e.target.value)
-                        )
-                      }
-                      style={{ width: "80px" }}
-                    />
-                    <br />
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <Button
+                        onClick={() =>
+                          handleQuantityChange(item.shirtSizeId, item.quantity - 1)
+                        }
+                        disabled={item.quantity <= 1}
+                      >
+                        -
+                      </Button>
+                      <Text style={{ margin: "0 10px" }}>{item.quantity}</Text>
+                      <Button
+                        onClick={() =>
+                          handleQuantityChange(item.shirtSizeId, item.quantity + 1)
+                        }
+                      >
+                        +
+                      </Button>
+                    </div>
                   </div>
 
-                  {/* Nút cập nhật số lượng */}
-                  {editedQuantities[item.shirtSizeId] !== undefined &&
-                    editedQuantities[item.shirtSizeId] !== item.quantity && (
-                      <Button
-                        type="primary"
-                        onClick={() =>
-                          handleUpdateQuantity(
-                            item.shirtSizeId,
-                            editedQuantities[item.shirtSizeId]
-                          )
-                        }
-                        style={{
-                          position: "absolute",
-                          bottom: "10px",
-                          right: "10px",
-                        }}
-                      >
-                        Cập nhật
-                      </Button>
-                    )}
-
-                  {/* Nút xóa sản phẩm */}
                   <Button
                     type="primary"
                     danger
@@ -265,7 +210,7 @@ const Cartdetail: React.FC = () => {
             <Title level={3}>Tổng đơn hàng</Title>
             <div style={{ marginBottom: "16px" }}>
               <Text strong>Tổng tiền: </Text>
-              <Text>{totalPrice.toLocaleString()}₫</Text>
+              <Text>£{totalPrice}</Text>
             </div>
             <Button type="primary" size="large" block onClick={handlePayment}>
               Thanh toán
