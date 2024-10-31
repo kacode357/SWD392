@@ -140,9 +140,14 @@ const Shirtdetail: React.FC = () => {
                 <div
                   key={size.sizeId}
                   onClick={() => {
-                    setSelectedSizeId(size.sizeId);
-                    setShowSizeError(false); // Remove error highlight
+                    if (selectedSizeId === size.sizeId) {
+                      setSelectedSizeId(null); // Nếu size đang chọn trùng với size đã chọn thì bỏ chọn
+                    } else {
+                      setSelectedSizeId(size.sizeId); // Ngược lại, chọn size mới
+                      setShowSizeError(false); // Xóa thông báo lỗi nếu có
+                    }
                   }}
+                  
                   className={`cursor-pointer border rounded-lg p-4 m-2 ${selectedSizeId === size.sizeId
                     ? "bg-green-500 text-white"
                     : "bg-gray-200"

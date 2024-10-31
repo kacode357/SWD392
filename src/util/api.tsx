@@ -307,6 +307,11 @@ const getCartDetailApi = async () => {
   const response = await defaultAxiosInstance.get(URL_API);
   return response.data;
 };
+const getCartDetailApiWithoutLoading = async () => {
+  const URL_API = '/api/order/cart';
+  const response = await axiosWithoutLoading.get(URL_API);
+  return response.data;
+};
 const searchShirtSizeApi = async (data: { pageNum: number; pageSize: number; keyWord?: string; status?: boolean; }) => {
   const URL_API = `/api/shirtsize/search`;
   const response = await defaultAxiosInstance.post(URL_API, data);
@@ -387,6 +392,7 @@ const searchOrderByCurrentUserApi = async (data: { pageNum: number; pageSize: nu
 };
 
 export {
+  getCartDetailApiWithoutLoading,
   searchOrderByCurrentUserApi,
   changePasswordApi,
   updateOrderApi,
