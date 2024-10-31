@@ -99,8 +99,8 @@ const Shirtdetail: React.FC = () => {
             <img
               src={
                 mainImage &&
-                (mainImage.startsWith("http://") ||
-                  mainImage.startsWith("https://"))
+                  (mainImage.startsWith("http://") ||
+                    mainImage.startsWith("https://"))
                   ? mainImage
                   : "https://m.media-amazon.com/images/I/B1HVVUyLAhL._CLa%7C2140%2C2000%7C51TfbGiVkfL.png%7C0%2C0%2C2140%2C2000%2B0.0%2C0.0%2C2140.0%2C2000.0_AC_UY1000_.png"
               }
@@ -113,7 +113,7 @@ const Shirtdetail: React.FC = () => {
         <div className="w-full lg:w-1/2 p-4">
           <h1 className="text-3xl font-bold mb-4">{shirtData.name}</h1>
           <p className="text-3xl font-semibold text-green-600">
-            £{shirtData.price}
+            {shirtData.price.toLocaleString("vi-VN")}₫ {/* Price in VND */}
           </p>
 
           {/* General Information */}

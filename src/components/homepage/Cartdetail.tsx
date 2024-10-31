@@ -162,9 +162,10 @@ const Cartdetail: React.FC = () => {
                     </Title>
                     <Text>Kích thước: {item.sizeName}</Text>
                     <br />
-                    <Text>Giá mỗi chiếc: £{item.shirtPrice}</Text>
+                    <Text>Giá mỗi chiếc: {item.shirtPrice.toLocaleString()}₫</Text>
                     <br />
                     <Text>Số lượng: </Text>
+<<<<<<< HEAD
                     <div style={{ display: "flex", alignItems: "center" }}>
                       <Button
                         onClick={() =>
@@ -183,6 +184,23 @@ const Cartdetail: React.FC = () => {
                         +
                       </Button>
                     </div>
+=======
+                    <Input
+                      type="number"
+                      value={
+                        editedQuantities[item.shirtSizeId] ?? item.quantity
+                      }
+                      min={1}
+                      onChange={(e) =>
+                        handleQuantityChange(
+                          item.shirtSizeId,
+                          Number(e.target.value)
+                        )
+                      }
+                      style={{ width: "80px" }}
+                    />
+                    <br />
+>>>>>>> 7f06050cedd381ca06bf989069ec9777a1e50806
                   </div>
 
                   <Button
@@ -210,7 +228,7 @@ const Cartdetail: React.FC = () => {
             <Title level={3}>Tổng đơn hàng</Title>
             <div style={{ marginBottom: "16px" }}>
               <Text strong>Tổng tiền: </Text>
-              <Text>£{totalPrice}</Text>
+              <Text>{totalPrice.toLocaleString()}₫</Text>
             </div>
             <Button type="primary" size="large" block onClick={handlePayment}>
               Thanh toán
