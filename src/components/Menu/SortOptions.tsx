@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Collapse, Radio, Tag } from 'antd';
+import { useLocation } from 'react-router-dom';
 import { getShirtByMultipleNamesApi } from '../../util/api';
 
 const { Panel } = Collapse;
@@ -42,7 +43,29 @@ const SortOptions: React.FC<SortOptionsProps> = ({
     const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
     const [selectedType, setSelectedType] = useState<string | null>(null);
 
-    // Function to fetch and update filtered lists
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const nameClub = searchParams.get("nameclub");
+    const namePlayer = searchParams.get("nameplayer");
+    const nameSession = searchParams.get("namesession");
+    const nameTypeShirt = searchParams.get("nametypeshirt");
+
+    // Cập nhật trạng thái dựa trên các tham số tìm kiếm
+    useEffect(() => {
+        if (nameClub) {
+            setSelectedClub(nameClub);
+        }
+        if (nameSession) {
+            setSelectedSession(nameSession);
+        }
+        if (namePlayer) {
+            setSelectedPlayer(namePlayer);
+        }
+        if (nameTypeShirt) {
+            setSelectedType(nameTypeShirt);
+        }
+    }, [nameClub, nameSession, namePlayer, nameTypeShirt]);
+
     const updateFilteredLists = async () => {
         try {
             const data = {
@@ -50,7 +73,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                 pageSize: 1000,
                 nameShirt: '',
                 nameClub: selectedClub || '',
-                nameSeason: selectedSession || '',
+                nameSession: selectedSession || '',
                 namePlayer: selectedPlayer || '',
                 typeShirt: selectedType || '',
                 status: 1,
@@ -59,13 +82,11 @@ const SortOptions: React.FC<SortOptionsProps> = ({
             const result: ApiResponse = await getShirtByMultipleNamesApi(data as any);
             const pageData = result.pageData;
 
-            // Create lists based on returned data from API
             const relatedClubs = Array.from(new Set(pageData.map((shirt) => shirt.clubName).filter(Boolean)));
             const relatedSessions = Array.from(new Set(pageData.map((shirt) => shirt.sessionName).filter(Boolean)));
             const relatedPlayers = Array.from(new Set(pageData.map((shirt) => shirt.fullName).filter(Boolean)));
             const relatedTypes = Array.from(new Set(pageData.map((shirt) => shirt.typeShirtName).filter(Boolean)));
 
-            // Update filtered lists based on current selection
             setFilteredClubList(relatedClubs);
             setFilteredSessionList(relatedSessions);
             setFilteredPlayerList(relatedPlayers);
@@ -75,7 +96,6 @@ const SortOptions: React.FC<SortOptionsProps> = ({
         }
     };
 
-    // Update filtered lists when any filter changes
     useEffect(() => {
         updateFilteredLists();
     }, [selectedClub, selectedSession, selectedPlayer, selectedType]);
@@ -106,13 +126,19 @@ const SortOptions: React.FC<SortOptionsProps> = ({
 
     return (
         <div style={{ padding: '16px', border: '1px solid #d9d9d9', borderRadius: '4px' }}>
-            <h3>Sort Options</h3>
+            <h3>Shopping Options</h3>
             <Collapse defaultActiveKey={['1', '2', '3', '4']}>
-                {/* Club Selection */}
+                {/* Chọn Câu Lạc Bộ */}
                 <Panel header="Club" key="1">
                     {selectedClub ? (
-                        <Tag closable onClose={() => handleClubChange({ target: { value: '' } })} style={{ fontSize: '14px', padding: '5px 10px' }}>
-                            <strong>Team:</strong> {selectedClub}
+                        <Tag closable onClose={() => handleClubChange({ target: { value: '' } })} style={{
+                            fontSize: '14px',
+                            padding: '5px 10px',
+                            maxWidth: '100%',
+                            whiteSpace: 'normal',
+                            wordWrap: 'break-word',
+                        }}>
+                            <strong>Club:</strong> {selectedClub}
                         </Tag>
                     ) : (
                         <Radio.Group onChange={handleClubChange} value={selectedClub}>
@@ -125,7 +151,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                     )}
                 </Panel>
 
-                {/* Session Selection */}
+                {/* Chọn Mùa Giải */}
                 <Panel header="Session" key="2">
                     {selectedSession ? (
                         <Tag closable onClose={() => handleSessionChange({ target: { value: '' } })} style={{ fontSize: '14px', padding: '5px 10px' }}>
@@ -142,10 +168,16 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                     )}
                 </Panel>
 
-                {/* Player Selection */}
-                <Panel header="Player" key="3">
+                {/* Chọn Cầu Thủ */}
+                <Panel header="Players" key="3">
                     {selectedPlayer ? (
-                        <Tag closable onClose={() => handlePlayerChange({ target: { value: '' } })} style={{ fontSize: '14px', padding: '5px 10px' }}>
+                        <Tag closable onClose={() => handlePlayerChange({ target: { value: '' } })} style={{
+                            fontSize: '14px',
+                            padding: '5px 10px',
+                            maxWidth: '100%',
+                            whiteSpace: 'normal',
+                            wordWrap: 'break-word',
+                        }}>
                             <strong>Player:</strong> {selectedPlayer}
                         </Tag>
                     ) : (
@@ -159,10 +191,16 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                     )}
                 </Panel>
 
-                {/* Type Selection */}
+                {/* Chọn Loại Áo */}
                 <Panel header="Type" key="4">
                     {selectedType ? (
-                        <Tag closable onClose={() => handleTypeChange({ target: { value: '' } })} style={{ fontSize: '14px', padding: '5px 10px' }}>
+                        <Tag closable onClose={() => handleTypeChange({ target: { value: '' } })} style={{
+                            fontSize: '14px',
+                            padding: '5px 10px',
+                            maxWidth: '100%',
+                            whiteSpace: 'normal',
+                            wordWrap: 'break-word',
+                        }}>
                             <strong>Type:</strong> {selectedType}
                         </Tag>
                     ) : (

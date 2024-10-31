@@ -11,24 +11,27 @@ const AllShirts: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
-    const [searchKeyword, setSearchKeyword] = useState(''); // Thêm state để lưu từ khóa tìm kiếm
+    const [searchKeyword, setSearchKeyword] = useState('');
     const navigate = useNavigate();
 
-    // Các state cho bộ lọc
     const [selectedClub, setSelectedClub] = useState<string>('');
     const [selectedSession, setSelectedSession] = useState<string>('');
     const [selectedPlayer, setSelectedPlayer] = useState<string>('');
 
-    const pageSize = 12; // Hiển thị 12 áo mỗi trang
+    const pageSize = 12;
 
-    // Hàm fetch dữ liệu dựa trên các bộ lọc và từ khóa tìm kiếm
+    // Hàm định dạng giá tiền VND
+    const formatPrice = (price: number) => {
+        return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    };
+
     const fetchShirts = async () => {
         try {
             setLoading(true);
             const data = {
                 pageNum: currentPage,
                 pageSize: pageSize,
-                nameShirt: searchKeyword, // Sử dụng từ khóa tìm kiếm
+                nameShirt: searchKeyword,
                 nameClub: selectedClub,
                 nameSeason: selectedSession,
                 namePlayer: selectedPlayer,
@@ -45,20 +48,17 @@ const AllShirts: React.FC = () => {
         }
     };
 
-    // Gọi lại fetchShirts mỗi khi một bộ lọc, trang hiện tại, hoặc từ khóa tìm kiếm thay đổi
     useEffect(() => {
         fetchShirts();
     }, [selectedClub, selectedSession, selectedPlayer, currentPage, searchKeyword]);
 
-    // Hàm xử lý khi người dùng chuyển trang
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
 
-    // Hàm xử lý khi người dùng tìm kiếm
     const handleSearch = (value: string) => {
-        setSearchKeyword(value); // Cập nhật từ khóa tìm kiếm
-        setCurrentPage(1); // Đặt lại trang về 1 khi tìm kiếm
+        setSearchKeyword(value);
+        setCurrentPage(1);
     };
 
     return (
@@ -74,11 +74,9 @@ const AllShirts: React.FC = () => {
                 <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <h1 className='py-5'>All Shirts</h1>
-                        {/* Thêm thanh tìm kiếm ở góc phải */}
                         <Search className="custom-search"
                             placeholder="Search shirts"
                             allowClear
-
                             onSearch={handleSearch}
                             enterButton
                             style={{ width: 300, marginBottom: 20 }}
@@ -111,12 +109,28 @@ const AllShirts: React.FC = () => {
                                                     <div>Number: {shirt.number}</div>
                                                     <div>Type: {shirt.typeShirtName}</div>
                                                     <div>Session: {shirt.sessionName}</div>
+                                                    <div className='flex gap-2'>
+                                                        <img
+                                                            src={shirt.clubLogo}
+                                                            alt={shirt.clubName}
+                                                            style={{
+                                                                width: '30px',
+                                                                height: '30px',
+
+                                                            }}
+                                                        />
+                                                        <span style={{ fontWeight: 'bold' }}>{shirt.clubName}</span>
+                                                    </div>
+
                                                 </>
                                             }
                                         />
-                                        <div style={{ position: 'absolute', bottom: '10px', right: '10px', backgroundColor: '#fff', padding: '5px 10px', borderRadius: '5px', fontWeight: 'bold', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
-                                            ${shirt.price}
+                                        <div className='pt-5'>
+                                            <div style={{ position: 'absolute', bottom: '10px', right: '10px', backgroundColor: '#fff', padding: '5px 10px', borderRadius: '5px', fontWeight: 'bold', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
+                                                {formatPrice(shirt.price)}
+                                            </div>
                                         </div>
+
                                     </Card>
                                 </Col>
                             ))}
