@@ -36,17 +36,16 @@ const UpdateStatusComponent: React.FC<UpdateStatusComponentProps> = ({
 
   const nextStatus = getNextStatus(order.status);
 
-  const handleStatusChange = async () => {
-    if (!nextStatus) return; // No next status available
+  const handleStatusChange = async (newStatus: number) => {
     try {
       const updatedData = {
         userId: order.userId,
         totalPrice: order.totalPrice,
         shipPrice: order.shipPrice,
-        deposit: order.deposit,
+        deposit: order.deposit || 0,
         date: order.date,
         refundStatus: order.refundStatus,
-        status: nextStatus.status,
+        status: newStatus,
       };
 
       await updateOrderApi(order.id, updatedData);
@@ -58,15 +57,25 @@ const UpdateStatusComponent: React.FC<UpdateStatusComponentProps> = ({
   };
 
   return (
-    <div>
+    <div className="flex justify-center items-center space-x-4">
       {nextStatus ? (
-        <Button
-          type="primary"
-          onClick={handleStatusChange}
-          className={`${nextStatus.color} border ${nextStatus.color} text-white font-bold w-36 h-8`}
-        >
-          {`Move to ${nextStatus.label}`}
-        </Button>
+        <>
+          <Button
+            type="primary"
+            onClick={() => handleStatusChange(nextStatus.status)}
+            className={`${nextStatus.color} border ${nextStatus.color}`}
+          >
+            {nextStatus.label}
+          </Button>
+          {order.status === 2 && (
+            <Button
+              danger
+              onClick={() => handleStatusChange(6)} // Assuming 6 is the status code for "Rejected"
+            >
+              Reject
+            </Button>
+          )}
+        </>
       ) : (
         <span
           className="inline-flex items-center justify-center bg-gray-300 text-gray-800 font-semibold py-1 px-4 rounded-md text-sm shadow-md"

@@ -26,11 +26,11 @@ const formatStatus = (status: number): string => {
 const getStatusColor = (status: number): string => {
   switch (status) {
     case 2:
-      return "green";
+      return "blue";
     case 3:
       return "gold";
     case 4:
-      return "blue";
+      return "green";
     case 5:
       return "purple";
     case 6:
