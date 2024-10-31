@@ -154,7 +154,13 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                 {/* Chọn Mùa Giải */}
                 <Panel header="Session" key="2">
                     {selectedSession ? (
-                        <Tag closable onClose={() => handleSessionChange({ target: { value: '' } })} style={{ fontSize: '14px', padding: '5px 10px' }}>
+                        <Tag closable onClose={() => handleSessionChange({ target: { value: '' } })} style={{
+                            fontSize: '14px',
+                            padding: '5px 10px',
+                            maxWidth: '100%',
+                            whiteSpace: 'normal',
+                            wordWrap: 'break-word',
+                        }}>
                             <strong>Session:</strong> {selectedSession}
                         </Tag>
                     ) : (

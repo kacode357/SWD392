@@ -106,7 +106,7 @@ const PlayerMenuComponent: React.FC = () => {
                 )}
             </div>
             <div style={{ textAlign: 'center', marginTop: '10px' }}>
-                <Button type="link" onClick={() => navigate('/all-players')}>
+                <Button type="link" onClick={() => navigate('/player')}>
                     View All
                 </Button>
             </div>
