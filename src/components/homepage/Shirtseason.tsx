@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { getShirtByMultipleNamesApi } from '../../util/api';
 import { useNavigate } from 'react-router-dom';
+import { getClubApi } from '../../util/api'; // Đảm bảo bạn đã import đúng API mới
 
 const Shirtseason: React.FC = () => {
-    const [clubs, setClubs] = useState<Array<{ clubId: number; clubName: string; clubLogo: string }>>([]);
+    const [clubs, setClubs] = useState<Array<{ id: number; name: string; clubLogo: string }>>([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -11,29 +11,19 @@ const Shirtseason: React.FC = () => {
             try {
                 const data = {
                     pageNum: 1,
-                    pageSize: 20,
-                    nameShirt: '',
-                    nameClub: '',
-                    nameSeason: '',
-                    namePlayer: '',
-                    nameTypeShirt : '',
-                    status: 1
+                    pageSize: 10,
+                    keyWord: '',  // Để trống để lấy tất cả các câu lạc bộ
+                    status: true, // Trạng thái là active
                 };
-                const response = await getShirtByMultipleNamesApi(data);
+                const response = await getClubApi(data);
 
-                const selectedClubs = ['Real Madrid', 'Barcelona', 'Manchester United'];
-                const uniqueClubs = response.pageData.filter((club: { clubName: string }) =>
-                    selectedClubs.includes(club.clubName)
+                // Lọc để lấy đúng 3 câu lạc bộ mong muốn
+                const selectedClubs = ["FC Barcelona", "Manchester City", "Real Madrid"];
+                const uniqueClubs = response.pageData.filter((club: { name: string }) =>
+                    selectedClubs.includes(club.name)
                 );
 
-                const clubsMap = new Map<string, { clubId: number; clubName: string; clubLogo: string }>();
-                uniqueClubs.forEach((club: { clubId: number; clubName: string; clubLogo: string }) => {
-                    if (!clubsMap.has(club.clubName)) {
-                        clubsMap.set(club.clubName, club);
-                    }
-                });
-
-                setClubs(Array.from(clubsMap.values()));
+                setClubs(uniqueClubs); // Cập nhật state với 3 câu lạc bộ đã chọn
             } catch (error) {
                 console.error('Error fetching clubs:', error);
             }
@@ -51,18 +41,18 @@ const Shirtseason: React.FC = () => {
             <div className="grid grid-cols-3 gap-4">
                 {clubs.map((club) => (
                     <div
-                        key={club.clubId}
+                        key={club.id}
                         className="text-center"
-                        onClick={() => handleClubClick(club.clubName)}
+                        onClick={() => handleClubClick(club.name)}
                     >
-                        <div className="relative w-full h-100 overflow-hidden">
+                        <div className="relative w-full h-[300px] overflow-hidden"> {/* Đặt chiều cao cố định */}
                             <img
                                 src={club.clubLogo}
-                                alt={club.clubName}
-                                className="w-full h-full object-cover transition duration-300 hover:scale-110"
+                                alt={club.name}
+                                className="w-full h-full object-contain transition duration-300 hover:scale-110" // Sử dụng object-contain để giữ tỉ lệ
                             />
                             <div className="absolute bottom-0 w-full bg-black bg-opacity-40 text-white text-lg p-2">
-                                {club.clubName}
+                                {club.name} {/* Sử dụng trường `name` thay vì `clubName` */}
                             </div>
                         </div>
                     </div>

@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Skeleton, Row, Col, Pagination } from 'antd';
+import { Card, Skeleton, Row, Col, Pagination, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { getShirtByMultipleNamesApi } from '../../util/api';
 import ShoppingOptions from '../../components/Menu/ShoppingOptions';
+
+const { Search } = Input;
 
 const AllShirts: React.FC = () => {
     const [shirts, setShirts] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
+    const [searchKeyword, setSearchKeyword] = useState(''); // Thêm state để lưu từ khóa tìm kiếm
     const navigate = useNavigate();
 
     // Các state cho bộ lọc
@@ -18,14 +21,14 @@ const AllShirts: React.FC = () => {
 
     const pageSize = 12; // Hiển thị 12 áo mỗi trang
 
-    // Hàm fetch dữ liệu dựa trên các bộ lọc
+    // Hàm fetch dữ liệu dựa trên các bộ lọc và từ khóa tìm kiếm
     const fetchShirts = async () => {
         try {
             setLoading(true);
             const data = {
                 pageNum: currentPage,
                 pageSize: pageSize,
-                nameShirt: '',
+                nameShirt: searchKeyword, // Sử dụng từ khóa tìm kiếm
                 nameClub: selectedClub,
                 nameSeason: selectedSession,
                 namePlayer: selectedPlayer,
@@ -42,13 +45,20 @@ const AllShirts: React.FC = () => {
         }
     };
 
-    // Gọi lại fetchShirts mỗi khi một bộ lọc hoặc trang hiện tại thay đổi
+    // Gọi lại fetchShirts mỗi khi một bộ lọc, trang hiện tại, hoặc từ khóa tìm kiếm thay đổi
     useEffect(() => {
         fetchShirts();
-    }, [selectedClub, selectedSession, selectedPlayer, currentPage]);
+    }, [selectedClub, selectedSession, selectedPlayer, currentPage, searchKeyword]);
 
+    // Hàm xử lý khi người dùng chuyển trang
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
+    };
+
+    // Hàm xử lý khi người dùng tìm kiếm
+    const handleSearch = (value: string) => {
+        setSearchKeyword(value); // Cập nhật từ khóa tìm kiếm
+        setCurrentPage(1); // Đặt lại trang về 1 khi tìm kiếm
     };
 
     return (
@@ -62,7 +72,18 @@ const AllShirts: React.FC = () => {
                     />
                 </div>
                 <div style={{ flex: 1 }}>
-                    <h1 className='py-5'>All Shirts</h1>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <h1 className='py-5'>All Shirts</h1>
+                        {/* Thêm thanh tìm kiếm ở góc phải */}
+                        <Search className="custom-search"
+                            placeholder="Search shirts"
+                            allowClear
+
+                            onSearch={handleSearch}
+                            enterButton
+                            style={{ width: 300, marginBottom: 20 }}
+                        />
+                    </div>
                     <Row gutter={[16, 16]}>
                         {loading
                             ? Array.from({ length: pageSize }).map((_, index) => (
