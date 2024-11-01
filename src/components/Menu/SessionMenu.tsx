@@ -7,7 +7,7 @@ import { getSessionApi } from '../../util/api'; // Import API
 interface Session {
     id: number;
     name: string;
- 
+
 }
 
 const SessionMenuComponent: React.FC = () => {
@@ -41,7 +41,7 @@ const SessionMenuComponent: React.FC = () => {
     const handleSessionClick = (sessionsName: string) => {
         navigate(`/listshirt?namesession=${encodeURIComponent(sessionsName)}`);
     };
-   
+
     return (
         <Menu>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
@@ -71,7 +71,7 @@ const SessionMenuComponent: React.FC = () => {
                 )}
             </div>
             <div style={{ textAlign: 'center', marginTop: '10px' }}>
-                <Button type="link" onClick={() => navigate('/allsessions')}>
+                <Button type="link" onClick={() => navigate('/sessions')}>
                     View All
                 </Button>
             </div>
