@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, InputNumber, Select, message } from 'antd';
-import { getShirtSizeByIdApi, updateShirtSizeApi, getSizeApi } from '../../../util/api'; // Đảm bảo đường dẫn chính xác đến file chứa các API
+import { Modal, Form, Input, InputNumber, Select, message, Switch } from 'antd';
+import { getShirtSizeByIdApi, updateShirtSizeApi, getSizeApi } from '../../../util/api';
 
 interface EditShirtSizeModalProps {
-  sizeId: number; 
-  visible: boolean; 
-  onClose: () => void; 
-  refreshSizes: () => void; 
+  sizeId: number;
+  visible: boolean;
+  onClose: () => void;
+  refreshSizes: () => void;
 }
 
 const EditShirtSizeModal: React.FC<EditShirtSizeModalProps> = ({ sizeId, visible, onClose, refreshSizes }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [sizes, setSizes] = useState<any[]>([]);
-  
+
   useEffect(() => {
     if (visible) {
       const fetchSizeDetails = async () => {
@@ -24,12 +24,15 @@ const EditShirtSizeModal: React.FC<EditShirtSizeModalProps> = ({ sizeId, visible
             keyWord: '',
             status: true,
           });
-          setSizes(sizeData.pageData || []); 
-          
+          setSizes(sizeData.pageData || []);
+
           const shirtSizeDetails = await getShirtSizeByIdApi(sizeId);
           form.setFieldsValue({
-            ...shirtSizeDetails,
-            sizeId: shirtSizeDetails.sizeId 
+            shirtId: shirtSizeDetails.shirtId,
+            sizeId: shirtSizeDetails.sizeId,
+            quantity: shirtSizeDetails.quantity,
+            description: shirtSizeDetails.description,
+            status: shirtSizeDetails.status,
           });
         } catch (error) {
           message.error('Failed to fetch size details');
@@ -44,16 +47,17 @@ const EditShirtSizeModal: React.FC<EditShirtSizeModalProps> = ({ sizeId, visible
     setLoading(true);
     try {
       const values = form.getFieldsValue();
+      console.log('Updating size with values:', values);
       await updateShirtSizeApi(sizeId, {
-        shirtId: values.shirtId, 
-        sizeId: values.sizeId, // Gửi size ID được chọn
-        quantity: values.quantity, 
+        shirtId: values.shirtId,
+        sizeId: values.sizeId,
+        quantity: values.quantity,
         description: values.description,
-        status: values.status,
+        status: true,
       });
       message.success('Size updated successfully');
-      refreshSizes(); 
-      onClose(); 
+      refreshSizes();
+      onClose();
     } catch (error) {
       message.error('Failed to update size');
     } finally {
@@ -70,6 +74,14 @@ const EditShirtSizeModal: React.FC<EditShirtSizeModalProps> = ({ sizeId, visible
       confirmLoading={loading}
     >
       <Form form={form} layout="vertical">
+        <Form.Item 
+          name="shirtId" 
+          label="Shirt ID" 
+          hidden
+          rules={[{ required: true, message: 'Please select a shirt' }]}
+        >
+          <InputNumber min={1} />
+        </Form.Item>
         <Form.Item 
           name="sizeId" 
           label="Size" 
@@ -93,6 +105,7 @@ const EditShirtSizeModal: React.FC<EditShirtSizeModalProps> = ({ sizeId, visible
         <Form.Item name="description" label="Description">
           <Input />
         </Form.Item>
+      
       </Form>
     </Modal>
   );
