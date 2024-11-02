@@ -62,7 +62,7 @@ const AllShirts: React.FC = () => {
     };
 
     return (
-        <div className="py-20 px-20">
+        <div className="py-20 ">
             <div style={{ display: 'flex' }}>
                 <div style={{ width: '250px', marginRight: '20px' }}>
                     <ShoppingOptions
@@ -73,7 +73,7 @@ const AllShirts: React.FC = () => {
                 </div>
                 <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <h1 className='py-5'>All Shirts</h1>
+                        <h1 className='py-5 text-gray-800 font-bold text-xl'>All Shirts</h1>
                         <Search className="custom-search"
                             placeholder="Search shirts"
                             allowClear
@@ -104,11 +104,25 @@ const AllShirts: React.FC = () => {
                                             title={shirt.name}
                                             description={
                                                 <>
-                                                    <div>Club: {shirt.clubName}</div>
-                                                    <div>Player: {shirt.fullName}</div>
-                                                    <div>Number: {shirt.number}</div>
-                                                    <div>Type: {shirt.typeShirtName}</div>
-                                                    <div>Session: {shirt.sessionName}</div>
+
+                                                    <p><span className="font-medium text-gray-800">Club: </span>
+                                                        <span className="font-medium">{shirt.clubName}</span></p>
+
+                                                    <p><span className="font-medium text-gray-800">Player: </span>
+                                                        <span className="font-medium">{shirt.fullName}</span></p>
+
+                                                    <p><span className="font-medium text-gray-800">Number: </span>
+                                                        <span className="font-medium">{shirt.number}</span></p>
+
+                                                    <p> <span className="font-medium text-gray-800">Type: </span>
+                                                        <span className="font-medium">{shirt.typeShirtName}</span></p>
+
+                                                    <p> <span className="font-medium text-gray-800">Session: </span>
+                                                        <span className="font-medium">{shirt.sessionName}</span></p>
+
+
+
+
                                                     <div className='flex gap-2'>
                                                         <img
                                                             src={shirt.clubLogo}

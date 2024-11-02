@@ -40,7 +40,7 @@ const TypeShirtMenu: React.FC = () => {
     const handleTypeShirtClick = (typeShirtName: string) => {
         navigate(`/listshirt?nametypeshirt=${encodeURIComponent(typeShirtName)}`);
     };
-    
+
 
     return (
         <Menu>
@@ -71,7 +71,7 @@ const TypeShirtMenu: React.FC = () => {
                 )}
             </div>
             <div style={{ textAlign: 'center', marginTop: '10px' }}>
-                <Button type="link" onClick={() => navigate('/alltypeshirts')}>
+                <Button type="link" onClick={() => navigate('/typeshirts')}>
                     View All
                 </Button>
             </div>
