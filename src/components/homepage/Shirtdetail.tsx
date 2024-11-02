@@ -120,35 +120,34 @@ const Shirtdetail: React.FC = () => {
           <div className="mt-6 p-4 border rounded-lg shadow-sm bg-white">
             <h2 className="text-xl font-semibold">General Information</h2>
             <p className="text-lg mt-2">
-              <span className="font-semibold">Shirt Name:</span> {shirtData.name}
+              <span className="font-semibold">Shirt Name:</span> <span className="font-medium">{shirtData.name}</span>
             </p>
             <p className="text-lg">
-              <span className="font-semibold">Player:</span>
+              <span className="font-semibold">Player: </span>
               <span
-                className="cursor-pointer hover:font-bold transition-all duration-200"
+                className="text-sky-500 cursor-pointer hover:underline transition-all duration-200"
                 onClick={() => navigate(`/listshirt?nameplayer=${encodeURIComponent(shirtData.fullName)}`)}
               >
                 {shirtData.fullName}
               </span>
             </p>
             <p className="text-lg">
-              <span className="font-semibold">Number:</span> {shirtData.number}
+              <span className="font-semibold">Number: </span> <span className="font-medium">{shirtData.number}</span>
             </p>
             <p className="text-lg">
-              <span className="font-semibold">Type:</span> {shirtData.typeShirtName}
+              <span className="font-semibold">Type:</span><span className="font-medium"> {shirtData.typeShirtName}</span>
             </p>
             <p className="text-lg">
-              <span className="font-semibold">Session:</span> {shirtData.sessionName}
+              <span className="font-semibold">Session:</span><span className="font-medium">{shirtData.sessionName}</span>
             </p>
             <p className="text-lg">
-              <span className="font-semibold">Status:</span> {shirtData.status === 1 ? "Available" : "Out of stock"}
+              <span className="font-semibold">Status:</span><span className="font-medium"> {shirtData.status === 1 ? "Available" : "Out of stock"}</span>
             </p>
           </div>
 
           {/* Size and Quantity */}
           <div
-            className={`mt-6 p-4 border rounded-lg shadow-sm bg-white ${showSizeError ? "border-red-500" : ""
-              }`}
+            className={`mt-6 p-4 border rounded-lg shadow-sm bg-white ${showSizeError ? "border-red-500" : ""}`}
           >
             <h2 className="text-xl font-semibold">Size and Quantity</h2>
             <div className="flex flex-wrap mt-2">
@@ -163,23 +162,28 @@ const Shirtdetail: React.FC = () => {
                       setShowSizeError(false); // Xóa thông báo lỗi nếu có
                     }
                   }}
-
-                  className={`cursor-pointer border rounded-lg p-4 m-2 ${selectedSizeId === size.sizeId
+                  className={`cursor-pointer border rounded-lg p-1 m-2 ${selectedSizeId === size.sizeId
                     ? "bg-green-500 text-white"
                     : "bg-gray-200"
                     }`}
-                  style={{ minWidth: "80px", textAlign: "center" }}
+                  style={{ minWidth: "50px", textAlign: "center", height: "30px" }}
                 >
                   <p>{size.sizeName}</p>
-                  <p className="text-sm text-gray-600">Quantity : {size.quantity}</p>
                 </div>
               ))}
             </div>
+
+            {/* Hiển thị Quantity nếu một size đã được chọn */}
+            {selectedSizeId && (
+              <p className="text-red-500 mt-4 text-center">
+                Quantity: {shirtData.listSize.find((size: any) => size.sizeId === selectedSizeId)?.quantity}
+              </p>
+            )}
+
             {showSizeError && (
               <p className="text-red-500 mt-2">Please select a size</p>
             )}
           </div>
-
           {/* Add to Basket */}
           <div className="flex items-center space-x-4 mt-6">
             <input

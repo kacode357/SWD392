@@ -33,6 +33,7 @@ import ManagerOrder from "../pages/Admin/ManagerOrder";
 import OrdersHistory from "../pages/User/OrdersHistory";
 import PlayerComponent from "../pages/User/Player";
 import Session from "../pages/User/Session";
+import TypeShirt from "../pages/User/TypeShirts";
 
 // Define routes with role-based access
 const router = createBrowserRouter([
@@ -78,6 +79,7 @@ const router = createBrowserRouter([
       { path: "allshirts", element: <PrivateRoute element={AllShirts} allowedRoles={[ROLES.USER]} /> },
       { path: "player", element: <PrivateRoute element={PlayerComponent} allowedRoles={[ROLES.USER]} /> },
       { path: "sessions", element: <PrivateRoute element={Session} allowedRoles={[ROLES.USER]} /> },
+      { path: "typeshirts", element: <PrivateRoute element={TypeShirt} allowedRoles={[ROLES.USER]} /> },
       { path: "", element: <PrivateRoute element={HomePage} allowedRoles={[ROLES.USER]} /> },
       { path: "*", element: <NotFound /> },
     ],

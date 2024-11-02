@@ -86,12 +86,16 @@ const ListShirtPage: React.FC = () => {
         </div>
 
         <div style={{ flex: 1 }}>
-          <h1>
+          <h1 className="py-5 text-gray-800 font-bold text-xl">
             {nameClub
               ? `Shirts for ${nameClub}`
               : namePlayer
                 ? `Shirts for player ${namePlayer}`
-                : "No matching shirt found"}
+                : nameSession
+                  ? `Shirts for session ${nameSession}`
+                  : nametypeshirt
+                    ? `Shirts of type ${nametypeshirt}`
+                    : "No matching shirt found"}
           </h1>
 
           <Row gutter={[16, 16]}>
@@ -128,11 +132,21 @@ const ListShirtPage: React.FC = () => {
                       title={shirt.name}
                       description={
                         <>
-                          <div>Club: {shirt.clubName}</div>
-                          <div>Player: {shirt.fullName}</div>
-                          <div>Number: {shirt.number}</div>
-                          <div>Type: {shirt.typeShirtName}</div>
-                          <div>Session: {shirt.sessionName}</div>
+                          <p><span className="font-medium text-gray-800">Club: </span>
+                            <span className="font-medium">{shirt.clubName}</span></p>
+
+                          <p><span className="font-medium text-gray-800">Player: </span>
+                            <span className="font-medium">{shirt.fullName}</span></p>
+
+                          <p><span className="font-medium text-gray-800">Number: </span>
+                            <span className="font-medium">{shirt.number}</span></p>
+
+                          <p> <span className="font-medium text-gray-800">Type: </span>
+                            <span className="font-medium">{shirt.typeShirtName}</span></p>
+
+                          <p> <span className="font-medium text-gray-800">Session: </span>
+                            <span className="font-medium">{shirt.sessionName}</span></p>
+
                         </>
                       }
                     />

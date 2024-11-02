@@ -92,7 +92,7 @@ const ClubShirts: React.FC = () => {
                                     alt={club.name}
                                     className="w-16 h-16 mx-auto"
                                 />
-                                <p className="text-gray-600">{club.name}</p>
+                                <p className="text-gray-600 font-semibold">{club.name}</p>
                             </div>
                         </Col>
                     ))

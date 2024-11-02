@@ -81,7 +81,7 @@ const Session: React.FC = () => {
                                 onClick={() => handleSessionClick(session.name)}
                             >
 
-                                <p className="text-gray-600">{session.name}</p>
+                                <p className="text-gray-600 font-semibold">{session.name}</p>
                             </div>
                         </Col>
                     ))

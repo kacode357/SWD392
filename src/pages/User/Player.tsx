@@ -79,7 +79,7 @@ const PlayerComponent: React.FC = () => {
                                 onClick={() => handlePlayerClick(player.fullName)}
                             >
 
-                                <p className="text-gray-600">{player.fullName}</p>
+                                <p className="text-gray-600 font-semibold">{player.fullName}</p>
                             </div>
                         </Col>
                     ))
