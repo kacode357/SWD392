@@ -34,6 +34,7 @@ import OrdersHistory from "../pages/User/OrdersHistory";
 import PlayerComponent from "../pages/User/Player";
 import Session from "../pages/User/Session";
 import TypeShirt from "../pages/User/TypeShirts";
+import ManagerPayment from "../pages/Admin/ManagerPayment";
 
 // Define routes with role-based access
 const router = createBrowserRouter([
@@ -50,17 +51,12 @@ const router = createBrowserRouter([
       { path: "admin/manager-shirt", element: <PrivateRoute element={ManagerShirt} allowedRoles={[ROLES.ADMIN]} /> },
       { path: "admin/manager-shirt-size", element: <PrivateRoute element={ManagerShirtSize} allowedRoles={[ROLES.ADMIN]} /> },
       { path: "admin/manager-order", element: <PrivateRoute element={ManagerOrder} allowedRoles={[ROLES.ADMIN]} /> },
+      { path: "admin/manager-payment", element: <PrivateRoute element={ManagerPayment} allowedRoles={[ROLES.ADMIN]} /> },
+
 
       // Staff routes
-      { path: "staff/manager-club", element: <PrivateRoute element={ManagerClub} allowedRoles={[ROLES.STAFF]} /> },
-      { path: "staff/manager-session", element: <PrivateRoute element={ManagerSession} allowedRoles={[ROLES.STAFF]} /> },
-      { path: "staff/manager-player", element: <PrivateRoute element={ManagerPlayer} allowedRoles={[ROLES.STAFF]} /> },
-      { path: "staff/manager-size", element: <PrivateRoute element={ManagerSize} allowedRoles={[ROLES.STAFF]} /> },
-      { path: "staff/manager-type-shirt", element: <PrivateRoute element={ManagerTypeShirt} allowedRoles={[ROLES.STAFF]} /> },
-      { path: "staff/manager-shirt", element: <PrivateRoute element={ManagerShirt} allowedRoles={[ROLES.STAFF]} /> },
-      { path: "staff/manager-shirt-size", element: <PrivateRoute element={ManagerShirtSize} allowedRoles={[ROLES.STAFF]} /> },
       { path: "staff/manager-order", element: <PrivateRoute element={ManagerOrder} allowedRoles={[ROLES.STAFF]} /> },
-
+      { path: "staff/manager-payment", element: <PrivateRoute element={ManagerPayment} allowedRoles={[ROLES.STAFF]} /> },
 
       // User routes
       { path: "user/my-profile", element: <PrivateRoute element={MyProfile} allowedRoles={[ROLES.USER]} /> },

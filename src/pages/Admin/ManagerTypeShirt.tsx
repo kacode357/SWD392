@@ -1,4 +1,4 @@
-import Typeshirt from "../../components/Admin/TypeShirt.tsx/Typeshirt"
+import Typeshirt from "../../components/Admin/TypeShirt/Typeshirt"
 
 const ManagerTypeShirt = () => {
   return (

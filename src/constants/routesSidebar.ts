@@ -19,14 +19,9 @@ export const sidebarPaths: string[] = [
     '/admin/manager-shirt',
     '/admin/manager-shirt-size',
     '/admin/manager-order',
-    '/staff/manager-club', 
-    '/staff/manager-session', 
-    '/staff/manager-size', 
-    '/staff/manager-player',
-    '/staff/manager-type-shirt',
-    '/staff/manager-shirt',
-    '/staff/manager-shirt-size',
+    '/admin/manager-payment',
     '/staff/manager-order',
+    '/staff/manager-payment',
 
 
 ];

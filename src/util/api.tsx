@@ -390,8 +390,14 @@ const searchOrderByCurrentUserApi = async (data: { pageNum: number; pageSize: nu
   const response = await defaultAxiosInstance.post(URL_API, data);
   return response.data;
 };
+const searchPaymentApi = async (data: { pageNum: number; pageSize: number;keyword : string ;status: boolean }) => {
+  const URL_API = `/api/payment/search`;
+  const response = await defaultAxiosInstance.post(URL_API, data);
+  return response.data;
+};
 
 export {
+  searchPaymentApi,
   getCartDetailApiWithoutLoading,
   searchOrderByCurrentUserApi,
   changePasswordApi,

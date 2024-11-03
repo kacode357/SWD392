@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, InputNumber, Select, message, Switch } from 'antd';
+import { Modal, Form, Input, InputNumber, Select, message } from 'antd';
 import { getShirtSizeByIdApi, updateShirtSizeApi, getSizeApi } from '../../../util/api';
 
 interface EditShirtSizeModalProps {

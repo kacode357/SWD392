@@ -40,7 +40,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ element: Component, allowed
 
     // Nếu người dùng là staff nhưng truy cập vào trang không dành cho staff, điều hướng về trang staff
     if (userRole === ROLES.STAFF && !allowedRoles.includes(ROLES.STAFF)) {
-        return <Navigate to="/staff/manager-session" replace />;
+        return <Navigate to="/staff/manager-order" replace />;
     }
 
     // Điều hướng người dùng không có quyền về trang chủ

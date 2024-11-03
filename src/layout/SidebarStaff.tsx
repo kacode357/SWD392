@@ -8,14 +8,10 @@ const StaffSidebar: React.FC = () => {
   const location = useLocation();
 
   const menuItems = [
-    { key: '/staff/manager-session', icon: <UserOutlined />, label: 'Manager Session' },
-    { key: '/staff/manager-club', icon: <UserOutlined />, label: 'Manager Club' },
-    { key: '/staff/manager-size', icon: <UserOutlined />, label: 'Manager Size' },
-    { key: '/staff/manager-player', icon: <UserOutlined />, label: 'Manager Player' },
-    { key: '/staff/manager-type-shirt', icon: <UserOutlined />, label: 'Manager Type Shirt' },
-    { key: '/staff/manager-shirt', icon: <UserOutlined />, label: 'Manager Shirt' },
-    { key: '/staff/manager-shirt-size', icon: <UserOutlined />, label: 'Manager Shirt Size' },
+   
     { key: '/staff/manager-order', icon: <UserOutlined />, label: 'Manager Order' },
+    { key: '/staff/manager-payment', icon: <UserOutlined />, label: 'Manager Order' },
+
     { key: '/user/setting', icon: <SettingOutlined />, label: 'Setting' },
   ];
 
