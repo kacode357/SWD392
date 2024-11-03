@@ -50,7 +50,6 @@ const SortOptions: React.FC<SortOptionsProps> = ({
     const nameSession = searchParams.get("namesession");
     const nameTypeShirt = searchParams.get("nametypeshirt");
 
-    // Cập nhật trạng thái dựa trên các tham số tìm kiếm
     useEffect(() => {
         if (nameClub) {
             setSelectedClub(nameClub);
@@ -128,7 +127,6 @@ const SortOptions: React.FC<SortOptionsProps> = ({
         <div style={{ padding: '16px', border: '1px solid #d9d9d9', borderRadius: '4px' }}>
             <h3>Shopping Options</h3>
             <Collapse defaultActiveKey={['1', '2', '3', '4']}>
-                {/* Chọn Câu Lạc Bộ */}
                 <Panel header="Club" key="1">
                     {selectedClub ? (
                         <Tag closable onClose={() => handleClubChange({ target: { value: '' } })} style={{
@@ -141,7 +139,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                             <strong>Club:</strong> {selectedClub}
                         </Tag>
                     ) : (
-                        <Radio.Group onChange={handleClubChange} value={selectedClub}>
+                        <Radio.Group onChange={handleClubChange} value={selectedClub} style={{ maxHeight: '150px', overflowY: 'auto' }}>
                             {filteredClubList.map((club, index) => (
                                 <Radio key={index} value={club} style={{ display: 'block', marginBottom: '8px' }}>
                                     {club}
@@ -151,7 +149,6 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                     )}
                 </Panel>
 
-                {/* Chọn Mùa Giải */}
                 <Panel header="Session" key="2">
                     {selectedSession ? (
                         <Tag closable onClose={() => handleSessionChange({ target: { value: '' } })} style={{
@@ -164,7 +161,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                             <strong>Session:</strong> {selectedSession}
                         </Tag>
                     ) : (
-                        <Radio.Group onChange={handleSessionChange} value={selectedSession}>
+                        <Radio.Group onChange={handleSessionChange} value={selectedSession} style={{ maxHeight: '150px', overflowY: 'auto' }}>
                             {filteredSessionList.map((session, index) => (
                                 <Radio key={index} value={session} style={{ display: 'block', marginBottom: '8px' }}>
                                     {session}
@@ -174,7 +171,6 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                     )}
                 </Panel>
 
-                {/* Chọn Cầu Thủ */}
                 <Panel header="Players" key="3">
                     {selectedPlayer ? (
                         <Tag closable onClose={() => handlePlayerChange({ target: { value: '' } })} style={{
@@ -187,7 +183,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                             <strong>Player:</strong> {selectedPlayer}
                         </Tag>
                     ) : (
-                        <Radio.Group onChange={handlePlayerChange} value={selectedPlayer}>
+                        <Radio.Group onChange={handlePlayerChange} value={selectedPlayer} style={{ maxHeight: '150px', overflowY: 'auto' }}>
                             {filteredPlayerList.map((player, index) => (
                                 <Radio key={index} value={player} style={{ display: 'block', marginBottom: '8px' }}>
                                     {player}
@@ -197,7 +193,6 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                     )}
                 </Panel>
 
-                {/* Chọn Loại Áo */}
                 <Panel header="Type" key="4">
                     {selectedType ? (
                         <Tag closable onClose={() => handleTypeChange({ target: { value: '' } })} style={{
@@ -210,7 +205,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({
                             <strong>Type:</strong> {selectedType}
                         </Tag>
                     ) : (
-                        <Radio.Group onChange={handleTypeChange} value={selectedType}>
+                        <Radio.Group onChange={handleTypeChange} value={selectedType} style={{ maxHeight: '150px', overflowY: 'auto' }}>
                             {filteredTypeList.map((type, index) => (
                                 <Radio key={index} value={type} style={{ display: 'block', marginBottom: '8px' }}>
                                     {type}

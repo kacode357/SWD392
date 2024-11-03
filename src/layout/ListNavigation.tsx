@@ -35,7 +35,7 @@ const NavigationComponent: React.FC = () => {
                             ALL SHIRTS
                         </Button>
                     </li>
-                 
+
                     <li>
                         <Dropdown overlay={<SessionComponent />} trigger={['hover']}>
                             <Button type="text" style={{ color: 'white' }}>
@@ -64,7 +64,7 @@ const NavigationComponent: React.FC = () => {
                             </Button>
                         </Dropdown>
                     </li>
-                    <li>
+                    {/* <li>
                         <Button type="text" style={{ color: 'white' }}>
                             OFFERS
                         </Button>
@@ -73,7 +73,7 @@ const NavigationComponent: React.FC = () => {
                         <Button type="text" style={{ color: 'white' }}>
                             EURO 2024
                         </Button>
-                    </li>
+                    </li> */}
                 </ul>
             </nav>
         </div>
