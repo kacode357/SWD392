@@ -5,11 +5,11 @@ import {
   createReviewApi,
   getReviewByShirtApi,
 } from "../../util/api";
-import TinyMCEEditorComponent from "../../util/TinyMCEEditor"; // Import TinyMCEEditorComponent
+import TinyMCEEditorComponent from "../../util/TinyMCEEditor";
 
 interface OrderDetail {
   orderId: string;
-  id: number; // orderDetailId
+  id: number;
   shirtId: number;
 }
 
@@ -121,15 +121,12 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({ shirtId }) => {
     }
   };
 
-  if (!token || orderDetails.length === 0) {
-    return null;
-  }
-
   return (
     <div className="review-container">
+      {/* List of Reviews */}
       <div className="reviews-list-container">
         <h2 className="text-xl font-semibold mb-4">Customer Reviews</h2>
-        {reviews.length === 0 && !loading ? (
+        {reviews.length === 0 ? (
           <p className="text-gray-500">No reviews available</p>
         ) : (
           <List
@@ -145,24 +142,18 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({ shirtId }) => {
                       src={review.imgUrl || "https://via.placeholder.com/150"}
                       size={50}
                     />
-
                     {/* Review Content */}
                     <div className="flex-1">
-                      {/* Username and Rating */}
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-lg">
                           {review.userName}
                         </span>
                       </div>
-
-                      {/* Rating */}
                       <Rate
                         disabled
                         defaultValue={review.scoreRating}
                         className="mt-1"
                       />
-
-                      {/* Comment */}
                       <div
                         className="mt-2 text-gray-700"
                         dangerouslySetInnerHTML={{ __html: review.comment }}
@@ -176,25 +167,26 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({ shirtId }) => {
         )}
       </div>
 
-      <div className="submit-review-container">
-  <h2 className="text-xl font-semibold mb-4">Submit Your Review</h2>
-  <Rate value={rating} onChange={(value) => setRating(value)} />
-  <TinyMCEEditorComponent
-    value={comment}
-    onEditorChange={(content) => setComment(content)}
-  />
-  <div className="flex justify-end mt-4">
-    <Button
-      type="primary"
-      className="bg-black hover:bg-gray-500 text-white"
-      onClick={handleReviewSubmit}
-      disabled={orderDetails.length === 0}
-    >
-      Submit Review
-    </Button>
-  </div>
-</div>
-
+      {/* Conditional Submit Review Form */}
+      {token && orderDetails.length > 0 && (
+        <div className="submit-review-container">
+          <h2 className="text-xl font-semibold mb-4">Submit Your Review</h2>
+          <Rate value={rating} onChange={(value) => setRating(value)} />
+          <TinyMCEEditorComponent
+            value={comment}
+            onEditorChange={(content) => setComment(content)}
+          />
+          <div className="flex justify-end mt-4">
+            <Button
+              type="primary"
+              className="bg-black hover:bg-gray-500 text-white"
+              onClick={handleReviewSubmit}
+            >
+              Submit Review
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
