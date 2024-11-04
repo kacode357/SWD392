@@ -1,6 +1,6 @@
 import React from 'react';
 import { Menu } from 'antd';
-import { SettingOutlined, UserOutlined, ShoppingCartOutlined, DollarOutlined } from '@ant-design/icons';
+import { SettingOutlined, ShoppingCartOutlined, DollarOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const StaffSidebar: React.FC = () => {
