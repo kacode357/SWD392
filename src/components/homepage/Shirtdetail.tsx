@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import { Collapse, notification } from "antd";
+import { Collapse } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { getShirtByIdApi, addToCartApi } from "../../util/api";
 import { CartContext } from "../../context/cart.context";
 import BreadcrumbComponent from "../../layout/Breadcrumb";
-
 import GetReview from "./GetReview";
+
 const { Panel } = Collapse;
 
 const Shirtdetail: React.FC = () => {
@@ -15,111 +15,86 @@ const Shirtdetail: React.FC = () => {
   const [mainImage, setMainImage] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedSizeId, setSelectedSizeId] = useState<number | null>(null);
-  const [showSizeError, setShowSizeError] = useState(false); // For size selection error
+  const [showSizeError, setShowSizeError] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchShirtDetail = async () => {
-      try {
-        const data = await getShirtByIdApi(Number(id));
-        if (data) {
-          setShirtData(data);
-          setMainImage(data.urlImg);
-        }
-      } catch (error) {
-        console.error("Error fetching shirt data:", error);
-        notification.error({
-          message: "Error",
-          description: "Unable to load shirt details.",
-        });
+  const fetchShirtDetail = useCallback(async () => {
+    try {
+      const data = await getShirtByIdApi(Number(id));
+      if (data) {
+        setShirtData(data);
+        setMainImage(data.urlImg);
       }
-    };
-
-    if (id) {
-      fetchShirtDetail();
+    } catch (error) {
+      console.error("Error fetching shirt data:", error);
     }
   }, [id]);
 
-  // Function to handle add to basket
+  useEffect(() => {
+    if (id && !shirtData) {
+      fetchShirtDetail();
+    }
+  }, [id, shirtData, fetchShirtDetail]);
+
   const handleAddToBasket = useCallback(async () => {
-    const token = localStorage.getItem("token"); // Check if token exists
+    const token = localStorage.getItem("token");
 
     if (!token) {
-      notification.warning({
-        message: "Please Login",
-        description: "You need to login before adding items to the basket.",
-      });
-      navigate("/login"); // Redirect to login page
+      navigate("/login");
       return;
     }
     if (!selectedSizeId) {
-      setShowSizeError(true); // Highlight size selection area
+      setShowSizeError(true);
       return;
     }
 
     const cartData = {
       shirtId: Number(id),
       quantity: quantity,
-      sizeId: selectedSizeId, // Send sizeId directly
+      sizeId: selectedSizeId,
     };
 
     try {
       const response = await addToCartApi(cartData);
       if (response) {
-        notification.success({
-          message: "Success",
-          description: "Added to basket successfully.",
-        });
-        updateCart(); // Update cart after success
-      
+        setShowSuccessMessage(true);
+        updateCart();
+        setTimeout(() => {
+          setShowSuccessMessage(false);
+        }, 2000);
       }
     } catch (error) {
       console.error("Error adding to cart:", error);
-      notification.error({
-        message: "Error",
-        description: "Failed to add to basket.",
-      });
     }
   }, [id, quantity, selectedSizeId, updateCart, navigate]);
 
-  // Early return for loading state
   if (!shirtData) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className="py-20">
-      {/* Breadcrumb */}
       <BreadcrumbComponent />
 
-      {/* Shirt details */}
       <div className="flex flex-col lg:flex-row items-start p-4 max-w-6xl mx-auto gap-4">
-        {/* Main Image */}
-        <div className="w-full lg:w-1/2 p-4 mt-2 ">
+        <div className="w-full lg:w-1/2 p-4 mt-2">
           <div className="relative w-full">
             <img
-              src={
-                mainImage &&
-                (mainImage.startsWith("http://") ||
-                  mainImage.startsWith("https://"))
-                  ? mainImage
-                  : "https://m.media-amazon.com/images/I/B1HVVUyLAhL._CLa%7C2140%2C2000%7C51TfbGiVkfL.png%7C0%2C0%2C2140%2C2000%2B0.0%2C0.0%2C2140.0%2C2000.0_AC_UY1000_.png"
-              }
+              src={mainImage}
               className="w-full h-full object-contain shadow-lg rounded-lg"
+              alt={shirtData.name}
             />
           </div>
           <GetReview shirtId={Number(id)} />
-         
         </div>
 
-        {/* Shirt Information */}
         <div className="w-full lg:w-1/2 p-4">
           <h1 className="text-3xl font-bold mb-4">{shirtData.name}</h1>
           <p className="text-3xl font-semibold text-green-600">
-            {shirtData.price.toLocaleString("vi-VN")}₫ {/* Price in VND */}
+            {shirtData.price.toLocaleString("vi-VN")}₫
           </p>
 
-          {/* General Information */}
           <div className="mt-6 p-4 border rounded-lg shadow-sm bg-white">
             <h2 className="text-xl font-semibold">General Information</h2>
             <p className="text-lg mt-2">
@@ -153,16 +128,9 @@ const Shirtdetail: React.FC = () => {
               <span className="font-semibold">Session:</span>
               <span className="font-medium">{shirtData.sessionName}</span>
             </p>
-            <p className="text-lg">
-              <span className="font-semibold">Status:</span>
-              <span className="font-medium">
-                {" "}
-                {shirtData.status === 1 ? "Available" : "Out of stock"}
-              </span>
-            </p>
+          
           </div>
 
-          {/* Size and Quantity */}
           <div
             className={`mt-6 p-4 border rounded-lg shadow-sm bg-white ${
               showSizeError ? "border-red-500" : ""
@@ -175,10 +143,10 @@ const Shirtdetail: React.FC = () => {
                   key={size.sizeId}
                   onClick={() => {
                     if (selectedSizeId === size.sizeId) {
-                      setSelectedSizeId(null); // Nếu size đang chọn trùng với size đã chọn thì bỏ chọn
+                      setSelectedSizeId(null);
                     } else {
-                      setSelectedSizeId(size.sizeId); // Ngược lại, chọn size mới
-                      setShowSizeError(false); // Xóa thông báo lỗi nếu có
+                      setSelectedSizeId(size.sizeId);
+                      setShowSizeError(false);
                     }
                   }}
                   className={`cursor-pointer border rounded-lg p-1 m-2 ${
@@ -196,24 +164,11 @@ const Shirtdetail: React.FC = () => {
                 </div>
               ))}
             </div>
-
-            {/* Hiển thị Quantity nếu một size đã được chọn */}
-            {selectedSizeId && (
-              <p className="text-red-500 mt-4 text-center">
-                Quantity:{" "}
-                {
-                  shirtData.listSize.find(
-                    (size: any) => size.sizeId === selectedSizeId
-                  )?.quantity
-                }
-              </p>
-            )}
-
             {showSizeError && (
               <p className="text-red-500 mt-2">Please select a size</p>
             )}
           </div>
-          {/* Add to Basket */}
+
           <div className="flex items-center space-x-4 mt-6">
             <input
               type="number"
@@ -230,19 +185,27 @@ const Shirtdetail: React.FC = () => {
             </button>
           </div>
 
-          {/* Collapse for Additional Info */}
+          {showSuccessMessage && (
+            <p
+              className="text-green-500 mt-2 font-bold text-center transition-opacity duration-1000 ease-in-out"
+              style={{
+                opacity: showSuccessMessage ? 1 : 0,
+                transform: showSuccessMessage ? "translateY(0)" : "translateY(-10px)",
+              }}
+            >
+              Added to cart successfully!
+            </p>
+          )}
+
           <Collapse defaultActiveKey={["1"]} className="mt-6">
             <Panel header="Club" key="1">
               <div className="flex justify-between">
-                {/* Cột bên trái */}
                 <div className="mt-2">
                   <p className="font-semibold">
-                    Club Name:{" "}
-                    <span className="font-normal">{shirtData.clubName}</span>
+                    Club Name: <span className="font-normal">{shirtData.clubName}</span>
                   </p>
                   <p className="font-semibold">
-                    Club Country:{" "}
-                    <span className="font-normal">{shirtData.clubCountry}</span>
+                    Club Country: <span className="font-normal">{shirtData.clubCountry}</span>
                   </p>
                   <p className="font-semibold">
                     Established Year:{" "}
@@ -251,10 +214,7 @@ const Shirtdetail: React.FC = () => {
                     </span>
                   </p>
                 </div>
-
-                {/* Cột bên phải */}
                 <div className="flex flex-col items-center text-center mr-32">
-               
                   <img
                     src={shirtData.clubLogo}
                     alt={shirtData.clubName}

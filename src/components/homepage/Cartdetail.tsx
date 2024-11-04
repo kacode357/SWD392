@@ -1,11 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import {
-  getCartDetailApi,
-  getCartApi,
-  updateCartApi,
-  deleteItemInCartApi,
-  getUrlPaymentApi,
-} from "../../util/api";
+import React, { useState, useEffect, useContext, useCallback } from "react";
+import { getCartDetailApi, getCartApi, updateCartApi, deleteItemInCartApi, getUrlPaymentApi } from "../../util/api";
 import { Row, Col, Image, Typography, Button, notification, Input, Form } from "antd";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../../context/cart.context";
@@ -14,21 +8,98 @@ const { Title, Text } = Typography;
 
 const CartDetail: React.FC = () => {
   const [cartData, setCartData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true); // Trạng thái tải dữ liệu
   const { updateCart } = useContext(CartContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchCartData = async () => {
-      try {
-        const data = await getCartDetailApi();
-        setCartData(data);
-      } catch (error) {
-        console.error("Error fetching cart data:", error);
-      }
-    };
-
-    fetchCartData();
+  const fetchCartData = useCallback(async () => {
+    try {
+      const data = await getCartDetailApi();
+      setCartData(data);
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    } finally {
+      setIsLoading(false); // Dữ liệu đã được tải xong
+    }
   }, []);
+
+  useEffect(() => {
+    fetchCartData();
+  }, [fetchCartData]);
+
+  const formatCurrency = useCallback((value: number) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(value);
+  }, []);
+
+  const handleUpdateQuantity = useCallback(
+    async (shirtSizeId: number, quantity: number) => {
+      if (quantity <= 0) {
+        notification.error({
+          message: "Invalid quantity",
+          description: "Quantity must be greater than 0.",
+        });
+        return;
+      }
+      try {
+        await updateCartApi({ orderId: cartData.id, shirtSizeId, quantity });
+        const updatedCartData = await getCartApi();
+        setCartData(updatedCartData);
+      } catch (error) {
+        console.error("Error updating cart quantity:", error);
+        notification.error({
+          message: "Update Error",
+          description: "Failed to update quantity.",
+        });
+      }
+    },
+    [cartData?.id]
+  );
+
+  const handleDeleteItem = useCallback(
+    async (shirtSizeId: number) => {
+      try {
+        await deleteItemInCartApi({ orderId: cartData.id, shirtSizeId });
+        updateCart();
+        const updatedCartData = await getCartApi();
+        setCartData(updatedCartData);
+      } catch (error) {
+        console.error("Error deleting item:", error);
+        notification.error({
+          message: "Delete Error",
+          description: "Failed to delete item.",
+        });
+      }
+    },
+    [cartData?.id, updateCart]
+  );
+
+  const handlePayment = async (values: any) => {
+    try {
+      const payload = {
+        orderId: cartData.id,
+        amount: cartData.totalPrice,
+        createDate: new Date().toISOString(),
+        ...values,
+      };
+      const response = await getUrlPaymentApi(payload);
+      if (response) {
+        window.location.href = response.url;
+      }
+    } catch (error) {
+      console.error("Error during payment:", error);
+      notification.error({
+        message: "Payment Error",
+        description: "An error occurred during payment. Please try again.",
+      });
+    }
+  };
+
+  if (isLoading) {
+    return <div style={{ padding: "20px", textAlign: "center" }}></div>;
+  }
 
   if (!cartData || (cartData.orderDetails && cartData.orderDetails.length === 0)) {
     return (
@@ -44,82 +115,22 @@ const CartDetail: React.FC = () => {
     );
   }
 
-  const { orderDetails, totalPrice, id: orderId } = cartData;
-
-  const formatCurrency = (value: number) =>
-    new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(value);
-
-  const handleUpdateQuantity = async (shirtSizeId: number, quantity: number) => {
-    try {
-      if (quantity <= 0) {
-        notification.error({
-          message: "Invalid quantity",
-          description: "Quantity must be greater than 0.",
-        });
-        return;
-      }
-      await updateCartApi({ orderId, shirtSizeId, quantity });
-      const updatedCartData = await getCartApi();
-      setCartData(updatedCartData);
-    } catch (error) {
-      console.error("Error updating cart quantity:", error);
-      notification.error({
-        message: "Update Error",
-        description: "Failed to update quantity.",
-      });
-    }
-  };
-
-  const handleQuantityChange = (shirtSizeId: number, newQuantity: number) => {
-    handleUpdateQuantity(shirtSizeId, newQuantity);
-  };
-
-  const handleDeleteItem = async (shirtSizeId: number) => {
-    try {
-      await deleteItemInCartApi({ orderId, shirtSizeId });
-      updateCart();
-      const updatedCartData = await getCartApi();
-      setCartData(updatedCartData);
-    } catch (error) {
-      console.error("Error deleting item:", error);
-      notification.error({
-        message: "Delete Error",
-        description: "Failed to delete item.",
-      });
-    }
-  };
-
-  const handlePayment = async (values: any) => {
-    try {
-      const payload = {
-        orderId,
-        amount: totalPrice,
-        createDate: new Date().toISOString(),
-        ...values, // Add form values to payload
-      };
-      const response = await getUrlPaymentApi(payload);
-      if (response) {
-        window.location.href = response.url;
-      }
-    } catch (error) {
-      console.error("Error during payment:", error);
-      notification.error({
-        message: "Payment Error",
-        description: "An error occurred during payment. Please try again.",
-      });
-    }
-  };
-
   return (
     <div className="py-20">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <Title level={2}>Your Cart</Title>
       </div>
 
       <Row gutter={[16, 16]}>
         <Col span={16}>
           <Row gutter={[16, 16]}>
-            {orderDetails.map((item: any) => (
+            {cartData.orderDetails.map((item: any) => (
               <Col key={item.id} span={24}>
                 <div
                   style={{
@@ -154,15 +165,13 @@ const CartDetail: React.FC = () => {
                     <Text>Quantity: </Text>
                     <div style={{ display: "flex", alignItems: "center" }}>
                       <Button
-                        onClick={() => handleQuantityChange(item.shirtSizeId, item.quantity - 1)}
+                        onClick={() => handleUpdateQuantity(item.shirtSizeId, item.quantity - 1)}
                         disabled={item.quantity <= 1}
                       >
                         -
                       </Button>
                       <Text style={{ margin: "0 10px" }}>{item.quantity}</Text>
-                      <Button
-                        onClick={() => handleQuantityChange(item.shirtSizeId, item.quantity + 1)}
-                      >
+                      <Button onClick={() => handleUpdateQuantity(item.shirtSizeId, item.quantity + 1)}>
                         +
                       </Button>
                     </div>
@@ -183,12 +192,33 @@ const CartDetail: React.FC = () => {
         </Col>
 
         <Col span={8}>
-          <div style={{ border: "1px solid #ddd", padding: "20px", borderRadius: "8px" }}>
+          <div
+            style={{
+              border: "1px solid #ddd",
+              padding: "20px",
+              borderRadius: "8px",
+            }}
+          >
             <Title level={3}>Order Summary</Title>
             <div style={{ marginBottom: "16px" }}>
-              <Text strong>Total Price: </Text>
-              <Text>{formatCurrency(totalPrice)}</Text>
+              <Text strong style={{ color: "black", fontWeight: "bold" }}>
+                Total Price:
+              </Text>
+              <Text style={{ color: "green", fontWeight: "bold", marginLeft: "5px" }}>
+                {formatCurrency(cartData.totalPrice)}
+              </Text>
             </div>
+            <div
+              style={{
+                textAlign: "center",
+                fontWeight: "bold",
+                fontSize: "20px",
+                marginTop: "16px",
+              }}
+            >
+              Enter shipping information
+            </div>
+
             <Form layout="vertical" onFinish={handlePayment}>
               <Form.Item label="Full Name" name="fullName" rules={[{ required: true }]}>
                 <Input placeholder="Enter your full name" />
