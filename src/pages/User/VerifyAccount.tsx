@@ -48,28 +48,39 @@ const VerifyAccount: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: "500px", margin: "50px auto", textAlign: "center" }}>
-      <Title level={2}>Verify Account</Title>
-      {id ? (
-        <>
-          {loading ? (
-            <Spin tip="Verifying..." />
-          ) : (
-            <>
-              <Paragraph>
-                Successfully verified!
-              </Paragraph>
-              <Paragraph>
-                You will be redirected to the login page in:{" "}
-                <strong>{countdown} seconds</strong>.
-              </Paragraph>
-            </>
-          )}
-        </>
-      ) : (
-        <Paragraph>No ID provided in the URL.</Paragraph>
-      )}
-    </div>
+    < div
+      className="flex items-center justify-center min-h-screen p-5"
+      style={{
+        backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5)), url('https://i.pinimg.com/564x/16/3e/1a/163e1a79ab7b45324fc5b4c134665ef7.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }
+      }
+    >
+      <div className="w-full max-w-md p-6 shadow-lg bg-white rounded-lg" style={{ maxWidth: "500px", margin: "50px auto", textAlign: "center" }}>
+        <Title level={2}>Verify Account</Title>
+        {id ? (
+          <>
+            {loading ? (
+              <Spin tip="Verifying..." />
+            ) : (
+              <>
+                <Paragraph>
+                  Successfully verified!
+                </Paragraph>
+                <Paragraph>
+                  You will be redirected to the login page in:{" "}
+                  <strong>{countdown} seconds</strong>.
+                </Paragraph>
+              </>
+            )}
+          </>
+        ) : (
+          <Paragraph>No ID provided in the URL.</Paragraph>
+        )}
+      </div>
+    </div >
+
   );
 };
 
