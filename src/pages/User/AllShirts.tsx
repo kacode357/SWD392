@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Skeleton, Row, Col, Pagination, Input } from 'antd';
+import { Card, Skeleton, Row, Col, Pagination, Input, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { getShirtByMultipleNamesApi } from '../../util/api';
 import ShoppingOptions from '../../components/Menu/ShoppingOptions';
@@ -9,8 +9,11 @@ const { Search } = Input;
 const AllShirts: React.FC = () => {
     const [shirts, setShirts] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalItems, setTotalItems] = useState(0);
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 12,
+        total: 0,
+    });
     const [searchKeyword, setSearchKeyword] = useState('');
     const navigate = useNavigate();
 
@@ -18,18 +21,16 @@ const AllShirts: React.FC = () => {
     const [selectedSession, setSelectedSession] = useState<string>('');
     const [selectedPlayer, setSelectedPlayer] = useState<string>('');
 
-    const pageSize = 12;
-
     // Hàm định dạng giá tiền VND
     const formatPrice = (price: number) => {
         return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     };
 
-    const fetchShirts = async () => {
+    const fetchShirts = async (page = 1, pageSize = 12) => {
         try {
             setLoading(true);
             const data = {
-                pageNum: currentPage,
+                pageNum: page,
                 pageSize: pageSize,
                 nameShirt: searchKeyword,
                 nameClub: selectedClub,
@@ -40,35 +41,40 @@ const AllShirts: React.FC = () => {
             };
             const result = await getShirtByMultipleNamesApi(data);
             setShirts(result.pageData);
-            setTotalItems(result.totalItems);
+            setPagination({
+                current: result.pageInfo.page, // Assuming your API returns current page
+                pageSize: result.pageInfo.size, // Assuming your API returns page size
+                total: result.pageInfo.totalItem, // Assuming your API returns total items
+            });
         } catch (error) {
             console.error('Error fetching shirts', error);
+            message.error('Failed to fetch shirts');
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchShirts();
-    }, [selectedClub, selectedSession, selectedPlayer, currentPage, searchKeyword]);
+        fetchShirts(pagination.current, pagination.pageSize);
+    }, [selectedClub, selectedSession, selectedPlayer, pagination.current, searchKeyword]);
 
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
+    const handlePageChange = (page: number,) => {
+        setPagination((prev) => ({ ...prev, current: page }));
     };
 
     const handleSearch = (value: string) => {
         setSearchKeyword(value);
-        setCurrentPage(1);
+        setPagination((prev) => ({ ...prev, current: 1 }));
     };
 
     return (
-        <div className="py-20 ">
+        <div className="py-20">
             <div style={{ display: 'flex' }}>
                 <div style={{ width: '250px', marginRight: '20px' }}>
                     <ShoppingOptions
-                        onClubChange={(club) => { setSelectedClub(club); setCurrentPage(1); }}
-                        onSessionChange={(session) => { setSelectedSession(session); setCurrentPage(1); }}
-                        onPlayerChange={(player) => { setSelectedPlayer(player); setCurrentPage(1); }}
+                        onClubChange={(club) => { setSelectedClub(club); setPagination((prev) => ({ ...prev, current: 1 })); }}
+                        onSessionChange={(session) => { setSelectedSession(session); setPagination((prev) => ({ ...prev, current: 1 })); }}
+                        onPlayerChange={(player) => { setSelectedPlayer(player); setPagination((prev) => ({ ...prev, current: 1 })); }}
                     />
                 </div>
                 <div style={{ flex: 1 }}>
@@ -84,7 +90,7 @@ const AllShirts: React.FC = () => {
                     </div>
                     <Row gutter={[16, 16]}>
                         {loading
-                            ? Array.from({ length: pageSize }).map((_, index) => (
+                            ? Array.from({ length: pagination.pageSize }).map((_, index) => (
                                 <Col key={index} xs={24} sm={12} md={8} lg={6}>
                                     <Card hoverable style={{ width: '100%' }}>
                                         <Skeleton.Image style={{ width: '100%', height: '300px' }} />
@@ -104,25 +110,16 @@ const AllShirts: React.FC = () => {
                                             title={shirt.name}
                                             description={
                                                 <>
-
                                                     <p><span className="font-medium text-gray-800">Club: </span>
                                                         <span className="font-medium">{shirt.clubName}</span></p>
-
                                                     <p><span className="font-medium text-gray-800">Player: </span>
                                                         <span className="font-medium">{shirt.fullName}</span></p>
-
                                                     <p><span className="font-medium text-gray-800">Number: </span>
                                                         <span className="font-medium">{shirt.number}</span></p>
-
-                                                    <p> <span className="font-medium text-gray-800">Type: </span>
+                                                    <p><span className="font-medium text-gray-800">Type: </span>
                                                         <span className="font-medium">{shirt.typeShirtName}</span></p>
-
-                                                    <p> <span className="font-medium text-gray-800">Session: </span>
+                                                    <p><span className="font-medium text-gray-800">Session: </span>
                                                         <span className="font-medium">{shirt.sessionName}</span></p>
-
-
-
-
                                                     <div className='flex gap-2'>
                                                         <img
                                                             src={shirt.clubLogo}
@@ -130,12 +127,10 @@ const AllShirts: React.FC = () => {
                                                             style={{
                                                                 width: '30px',
                                                                 height: '30px',
-
                                                             }}
                                                         />
                                                         <span style={{ fontWeight: 'bold' }}>{shirt.clubName}</span>
                                                     </div>
-
                                                 </>
                                             }
                                         />
@@ -144,16 +139,15 @@ const AllShirts: React.FC = () => {
                                                 {formatPrice(shirt.price)}
                                             </div>
                                         </div>
-
                                     </Card>
                                 </Col>
                             ))}
                     </Row>
                     <div style={{ textAlign: 'center', marginTop: '20px' }}>
                         <Pagination
-                            current={currentPage}
-                            pageSize={pageSize}
-                            total={totalItems}
+                            current={pagination.current}
+                            pageSize={pagination.pageSize}
+                            total={pagination.total}
                             onChange={handlePageChange}
                             showSizeChanger={false}
                         />
