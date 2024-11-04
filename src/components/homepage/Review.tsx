@@ -20,12 +20,16 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({ shirtId }) => {
   const [rating, setRating] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
 
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
+    if (!token) return;
+
     const fetchOrderDetails = async () => {
       try {
         const response = await searchOrderByCurrentUserApi({
           pageNum: 1,
-          pageSize: 100,
+          pageSize: 1000,
           orderId: "",
           status: null,
         });
@@ -54,7 +58,7 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({ shirtId }) => {
     };
 
     fetchOrderDetails();
-  }, [shirtId]);
+  }, [shirtId, token]);
 
   const handleReviewSubmit = async () => {
     if (rating === 0) {
@@ -98,7 +102,7 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({ shirtId }) => {
   };
 
   // Kiểm tra nếu không có `orderDetails` nào phù hợp với `shirtId`, ẩn phần review
-  if (orderDetails.length === 0) {
+  if (!token || orderDetails.length === 0) {
     return null;
   }
 

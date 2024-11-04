@@ -405,8 +405,25 @@ const resendVerificationApi = async (email: string) => {
   const response = await defaultAxiosInstance.post(URL_API, email);
   return response.data;
 };
-
+const forgotPasswordApi = async (email: string) => {
+  const URL_API = '/api/user/forgot-password';
+  const response = await defaultAxiosInstance.post(URL_API,  email );
+  return response.data;
+};
+const resetPasswordApi = async (data: { email: string; verificationCode: string; newPassword: string }) => {
+  const URL_API = '/api/user/reset-password';
+  const response = await defaultAxiosInstance.post(URL_API, data);
+  return response.data;
+};
+const getReviewByShirtApi = async (shirtId: number) => {
+  const URL_API = `/api/review/by-shirt/${shirtId}`;
+  const response = await axiosWithoutLoading.get(URL_API);
+  return response.data;
+};
 export {
+  getReviewByShirtApi,
+  resetPasswordApi,
+  forgotPasswordApi,
   resendVerificationApi,
   createReviewApi,
   searchPaymentApi,

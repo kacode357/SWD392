@@ -36,6 +36,7 @@ import Session from "../pages/User/Session";
 import TypeShirt from "../pages/User/TypeShirts";
 import ManagerPayment from "../pages/Admin/ManagerPayment";
 import ResendVerificationButton from "../components/ResendVerificationButton";
+import ForgotPasswordButton from "../components/ForgotPasswordButton";
 
 // Define routes with role-based access
 const router = createBrowserRouter([
@@ -83,6 +84,7 @@ const router = createBrowserRouter([
   },
   { path: "verifyemail/:id", element: <VerifyAccount /> },
   { path: "resend-verification", element: <ResendVerificationButton /> },
+  { path: "forgot-password", element: <ForgotPasswordButton /> },
   { path: "/login", element: <Login /> },
   { path: "*", element: <NotFound /> }, // Catch-all for undefined routes
 ]);

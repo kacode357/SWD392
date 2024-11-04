@@ -5,7 +5,7 @@ import { getShirtByIdApi, addToCartApi } from "../../util/api";
 import { CartContext } from "../../context/cart.context";
 import BreadcrumbComponent from "../../layout/Breadcrumb";
 import ReviewComponent from "./Review";
-
+import GetReview from "./GetReview";
 const { Panel } = Collapse;
 
 const Shirtdetail: React.FC = () => {
@@ -108,6 +108,7 @@ const Shirtdetail: React.FC = () => {
               className="w-full h-full object-contain shadow-lg rounded-lg"
             />
           </div>
+          <GetReview shirtId={Number(id)} />
           <ReviewComponent shirtId={Number(id)} />
         </div>
 

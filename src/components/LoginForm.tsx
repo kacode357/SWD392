@@ -1,11 +1,11 @@
-import React, { useContext, useState } from 'react';
-import { Form, Input, Button, notification } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { getCurrentLogin, loginUserApi } from '../util/api';
-import { AuthContext } from '../context/auth.context';
-import logo from '../assets/logo1.jfif';
-import ForgotPasswordButton from './ForgotPasswordButton';
-import GoogleLoginButton from './GoogleLoginButton'; // Import the new GoogleLoginButton component
+import React, { useContext, useState } from "react";
+import { Form, Input, Button, notification } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { getCurrentLogin, loginUserApi } from "../util/api";
+import { AuthContext } from "../context/auth.context";
+import logo from "../assets/logo1.jfif";
+import ForgotPasswordButton from "./ForgotPasswordButton";
+import GoogleLoginButton from "./GoogleLoginButton"; // Import the new GoogleLoginButton component
 
 interface LoginFormValues {
   email: string;
@@ -24,14 +24,14 @@ const LoginForm: React.FC = () => {
 
     const resDataToken = await loginUserApi(data);
     if (resDataToken) {
-      localStorage.setItem('token', resDataToken.token);
+      localStorage.setItem("token", resDataToken.token);
 
       const resDataLogin = await getCurrentLogin();
       console.log(resDataLogin);
 
       notification.success({
-        message: 'Successful',
-        description: 'You have successfully logged in.',
+        message: "Successful",
+        description: "You have successfully logged in.",
       });
 
       setAuth({
@@ -46,18 +46,18 @@ const LoginForm: React.FC = () => {
       });
 
       // Redirect based on role
-      if (resDataLogin?.roleName === 'Admin') {
-        console.log('Admin');
-        window.location.href = '/admin/manager-user';
+      if (resDataLogin?.roleName === "Admin") {
+        console.log("Admin");
+        window.location.href = "/admin/manager-user";
         return;
       } else {
-        navigate('/');
+        navigate("/");
         return;
       }
     } else {
       notification.error({
-        message: 'Error',
-        description: resDataToken.EM || 'Something went wrong!',
+        message: "Error",
+        description: resDataToken.EM || "Something went wrong!",
       });
     }
 
@@ -66,15 +66,19 @@ const LoginForm: React.FC = () => {
 
   return (
     <div className="form-container sign-in px-5">
-      <Form<LoginFormValues> name="login_form" onFinish={onFinish} layout="vertical">
-        <img src={logo} className="w-full" alt="" />
+      <Form<LoginFormValues>
+        name="login_form"
+        onFinish={onFinish}
+        layout="vertical"
+      >
+        <img src={logo} className="w-5/6 mx-auto" alt="Logo" />
         <h1 className="font-bold text-2xl ">Sign In</h1>
         <Form.Item
           name="email"
           label="Email"
           rules={[
-            { required: true, message: 'Please input your email!' },
-            { type: 'email', message: 'Please enter a valid email!' },
+            { required: true, message: "Please input your email!" },
+            { type: "email", message: "Please enter a valid email!" },
           ]}
         >
           <Input placeholder="Email" />
@@ -82,7 +86,7 @@ const LoginForm: React.FC = () => {
         <Form.Item
           name="password"
           label="Password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
+          rules={[{ required: true, message: "Please input your password!" }]}
         >
           <Input.Password placeholder="Password" />
         </Form.Item>
@@ -95,15 +99,21 @@ const LoginForm: React.FC = () => {
         >
           Sign In
         </Button>
-        <ForgotPasswordButton />
-        <Button
-          type="link"
-          onClick={() => navigate('/resend-verification')}
-          className="text-blue-500 hover:underline"
-          block
-        >
-          Resend Verification
-        </Button>
+        <div className="flex justify-between mt-2">
+          <Link
+            to="/resend-verification"
+            className="text-black hover:text-black hover:underline"
+          >
+            Resend Verification
+          </Link>
+          <Link
+            to="/forgot-password"
+            className="text-black hover:text-black hover:underline"
+          >
+            Forgot Password
+          </Link>
+        </div>
+
         <div className="separator flex items-center py-2">
           <hr className="flex-grow border-gray-300" />
           <span className="text-gray-500">OR</span>
@@ -113,7 +123,10 @@ const LoginForm: React.FC = () => {
           <GoogleLoginButton />
         </div>
         <div className="text-center mt-2">
-          <button className="text-blue-500 hover:underline" onClick={() => (window.location.href = '/')}>
+          <button
+            className="text-blue-500 hover:underline"
+            onClick={() => (window.location.href = "/")}
+          >
             Back to HomePage
           </button>
         </div>
