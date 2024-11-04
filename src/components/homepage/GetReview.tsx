@@ -122,9 +122,9 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({ shirtId }) => {
   };
 
   return (
-    <div className="review-container">
-      {/* List of Reviews */}
-      <div className="reviews-list-container py-4">
+    <div className="review-container mt-3">
+      {/* Khung hiển thị danh sách đánh giá */}
+      <div className="reviews-list-container py-4 border-b mb-4">
         <h2 className="text-xl font-semibold mb-4">Customer Reviews</h2>
         {reviews.length === 0 ? (
           <p className="text-gray-500">No reviews available</p>
@@ -137,12 +137,10 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({ shirtId }) => {
               <List.Item>
                 <Skeleton avatar title={false} loading={loading} active>
                   <div className="flex items-start space-x-4 w-full">
-                    {/* Avatar */}
                     <Avatar
                       src={review.imgUrl || "https://via.placeholder.com/150"}
                       size={50}
                     />
-                    {/* Review Content */}
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-lg">
@@ -167,11 +165,14 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({ shirtId }) => {
         )}
       </div>
 
-      {/* Conditional Submit Review Form */}
+      {/* Khung form nhập đánh giá */}
       {token && orderDetails.length > 0 && (
-        <div className="submit-review-container">
+        <div className="submit-review-container bg-gray-100 p-4 rounded-lg">
           <h2 className="text-xl font-semibold mb-4">Submit Your Review</h2>
-          <Rate value={rating} onChange={(value) => setRating(value)} />
+          <div className="flex items-center mb-4">
+            <span className="font-bold mr-2">Rating</span>
+            <Rate value={rating} onChange={(value) => setRating(value)} />
+          </div>
           <TinyMCEEditorComponent
             value={comment}
             onEditorChange={(content) => setComment(content)}

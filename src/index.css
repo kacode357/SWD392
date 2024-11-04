@@ -238,28 +238,50 @@ body {
 .text-primary {
   color: #1890ff;
 }
-.review-container {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+/* Custom scrollbar styling */
+.review-container .reviews-list-container {
+  
+  max-height: 300px; /* Set max height for the reviews list container */
+  overflow-y: auto; /* Enable vertical scroll */
+  padding: 10px; /* Add padding for better readability */
 }
 
-.reviews-list-container {
-  max-height: 200px; /* Đặt chiều cao tối đa cho khung danh sách đánh giá */
-  overflow-y: auto; /* Kích hoạt cuộn khi vượt quá chiều cao */
-  border: 1px solid #e8e8e8;
-  padding: 8px;
-  border-radius: 8px;
+/* Scrollbar Styling */
+.review-container .reviews-list-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.review-container .reviews-list-container::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Track color */
+  border-radius: 4px;
+}
+
+.review-container .reviews-list-container::-webkit-scrollbar-thumb {
+  background-color: #888; /* Thumb color */
+  border-radius: 4px;
+  border: 1px solid #f1f1f1;
+}
+
+.review-container .reviews-list-container::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Hover color */
+}
+
+/* Expand review container styling */
+.review-container {
+  padding: 20px;
   background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .submit-review-container {
-  margin-top: 16px;
-  padding: 16px;
-  border: 1px solid #e8e8e8;
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
   border-radius: 8px;
-  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 .zoom-card:hover {
   transform: scale(1.05); /* Slightly increase size on hover */
 }
