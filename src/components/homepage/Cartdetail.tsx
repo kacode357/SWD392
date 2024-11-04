@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
   getCartDetailApi,
-  getCartDetailApiWithoutLoading, // Thêm API mới
+  getCartApi,
   updateCartApi,
   deleteItemInCartApi,
   getUrlPaymentApi,
@@ -67,7 +67,7 @@ const Cartdetail: React.FC = () => {
         return;
       }
       await updateCartApi({ orderId, shirtSizeId, quantity });
-      const updatedCartData = await getCartDetailApiWithoutLoading(); // Gọi API không có loading
+      const updatedCartData = await getCartApi(); // Gọi API không có loading
       setCartData(updatedCartData);
     } catch (error) {
       console.error("Error updating cart quantity:", error);
@@ -88,7 +88,7 @@ const Cartdetail: React.FC = () => {
     try {
       await deleteItemInCartApi({ orderId, shirtSizeId });
       updateCart();
-      const updatedCartData = await getCartDetailApiWithoutLoading(); // Gọi API không có loading
+      const updatedCartData = await getCartApi(); // Gọi API không có loading
       setCartData(updatedCartData);
     } catch (error) {
       console.error("Error deleting item:", error);

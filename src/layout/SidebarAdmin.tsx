@@ -1,6 +1,17 @@
 import React from 'react';
 import { Menu } from 'antd';
-import { SettingOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  SettingOutlined,
+  UserOutlined,
+  CalendarOutlined,
+  TeamOutlined,
+  AppstoreOutlined,
+  SolutionOutlined,
+  TagsOutlined,
+  BarcodeOutlined,
+  ShoppingCartOutlined,
+  DollarOutlined,
+} from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const AdminSidebar: React.FC = () => {
@@ -8,17 +19,17 @@ const AdminSidebar: React.FC = () => {
   const location = useLocation();
 
   const menuItems = [
-    { key: '/admin/manager-user', icon: <UserOutlined />, label: 'Account' },
-    { key: '/admin/manager-session', icon: <UserOutlined />, label: 'Session' },
-    { key: '/admin/manager-club', icon: <UserOutlined />, label: 'Club' },
-    { key: '/admin/manager-size', icon: <UserOutlined />, label: 'Size' },
-    { key: '/admin/manager-player', icon: <UserOutlined />, label: 'Player' },
-    { key: '/admin/manager-type-shirt', icon: <UserOutlined />, label: 'Type Shirt' },
-    { key: '/admin/manager-shirt', icon: <UserOutlined />, label: 'Shirt' },
-    { key: '/admin/manager-shirt-size', icon: <UserOutlined />, label: 'Shirt Size' },
-    { key: '/admin/manager-order', icon: <UserOutlined />, label: 'Order' },
-    { key: '/admin/manager-payment', icon: <UserOutlined />, label: 'Payment' },
-    { key: '/user/setting', icon: <SettingOutlined />, label: 'Setting' },
+    { key: '/admin/manager-user', icon: <UserOutlined />, label: 'Account' },                 
+    { key: '/admin/manager-session', icon: <CalendarOutlined />, label: 'Session' },          
+    { key: '/admin/manager-club', icon: <TeamOutlined />, label: 'Club' },                   
+    { key: '/admin/manager-size', icon: <AppstoreOutlined />, label: 'Size' },           
+    { key: '/admin/manager-player', icon: <SolutionOutlined />, label: 'Player' },           
+    { key: '/admin/manager-type-shirt', icon: <TagsOutlined />, label: 'Type Shirt' },      
+    { key: '/admin/manager-shirt', icon: <BarcodeOutlined />, label: 'Shirt' },              
+    { key: '/admin/manager-shirt-size', icon: <AppstoreOutlined />, label: 'Shirt Size' },  
+    { key: '/admin/manager-order', icon: <ShoppingCartOutlined />, label: 'Order' },          
+    { key: '/admin/manager-payment', icon: <DollarOutlined />, label: 'Payment' },          
+    { key: '/user/setting', icon: <SettingOutlined />, label: 'Setting' },                 
   ];
 
   return (
