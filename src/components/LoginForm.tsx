@@ -6,7 +6,6 @@ import { AuthContext } from '../context/auth.context';
 import logo from '../assets/logo1.jfif';
 import ForgotPasswordButton from './ForgotPasswordButton';
 import GoogleLoginButton from './GoogleLoginButton'; // Import the new GoogleLoginButton component
-import ResendVerificationButton from './ResendVerificationButton';
 
 interface LoginFormValues {
   email: string;
@@ -88,23 +87,30 @@ const LoginForm: React.FC = () => {
           <Input.Password placeholder="Password" />
         </Form.Item>
         <Button
-        className='button'
+          className="button"
           type="primary"
           htmlType="submit"
-          loading={loading} 
+          loading={loading}
           block
         >
           Sign In
         </Button>
         <ForgotPasswordButton />
+        <Button
+          type="link"
+          onClick={() => navigate('/resend-verification')}
+          className="text-blue-500 hover:underline"
+          block
+        >
+          Resend Verification
+        </Button>
         <div className="separator flex items-center py-2">
           <hr className="flex-grow border-gray-300" />
-          <span className=" text-gray-500">OR</span>
+          <span className="text-gray-500">OR</span>
           <hr className="flex-grow border-gray-300" />
         </div>
-        <div className='flex justify-center '>
+        <div className="flex justify-center">
           <GoogleLoginButton />
-          <ResendVerificationButton />
         </div>
         <div className="text-center mt-2">
           <button className="text-blue-500 hover:underline" onClick={() => (window.location.href = '/')}>

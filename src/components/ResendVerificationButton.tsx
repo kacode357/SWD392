@@ -1,60 +1,59 @@
 import React, { useState } from 'react';
-import { Button, Input, notification } from 'antd';
-import { resendVerificationApi } from '../util/api'; // API gửi lại email xác thực
+import { Button, Form, Input, Typography, Card, Space, Row, Col, notification } from 'antd';
+import { resendVerificationApi } from '../util/api';
+
+const { Title, Text } = Typography;
 
 const ResendVerificationButton: React.FC = () => {
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState(''); // Trạng thái để lưu email
 
-  const handleResendVerification = async () => {
-    if (!email) {
-      notification.warning({
-        message: 'Email Required',
-        description: 'Please enter your email to resend the verification email.',
-      });
-      return;
-    }
-
+  const onFinish = async (values: { email: string }) => {
     setLoading(true);
-    try {
-      const response = await resendVerificationApi(email ); // Gửi email qua API
-      if (response.success) {
-        notification.success({
-          message: 'Verification Email Sent',
-          description: 'A new verification email has been sent to your registered email address.',
-        });
-      } else {
-        notification.error({
-          message: 'Error',
-          description: response.message || 'Failed to send verification email.',
-        });
-      }
-    } catch (error) {
-      notification.error({
-        message: 'Error',
-        description: 'Something went wrong while sending verification email.',
-      });
-    }
-    setLoading(false);
+    await resendVerificationApi(values.email);
+    notification.success({
+      message: 'Email Sent',
+      description: 'A verification email has been sent to your registered email address.',
+    });
+    
+    // Đặt loading về false sau 10 giây
+    setTimeout(() => {
+      setLoading(false);
+    }, 10000);
   };
+  
 
   return (
-    <div className="text-center mt-2">
-      <Input 
-        placeholder="Enter your email" 
-        value={email} 
-        onChange={(e) => setEmail(e.target.value)} 
-        style={{ marginBottom: '8px' }} 
-      />
-      <Button 
-        type="link" 
-        onClick={handleResendVerification} 
-        loading={loading} 
-        className="text-blue-500 hover:underline"
-      >
-        Resend Verification Email
-      </Button>
-    </div>
+    <Row justify="center" align="middle" style={{ minHeight: '100vh', padding: '20px' }}>
+      <Col xs={24} sm={18} md={12} lg={8}>
+        <Card bordered={false} style={{ boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' }}>
+          <Space direction="vertical" size="large" style={{ width: '100%' }}>
+            <Title level={3} style={{ textAlign: 'center' }}>
+              Resend Verification Email
+            </Title>
+            <Text type="secondary" style={{ textAlign: 'center' }}>
+              Please enter your email address to resend the verification email.
+            </Text>
+            <Form name="resend_verification_form" onFinish={onFinish} layout="vertical">
+              <Form.Item
+                name="email"
+                label="Email"
+                rules={[
+                  { required: true, message: 'Please enter your email!' },
+                  { type: 'email', message: 'Please enter a valid email address!' },
+                ]}
+              >
+                <Input placeholder="Enter your email" size="large" />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit" loading={loading} block>
+                  Resend Verification Email
+                </Button>
+              </Form.Item>
+            </Form>
+          </Space>
+        </Card>
+      </Col>
+    </Row>
   );
 };
 
