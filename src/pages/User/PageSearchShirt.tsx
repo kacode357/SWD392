@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Skeleton, Row, Col } from "antd";
+import { Card, Skeleton, Row, Col, Pagination } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getShirtByMultipleNamesApi } from "../../util/api";
 import SortOptions from "../../components/Menu/SortOptions";
@@ -9,7 +9,6 @@ const ListShirtPage: React.FC = () => {
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
 
-  // Extracting query parameters
   const nameClub = searchParams.get("nameclub");
   const namePlayer = searchParams.get("nameplayer");
   const nameSession = searchParams.get("namesession");
@@ -17,14 +16,18 @@ const ListShirtPage: React.FC = () => {
 
   const [shirts, setShirts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 12,
+    total: 0,
+  });
 
-  // Function to update shirts list based on filters
-  const fetchShirts = async () => {
+  const fetchShirts = async (page = 1, pageSize = 12) => {
     try {
       setLoading(true);
       const data = {
-        pageNum: 1,
-        pageSize: 10,
+        pageNum: page,
+        pageSize: pageSize,
         nameShirt: "",
         nameClub: nameClub || "",
         nameSeason: nameSession || "",
@@ -34,6 +37,11 @@ const ListShirtPage: React.FC = () => {
       };
       const result = await getShirtByMultipleNamesApi(data);
       setShirts(result.pageData);
+      setPagination({
+        current: result.pageInfo.page,
+        pageSize: result.pageInfo.size,
+        total: result.pageInfo.totalItem,
+      });
     } catch (error) {
       console.error("Error fetching shirts", error);
     } finally {
@@ -41,12 +49,10 @@ const ListShirtPage: React.FC = () => {
     }
   };
 
-  // Triggers API call whenever a filter changes
   useEffect(() => {
-    fetchShirts();
-  }, [nameClub, namePlayer, nameSession, nametypeshirt]);
+    fetchShirts(pagination.current, pagination.pageSize);
+  }, [nameClub, namePlayer, nameSession, nametypeshirt, pagination.current]);
 
-  // Update URL parameter and navigate with updated filters
   const updateQueryParam = (key: string, value: string) => {
     const params = new URLSearchParams(location.search);
     if (value) {
@@ -57,13 +63,15 @@ const ListShirtPage: React.FC = () => {
     navigate({ search: params.toString() });
   };
 
-  // Filter change handlers
+  const handlePageChange = (page: number) => {
+    setPagination((prev) => ({ ...prev, current: page }));
+  };
+
   const handleClubChange = (club: string) => updateQueryParam("nameclub", club);
   const handleSessionChange = (session: string) => updateQueryParam("namesession", session);
   const handlePlayerChange = (player: string) => updateQueryParam("nameplayer", player);
   const handleTypeChange = (type: string) => updateQueryParam("nametypeshirt", type);
 
-  // Format price in VND
   const formatPrice = (price: number | null | undefined) => {
     return price ? `${new Intl.NumberFormat().format(price)} ₫` : "Liên hệ";
   };
@@ -74,9 +82,8 @@ const ListShirtPage: React.FC = () => {
 
   return (
     <div className="py-20">
-      <div style={{ display: 'flex' }}>
-        <div style={{ width: '250px', marginRight: '20px' }}>
-          {/* Passing filter handlers to SortOptions */}
+      <div style={{ display: "flex" }}>
+        <div style={{ width: "250px", marginRight: "20px" }}>
           <SortOptions
             onClubChange={handleClubChange}
             onSessionChange={handleSessionChange}
@@ -100,7 +107,7 @@ const ListShirtPage: React.FC = () => {
 
           <Row gutter={[16, 16]}>
             {loading
-              ? Array.from({ length: 10 }).map((_, index) => (
+              ? Array.from({ length: pagination.pageSize }).map((_, index) => (
                 <Col key={index} xs={24} sm={12} md={8} lg={6}>
                   <Card hoverable style={{ width: "100%" }}>
                     <Skeleton.Image style={{ width: "100%", height: "300px" }} />
@@ -108,22 +115,16 @@ const ListShirtPage: React.FC = () => {
                   </Card>
                 </Col>
               ))
-              : shirts.map((shirt: any) => (
+              : shirts.map((shirt) => (
                 <Col key={shirt.id} xs={24} sm={12} md={8} lg={6}>
                   <Card
                     hoverable
                     cover={
-                      loading ? (
-                        <Skeleton.Image
-                          style={{ width: "100%", height: "300px" }}
-                        />
-                      ) : (
-                        <img
-                          alt={shirt.name}
-                          src={shirt.urlImg}
-                          style={{ height: "300px", objectFit: "cover" }}
-                        />
-                      )
+                      <img
+                        alt={shirt.name}
+                        src={shirt.urlImg}
+                        style={{ height: "300px", objectFit: "cover" }}
+                      />
                     }
                     style={{ width: "100%", position: "relative" }}
                     onClick={() => handleCardClick(shirt.id)}
@@ -132,43 +133,14 @@ const ListShirtPage: React.FC = () => {
                       title={shirt.name}
                       description={
                         <>
-                          <p><span className="font-medium text-gray-800">Club: </span>
-                            <span className="font-medium">{shirt.clubName}</span></p>
-
-                          <p><span className="font-medium text-gray-800">Player: </span>
-                            <span className="font-medium">{shirt.fullName}</span></p>
-
-                          <p><span className="font-medium text-gray-800">Number: </span>
-                            <span className="font-medium">{shirt.number}</span></p>
-
-                          <p> <span className="font-medium text-gray-800">Type: </span>
-                            <span className="font-medium">{shirt.typeShirtName}</span></p>
-
-                          <p> <span className="font-medium text-gray-800">Session: </span>
-                            <span className="font-medium">{shirt.sessionName}</span></p>
-
+                          <p><span className="font-medium text-gray-800">Club: </span>{shirt.clubName}</p>
+                          <p><span className="font-medium text-gray-800">Player: </span>{shirt.fullName}</p>
+                          <p><span className="font-medium text-gray-800">Number: </span>{shirt.number}</p>
+                          <p><span className="font-medium text-gray-800">Type: </span>{shirt.typeShirtName}</p>
+                          <p><span className="font-medium text-gray-800">Session: </span>{shirt.sessionName}</p>
                         </>
                       }
                     />
-                    <div
-                      style={{
-                        marginTop: "10px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <img
-                        src={shirt.clubLogo}
-                        alt={shirt.clubName}
-                        style={{
-                          width: "30px",
-                          height: "30px",
-                          marginRight: "10px",
-                        }}
-                      />
-                      <span>{shirt.clubName}</span>
-                    </div>
                     <div className="pt-5">
                       <div
                         style={{
@@ -180,18 +152,23 @@ const ListShirtPage: React.FC = () => {
                           borderRadius: "5px",
                           fontWeight: "bold",
                           boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-
                         }}
                       >
-
                         {formatPrice(shirt.price)}
                       </div>
                     </div>
-
                   </Card>
                 </Col>
               ))}
           </Row>
+
+          <Pagination
+            current={pagination.current}
+            pageSize={pagination.pageSize}
+            total={pagination.total}
+            onChange={handlePageChange}
+            style={{ textAlign: "center", marginTop: "20px" }}
+          />
         </div>
       </div>
     </div>
