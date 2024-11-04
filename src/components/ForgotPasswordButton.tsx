@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Form, Input, Typography, Card, Space, notification } from 'antd';
+import { Form, Input, Typography, Card, Space, notification } from 'antd';
 import { forgotPasswordApi, resetPasswordApi } from '../util/api';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
 
@@ -51,7 +52,14 @@ const ForgotPasswordButton: React.FC = () => {
   };
 
   return (
-    <div className="text-center mt-2">
+    <div
+      className="flex items-center justify-center min-h-screen p-5"
+      style={{
+        backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5)), url('https://i.pinimg.com/564x/16/3e/1a/163e1a79ab7b45324fc5b4c134665ef7.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       {step === 1 ? (
         <Card bordered={false} style={{ boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)', padding: '20px' }}>
           <Space direction="vertical" size="large" style={{ width: '100%' }}>
@@ -71,12 +79,24 @@ const ForgotPasswordButton: React.FC = () => {
                 <Input placeholder="Enter your email" size="large" />
               </Form.Item>
               <Form.Item>
-                <Button type="primary" htmlType="submit" loading={loading} block>
-                  Send Verification Code
-                </Button>
+                <button
+                  type="submit"
+                  className="bg-black text-white py-2 px-4 w-full rounded-md hover:bg-gray-800 focus:outline-none"
+                  disabled={loading}
+                >
+                  {loading ? 'Sending...' : 'Send Verification Code'}
+                </button>
               </Form.Item>
             </Form>
           </Space>
+          <button
+            onClick={() => navigate('/login')}
+            className="mt-4 text-black hover:text-gray-800 focus:outline-none"
+          >
+            <ArrowLeftOutlined className="mr-2" /> {/* Add the icon here */}
+            Back to Login
+          </button>
+
         </Card>
       ) : (
         <Card bordered={false} style={{ boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)', padding: '20px' }}>
@@ -101,17 +121,19 @@ const ForgotPasswordButton: React.FC = () => {
                 <Input.Password placeholder="Enter new password" size="large" />
               </Form.Item>
               <Form.Item>
-                <Button type="primary" htmlType="submit" loading={loading} block>
-                  Reset Password
-                </Button>
+                <button
+                  type="submit"
+                  className="bg-black text-white py-2 px-4 w-full rounded-md hover:bg-gray-800 focus:outline-none"
+                  disabled={loading}
+                >
+                  {loading ? 'Resetting...' : 'Reset Password'}
+                </button>
               </Form.Item>
             </Form>
           </Space>
         </Card>
       )}
-      <Button type="link" onClick={() => navigate('/login')} className="text-blue-500 hover:underline">
-        Back to Login
-      </Button>
+
     </div>
   );
 };
