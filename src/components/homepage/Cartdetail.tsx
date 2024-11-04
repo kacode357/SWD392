@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
   getCartDetailApi,
-  getCartApi, // Thêm API mới
+  getCartApi,
   updateCartApi,
   deleteItemInCartApi,
   getUrlPaymentApi,
 } from "../../util/api";
-import { Row, Col, Image, Typography, Button, notification } from "antd";
+import { Row, Col, Image, Typography, Button, notification, Input, Form } from "antd";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../../context/cart.context";
 
 const { Title, Text } = Typography;
 
-const Cartdetail: React.FC = () => {
+const CartDetail: React.FC = () => {
   const [cartData, setCartData] = useState<any>(null);
   const { updateCart } = useContext(CartContext);
   const navigate = useNavigate();
@@ -30,10 +30,7 @@ const Cartdetail: React.FC = () => {
     fetchCartData();
   }, []);
 
-  if (
-    !cartData ||
-    (cartData.orderDetails && cartData.orderDetails.length === 0)
-  ) {
+  if (!cartData || (cartData.orderDetails && cartData.orderDetails.length === 0)) {
     return (
       <div style={{ padding: "20px", textAlign: "center" }}>
         <Title level={3}>Your cart is empty</Title>
@@ -49,63 +46,56 @@ const Cartdetail: React.FC = () => {
 
   const { orderDetails, totalPrice, id: orderId } = cartData;
 
-  // Hàm định dạng tiền Việt Nam Đồng
-  const formatCurrency = (value: number) => 
+  const formatCurrency = (value: number) =>
     new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(value);
 
-  // Hàm cập nhật số lượng sản phẩm
-  const handleUpdateQuantity = async (
-    shirtSizeId: number,
-    quantity: number
-  ) => {
+  const handleUpdateQuantity = async (shirtSizeId: number, quantity: number) => {
     try {
       if (quantity <= 0) {
         notification.error({
-          message: "Số lượng không hợp lệ",
-          description: "Số lượng phải lớn hơn 0.",
+          message: "Invalid quantity",
+          description: "Quantity must be greater than 0.",
         });
         return;
       }
       await updateCartApi({ orderId, shirtSizeId, quantity });
-      const updatedCartData = await getCartApi(); // Gọi API không có loading
+      const updatedCartData = await getCartApi();
       setCartData(updatedCartData);
     } catch (error) {
       console.error("Error updating cart quantity:", error);
       notification.error({
-        message: "Lỗi cập nhật",
-        description: "Cập nhật số lượng không thành công.",
+        message: "Update Error",
+        description: "Failed to update quantity.",
       });
     }
   };
 
-  // Hàm xử lý khi thay đổi số lượng sản phẩm
   const handleQuantityChange = (shirtSizeId: number, newQuantity: number) => {
     handleUpdateQuantity(shirtSizeId, newQuantity);
   };
 
-  // Hàm xóa từng sản phẩm nhỏ trong giỏ hàng
   const handleDeleteItem = async (shirtSizeId: number) => {
     try {
       await deleteItemInCartApi({ orderId, shirtSizeId });
       updateCart();
-      const updatedCartData = await getCartApi(); // Gọi API không có loading
+      const updatedCartData = await getCartApi();
       setCartData(updatedCartData);
     } catch (error) {
       console.error("Error deleting item:", error);
       notification.error({
-        message: "Lỗi xóa sản phẩm",
-        description: "Xóa sản phẩm không thành công.",
+        message: "Delete Error",
+        description: "Failed to delete item.",
       });
     }
   };
 
-  // Hàm thanh toán
-  const handlePayment = async () => {
+  const handlePayment = async (values: any) => {
     try {
       const payload = {
         orderId,
         amount: totalPrice,
         createDate: new Date().toISOString(),
+        ...values, // Add form values to payload
       };
       const response = await getUrlPaymentApi(payload);
       if (response) {
@@ -114,23 +104,16 @@ const Cartdetail: React.FC = () => {
     } catch (error) {
       console.error("Error during payment:", error);
       notification.error({
-        message: "Lỗi thanh toán",
-        description:
-          "Có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại.",
+        message: "Payment Error",
+        description: "An error occurred during payment. Please try again.",
       });
     }
   };
 
   return (
     <div className="py-20">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Title level={2}>Giỏ hàng của bạn</Title>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Title level={2}>Your Cart</Title>
       </div>
 
       <Row gutter={[16, 16]}>
@@ -164,25 +147,21 @@ const Cartdetail: React.FC = () => {
                     <Title level={4} style={{ marginBottom: "8px" }}>
                       {item.shirtName}
                     </Title>
-                    <Text>Kích thước: {item.sizeName}</Text>
+                    <Text>Size: {item.sizeName}</Text>
                     <br />
-                    <Text>Giá mỗi chiếc: {formatCurrency(item.shirtPrice)}</Text>
+                    <Text>Price per item: {formatCurrency(item.shirtPrice)}</Text>
                     <br />
-                    <Text>Số lượng: </Text>
+                    <Text>Quantity: </Text>
                     <div style={{ display: "flex", alignItems: "center" }}>
                       <Button
-                        onClick={() =>
-                          handleQuantityChange(item.shirtSizeId, item.quantity - 1)
-                        }
+                        onClick={() => handleQuantityChange(item.shirtSizeId, item.quantity - 1)}
                         disabled={item.quantity <= 1}
                       >
                         -
                       </Button>
                       <Text style={{ margin: "0 10px" }}>{item.quantity}</Text>
                       <Button
-                        onClick={() =>
-                          handleQuantityChange(item.shirtSizeId, item.quantity + 1)
-                        }
+                        onClick={() => handleQuantityChange(item.shirtSizeId, item.quantity + 1)}
                       >
                         +
                       </Button>
@@ -195,7 +174,7 @@ const Cartdetail: React.FC = () => {
                     onClick={() => handleDeleteItem(item.shirtSizeId)}
                     style={{ position: "absolute", top: "10px", right: "10px" }}
                   >
-                    Xóa
+                    Remove
                   </Button>
                 </div>
               </Col>
@@ -204,21 +183,32 @@ const Cartdetail: React.FC = () => {
         </Col>
 
         <Col span={8}>
-          <div
-            style={{
-              border: "1px solid #ddd",
-              padding: "20px",
-              borderRadius: "8px",
-            }}
-          >
-            <Title level={3}>Tổng đơn hàng</Title>
+          <div style={{ border: "1px solid #ddd", padding: "20px", borderRadius: "8px" }}>
+            <Title level={3}>Order Summary</Title>
             <div style={{ marginBottom: "16px" }}>
-              <Text strong>Tổng tiền: </Text>
+              <Text strong>Total Price: </Text>
               <Text>{formatCurrency(totalPrice)}</Text>
             </div>
-            <Button type="primary" size="large" block onClick={handlePayment}>
-              Thanh toán
-            </Button>
+            <Form layout="vertical" onFinish={handlePayment}>
+              <Form.Item label="Full Name" name="fullName" rules={[{ required: true }]}>
+                <Input placeholder="Enter your full name" />
+              </Form.Item>
+              <Form.Item label="Phone Number" name="phoneNumber" rules={[{ required: true }]}>
+                <Input placeholder="Enter your phone number" />
+              </Form.Item>
+              <Form.Item label="Street" name="street" rules={[{ required: true }]}>
+                <Input placeholder="Enter your street address" />
+              </Form.Item>
+              <Form.Item label="District" name="district" rules={[{ required: true }]}>
+                <Input placeholder="Enter your district" />
+              </Form.Item>
+              <Form.Item label="City" name="city" rules={[{ required: true }]}>
+                <Input placeholder="Enter your city" />
+              </Form.Item>
+              <Button type="primary" htmlType="submit" size="large" block>
+                Proceed to Payment
+              </Button>
+            </Form>
           </div>
         </Col>
       </Row>
@@ -226,4 +216,4 @@ const Cartdetail: React.FC = () => {
   );
 };
 
-export default Cartdetail;
+export default CartDetail;
