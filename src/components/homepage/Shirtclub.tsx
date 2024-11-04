@@ -13,7 +13,7 @@ const Shirtclub: React.FC = () => {
         const fetchShirts = async () => {
             try {
                 const response = await searchClientShirtApi({ pageNum: 1, pageSize: 100, keyWord: '', status: 1 });
-                console.log(response);
+       
                 if (response.pageData && Array.isArray(response.pageData)) {
                     setShirts(response.pageData);
                 } else {

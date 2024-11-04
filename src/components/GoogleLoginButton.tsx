@@ -1,28 +1,33 @@
 import React, { useState } from 'react';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import { notification, Modal, Spin } from 'antd';
-import { googleSignUpApi, googleSigInpApi } from '../util/api'; // Make sure the path is correct
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
+import { notification, Modal, Spin, Button, Typography } from 'antd';
+import { googleSignUpApi, googleSigInpApi } from '../util/api';
+import { useNavigate } from 'react-router-dom';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+
+const { Text } = Typography;
 
 const GoogleLoginButton: React.FC = () => {
-  const navigate = useNavigate(); // Initialize useNavigate hook
-  const [loading, setLoading] = useState(false); // State to manage modal visibility
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [isManagerModalVisible, setIsManagerModalVisible] = useState(false);
 
-  const handleSuccess = async (response: any) => {  
-    const googleId = response.credential; 
-
-  
+  const handleSuccess = async (response: any) => {
+    const googleId = response.credential;
     setLoading(true);
 
     try {
-      // Try to log in the user first
       const loginResponse = await googleSigInpApi(googleId);
+      const token = loginResponse.token;
 
-      // Assuming the API response contains a token
-      const token = loginResponse.token; 
       if (token) {
-        // Store token in localStorage
         localStorage.setItem('token', token);
+      }
+
+      if (loginResponse.user.roleName === "Manager") {
+        setIsManagerModalVisible(true); 
+        setLoading(false);
+        return;
       }
 
       notification.success({
@@ -33,20 +38,16 @@ const GoogleLoginButton: React.FC = () => {
       navigate('/');
 
     } catch (error: any) {
-      if (error.response && error.response.data.message === "Email not verified!.") {
-        setLoading(false); // Hide modal if specific error occurs
-        return; 
+      if (error.response && error.response.user.message === "Email not verified!.") {
+        setLoading(false);
+        return;
       }
 
       try {
-        // If login fails and the error is not about unverified email, try to sign up the user
         const signupResponse = await googleSignUpApi(googleId);
-        console.log('Signup API Response:', signupResponse);
+        const token = signupResponse?.user?.token;
         
-        // Assuming the signup response also contains a token
-        const token = signupResponse?.data?.token; 
         if (token) {
-          // Store token in localStorage
           localStorage.setItem('token', token);
           navigate('/');
         }
@@ -64,7 +65,6 @@ const GoogleLoginButton: React.FC = () => {
         });
       }
     } finally {
-      // Hide the modal when all API calls are complete
       setLoading(false);
     }
   };
@@ -78,12 +78,8 @@ const GoogleLoginButton: React.FC = () => {
 
   return (
     <>
-   <GoogleOAuthProvider clientId="976712067094-lv2i7i7ln5kul1tjejpti6a85rm3unt7.apps.googleusercontent.com">
-        <GoogleLogin
-          onSuccess={handleSuccess}
-          onError={handleError}
-          useOneTap
-        />
+     <GoogleOAuthProvider clientId="976712067094-lv2i7i7ln5kul1tjejpti6a85rm3unt7.apps.googleusercontent.com">
+        <GoogleLogin onSuccess={handleSuccess} onError={handleError} useOneTap />
       </GoogleOAuthProvider>
 
       {/* Loading Modal */}
@@ -96,6 +92,38 @@ const GoogleLoginButton: React.FC = () => {
       >
         <Spin size="large" />
         <p>Logging in, please wait...</p>
+      </Modal>
+
+      {/* Manager Role Modal */}
+      <Modal
+        visible={isManagerModalVisible}
+        footer={
+          <div style={{ textAlign: 'center' }}>
+            <Button type="primary" onClick={() => setIsManagerModalVisible(false)}>
+              OK
+            </Button>
+          </div>
+        }
+        onCancel={() => setIsManagerModalVisible(false)}
+        centered
+        style={{
+          borderRadius: '12px',
+          padding: 0,
+        }}
+        bodyStyle={{
+          padding: '39px',
+          textAlign: 'center',
+          background: 'linear-gradient(135deg, #ffecb3, #ff8a65)',
+          borderRadius: '8px',
+        }}
+      >
+        <ExclamationCircleOutlined style={{ fontSize: '48px', color: '#ff5722' }} />
+        <Typography.Title level={3} style={{ color: '#d84315', marginTop: '16px' }}>
+          Restricted Access
+        </Typography.Title>
+        <Text style={{ fontSize: '16px', color: '#5d4037', fontWeight: 500 }}>
+          This role is only available on mobile devices.
+        </Text>
       </Modal>
     </>
   );

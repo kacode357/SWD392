@@ -238,3 +238,28 @@ body {
 .text-primary {
   color: #1890ff;
 }
+.review-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reviews-list-container {
+  max-height: 200px; /* Đặt chiều cao tối đa cho khung danh sách đánh giá */
+  overflow-y: auto; /* Kích hoạt cuộn khi vượt quá chiều cao */
+  border: 1px solid #e8e8e8;
+  padding: 8px;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.submit-review-container {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  background-color: #fff;
+}
+.zoom-card:hover {
+  transform: scale(1.05); /* Slightly increase size on hover */
+}

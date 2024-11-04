@@ -75,7 +75,7 @@ const Payment = () => {
           vnp_TxnRef: newPaymentDetails.txnRef || "",
           vnp_SecureHash: newPaymentDetails.secureHash || "",
         });
-        console.log("API Response>>>:", response);
+ 
 
         if (response) {
           notification.success({

@@ -32,7 +32,7 @@ const VerifyAccount: React.FC = () => {
     setLoading(true);
     try {
       const result = await verifyUserByIdApi(userId);
-      console.log(result);
+    
       notification.success({
         message: "Verification Successful!",
         description: "Your account has been verified.",

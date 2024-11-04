@@ -50,7 +50,7 @@ const PlayerComponent: React.FC = () => {
       status: !isDeleted,
     };
     const response = await searchPlayerApi(data);
-    console.log("check res : ",response);
+   
     setPlayers(response.pageData);
     setPagination({
       current: response.pageInfo.page,

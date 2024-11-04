@@ -8,6 +8,7 @@ const StaffSidebar: React.FC = () => {
   const location = useLocation();
 
   const menuItems = [
+    { key: '/staff/dashboard', icon: <SettingOutlined />, label: 'Dashboard' },
     { key: '/staff/manager-order', icon: <ShoppingCartOutlined />, label: 'Order' },
     { key: '/staff/manager-payment', icon: <DollarOutlined />, label: 'Payment' },
     { key: '/user/setting', icon: <SettingOutlined />, label: 'Setting' },

@@ -29,7 +29,7 @@ const AddPlayerModal: React.FC<AddPlayerModalProps> = ({ visible, onClose, refre
         keyWord: "",
         status: true,
       });
-      console.log("Club: ", response);
+  
       if (response) {
         setClubOptions(response.pageData || []); // Assume response.pageData contains the list of clubs
       } else {

@@ -42,7 +42,7 @@ const Typeshirt: React.FC = () => {
       status: !isDeleted,
     };
     const response = await searchTypeShirtApi(data);
-    console.log(response);
+
     setShirts(response.pageData);
     setPagination({
       current: response.pageInfo.page,

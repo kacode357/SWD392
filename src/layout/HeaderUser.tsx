@@ -39,7 +39,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
     {
       key: "1",
       icon: <UserOutlined />,
-      label: <Link to="/user/order-history">History Order</Link>,
+      label: <Link to="/user/dashboard">My Dashboard</Link>,
     },
     {
       key: "2",
@@ -126,7 +126,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
                   >
                     <Avatar icon={<UserOutlined />} />
                     <span style={{ color: "white", marginLeft: "10px" }}>
-                      Hessllo, {auth.user.name}
+                      Hello, {auth.user.name}
                     </span>
                   </div>
                 </Dropdown>

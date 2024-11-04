@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
   getCartDetailApi,
-  getCartApi,
+  getCartApi, // Thêm API mới
   updateCartApi,
   deleteItemInCartApi,
   getUrlPaymentApi,

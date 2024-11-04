@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getShirtByIdApi, addToCartApi } from "../../util/api";
 import { CartContext } from "../../context/cart.context";
 import BreadcrumbComponent from "../../layout/Breadcrumb";
-import ReviewComponent from "./Review";
+
 import GetReview from "./GetReview";
 const { Panel } = Collapse;
 
@@ -71,7 +71,7 @@ const Shirtdetail: React.FC = () => {
           description: "Added to basket successfully.",
         });
         updateCart(); // Update cart after success
-        console.log("Added to cart:");
+      
       }
     } catch (error) {
       console.error("Error adding to cart:", error);
@@ -95,13 +95,13 @@ const Shirtdetail: React.FC = () => {
       {/* Shirt details */}
       <div className="flex flex-col lg:flex-row items-start p-4 max-w-6xl mx-auto gap-4">
         {/* Main Image */}
-        <div className="w-full lg:w-1/2 p-4 mt-12 lg:mt-28">
-          <div className="relative w-full h-80">
+        <div className="w-full lg:w-1/2 p-4 mt-2 ">
+          <div className="relative w-full">
             <img
               src={
                 mainImage &&
-                  (mainImage.startsWith("http://") ||
-                    mainImage.startsWith("https://"))
+                (mainImage.startsWith("http://") ||
+                  mainImage.startsWith("https://"))
                   ? mainImage
                   : "https://m.media-amazon.com/images/I/B1HVVUyLAhL._CLa%7C2140%2C2000%7C51TfbGiVkfL.png%7C0%2C0%2C2140%2C2000%2B0.0%2C0.0%2C2140.0%2C2000.0_AC_UY1000_.png"
               }
@@ -109,7 +109,7 @@ const Shirtdetail: React.FC = () => {
             />
           </div>
           <GetReview shirtId={Number(id)} />
-          <ReviewComponent shirtId={Number(id)} />
+         
         </div>
 
         {/* Shirt Information */}
@@ -123,34 +123,50 @@ const Shirtdetail: React.FC = () => {
           <div className="mt-6 p-4 border rounded-lg shadow-sm bg-white">
             <h2 className="text-xl font-semibold">General Information</h2>
             <p className="text-lg mt-2">
-              <span className="font-semibold">Shirt Name:</span> <span className="font-medium">{shirtData.name}</span>
+              <span className="font-semibold">Shirt Name:</span>{" "}
+              <span className="font-medium">{shirtData.name}</span>
             </p>
             <p className="text-lg">
               <span className="font-semibold">Player: </span>
               <span
                 className="text-sky-500 cursor-pointer hover:underline transition-all duration-200"
-                onClick={() => navigate(`/listshirt?nameplayer=${encodeURIComponent(shirtData.fullName)}`)}
+                onClick={() =>
+                  navigate(
+                    `/listshirt?nameplayer=${encodeURIComponent(
+                      shirtData.fullName
+                    )}`
+                  )
+                }
               >
                 {shirtData.fullName}
               </span>
             </p>
             <p className="text-lg">
-              <span className="font-semibold">Number: </span> <span className="font-medium">{shirtData.number}</span>
+              <span className="font-semibold">Number: </span>{" "}
+              <span className="font-medium">{shirtData.number}</span>
             </p>
             <p className="text-lg">
-              <span className="font-semibold">Type:</span><span className="font-medium"> {shirtData.typeShirtName}</span>
+              <span className="font-semibold">Type:</span>
+              <span className="font-medium"> {shirtData.typeShirtName}</span>
             </p>
             <p className="text-lg">
-              <span className="font-semibold">Session:</span><span className="font-medium">{shirtData.sessionName}</span>
+              <span className="font-semibold">Session:</span>
+              <span className="font-medium">{shirtData.sessionName}</span>
             </p>
             <p className="text-lg">
-              <span className="font-semibold">Status:</span><span className="font-medium"> {shirtData.status === 1 ? "Available" : "Out of stock"}</span>
+              <span className="font-semibold">Status:</span>
+              <span className="font-medium">
+                {" "}
+                {shirtData.status === 1 ? "Available" : "Out of stock"}
+              </span>
             </p>
           </div>
 
           {/* Size and Quantity */}
           <div
-            className={`mt-6 p-4 border rounded-lg shadow-sm bg-white ${showSizeError ? "border-red-500" : ""}`}
+            className={`mt-6 p-4 border rounded-lg shadow-sm bg-white ${
+              showSizeError ? "border-red-500" : ""
+            }`}
           >
             <h2 className="text-xl font-semibold">Size and Quantity</h2>
             <div className="flex flex-wrap mt-2">
@@ -165,11 +181,16 @@ const Shirtdetail: React.FC = () => {
                       setShowSizeError(false); // Xóa thông báo lỗi nếu có
                     }
                   }}
-                  className={`cursor-pointer border rounded-lg p-1 m-2 ${selectedSizeId === size.sizeId
-                    ? "bg-green-500 text-white"
-                    : "bg-gray-200"
-                    }`}
-                  style={{ minWidth: "50px", textAlign: "center", height: "30px" }}
+                  className={`cursor-pointer border rounded-lg p-1 m-2 ${
+                    selectedSizeId === size.sizeId
+                      ? "bg-green-500 text-white"
+                      : "bg-gray-200 hover:bg-green-400"
+                  }`}
+                  style={{
+                    minWidth: "50px",
+                    textAlign: "center",
+                    height: "30px",
+                  }}
                 >
                   <p>{size.sizeName}</p>
                 </div>
@@ -179,7 +200,12 @@ const Shirtdetail: React.FC = () => {
             {/* Hiển thị Quantity nếu một size đã được chọn */}
             {selectedSizeId && (
               <p className="text-red-500 mt-4 text-center">
-                Quantity: {shirtData.listSize.find((size: any) => size.sizeId === selectedSizeId)?.quantity}
+                Quantity:{" "}
+                {
+                  shirtData.listSize.find(
+                    (size: any) => size.sizeId === selectedSizeId
+                  )?.quantity
+                }
               </p>
             )}
 
@@ -207,17 +233,35 @@ const Shirtdetail: React.FC = () => {
           {/* Collapse for Additional Info */}
           <Collapse defaultActiveKey={["1"]} className="mt-6">
             <Panel header="Club" key="1">
-              <p>Club Name: {shirtData.clubName}</p>
-              <p>Club Country: {shirtData.clubCountry}</p>
-              <p>
-                Established Year:{" "}
-                {new Date(shirtData.clubEstablishedYear).getFullYear()}
-              </p>
-              <img
-                src={shirtData.clubLogo}
-                alt={shirtData.clubName}
-                className="w-16 h-16 mt-2"
-              />
+              <div className="flex justify-between">
+                {/* Cột bên trái */}
+                <div className="mt-2">
+                  <p className="font-semibold">
+                    Club Name:{" "}
+                    <span className="font-normal">{shirtData.clubName}</span>
+                  </p>
+                  <p className="font-semibold">
+                    Club Country:{" "}
+                    <span className="font-normal">{shirtData.clubCountry}</span>
+                  </p>
+                  <p className="font-semibold">
+                    Established Year:{" "}
+                    <span className="font-normal">
+                      {new Date(shirtData.clubEstablishedYear).getFullYear()}
+                    </span>
+                  </p>
+                </div>
+
+                {/* Cột bên phải */}
+                <div className="flex flex-col items-center text-center mr-32">
+               
+                  <img
+                    src={shirtData.clubLogo}
+                    alt={shirtData.clubName}
+                    className="w-16 h-16 mt-2 items-center text-center"
+                  />
+                </div>
+              </div>
             </Panel>
             <Panel header="Description" key="2">
               <p>{shirtData.description}</p>

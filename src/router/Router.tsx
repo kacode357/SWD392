@@ -37,6 +37,9 @@ import TypeShirt from "../pages/User/TypeShirts";
 import ManagerPayment from "../pages/Admin/ManagerPayment";
 import ResendVerificationButton from "../components/ResendVerificationButton";
 import ForgotPasswordButton from "../components/ForgotPasswordButton";
+import DashboardUser from "../pages/User/DashboardUser";
+import DashboardStaff from "../pages/Staff/DashboardStaff";
+import DashboardAdmin from "../pages/Admin/DashboardAdmin";
 
 // Define routes with role-based access
 const router = createBrowserRouter([
@@ -44,6 +47,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
+      { path: "admin/dashboard", element: <PrivateRoute element={DashboardAdmin} allowedRoles={[ROLES.ADMIN]} /> },
       { path: "admin/manager-user", element: <PrivateRoute element={ManagerUser} allowedRoles={[ROLES.ADMIN]} /> },
       { path: "admin/manager-club", element: <PrivateRoute element={ManagerClub} allowedRoles={[ROLES.ADMIN]} /> },
       { path: "admin/manager-session", element: <PrivateRoute element={ManagerSession} allowedRoles={[ROLES.ADMIN]} /> },
@@ -56,12 +60,15 @@ const router = createBrowserRouter([
       { path: "admin/manager-payment", element: <PrivateRoute element={ManagerPayment} allowedRoles={[ROLES.ADMIN]} /> },
 
 
+
       // Staff routes
       { path: "staff/manager-order", element: <PrivateRoute element={ManagerOrder} allowedRoles={[ROLES.STAFF]} /> },
+      { path: "staff/dashboard", element: <PrivateRoute element={DashboardStaff} allowedRoles={[ROLES.STAFF]} /> },
       { path: "staff/manager-payment", element: <PrivateRoute element={ManagerPayment} allowedRoles={[ROLES.STAFF]} /> },
 
       // User routes
       { path: "user/my-profile", element: <PrivateRoute element={MyProfile} allowedRoles={[ROLES.USER]} /> },
+      { path: "user/dashboard", element: <PrivateRoute element={DashboardUser} allowedRoles={[ROLES.USER]} /> },
       { path: "user/payment-history", element: <PrivateRoute element={HistoryPayment} allowedRoles={[ROLES.USER]} /> },
       { path: "user/order-history", element: <PrivateRoute element={OrdersHistory} allowedRoles={[ROLES.USER]} /> },
       { path: "user/setting", element: <PrivateRoute element={SettingUser} allowedRoles={[ROLES.USER, ROLES.STAFF, ROLES.ADMIN]} /> },

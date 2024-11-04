@@ -416,7 +416,25 @@ const getReviewByShirtApi = async (shirtId: number) => {
   const response = await axiosWithoutLoading.get(URL_API);
   return response.data;
 };
+const getDashboardUserApi = async () => {
+  const URL_API = '/api/dashboard/dashboard-user';
+  const response = await defaultAxiosInstance.get(URL_API);
+  return response.data;
+};
+const getDashboardStaffApi = async () => {
+  const URL_API = '/api/dashboard/dashboard-staff';
+  const response = await defaultAxiosInstance.get(URL_API);
+  return response.data;
+};
+const getDashboardAdminApi = async () => {
+  const URL_API = '/api/dashboard/dashboard-admin-manager';
+  const response = await defaultAxiosInstance.get(URL_API);
+  return response.data;
+};
 export {
+  getDashboardAdminApi,
+  getDashboardStaffApi,
+  getDashboardUserApi,
   getReviewByShirtApi,
   resetPasswordApi,
   forgotPasswordApi,

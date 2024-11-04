@@ -47,7 +47,7 @@ const EditShirtSizeModal: React.FC<EditShirtSizeModalProps> = ({ sizeId, visible
     setLoading(true);
     try {
       const values = form.getFieldsValue();
-      console.log('Updating size with values:', values);
+    
       await updateShirtSizeApi(sizeId, {
         shirtId: values.shirtId,
         sizeId: values.sizeId,

@@ -19,6 +19,7 @@ const AdminSidebar: React.FC = () => {
   const location = useLocation();
 
   const menuItems = [
+    { key: '/admin/dashboard', icon: <SettingOutlined />, label: 'Dashboard' },
     { key: '/admin/manager-user', icon: <UserOutlined />, label: 'Account' },                 
     { key: '/admin/manager-session', icon: <CalendarOutlined />, label: 'Session' },          
     { key: '/admin/manager-club', icon: <TeamOutlined />, label: 'Club' },                   

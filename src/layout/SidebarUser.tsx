@@ -8,9 +8,10 @@ const UserSidebar: React.FC = () => {
   const location = useLocation();
 
   const menuItems = [
-    { key: '/user/order-history', icon: <FileTextOutlined />, label: 'History Order' }, // Icon cho lịch sử đơn hàng
-    { key: '/user/payment-history', icon: <DollarOutlined />, label: 'History Payment' }, // Icon cho lịch sử thanh toán
-    { key: '/user/setting', icon: <SettingOutlined />, label: 'Setting' }, // Icon cho cài đặt
+    { key: '/user/dashboard', icon: <SettingOutlined />, label: 'Dashboard' },
+    { key: '/user/order-history', icon: <FileTextOutlined />, label: 'History Order' }, 
+    { key: '/user/payment-history', icon: <DollarOutlined />, label: 'History Payment' },
+    { key: '/user/setting', icon: <SettingOutlined />, label: 'Setting' }, 
   ];
 
   return (

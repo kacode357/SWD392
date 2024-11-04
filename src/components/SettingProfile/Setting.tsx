@@ -20,7 +20,7 @@ const Setting: React.FC = () => {
     const fetchUserData = async () => {
       try {
         const userData = await getUserByIdApi(auth.user.id);
-        console.log("userData", userData);
+ 
         form.setFieldsValue({
           ...userData,
           dob: userData.dob ? moment(userData.dob) : null,
