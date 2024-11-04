@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
-import backgroundImage from "../assets/backgrould.gif";
-import ball from '../assets/soccer-9133_256.gif'
+
 const Login = () => {
   const [isRegisterActive, setIsRegisterActive] = useState(false);
 
@@ -36,8 +35,8 @@ const Login = () => {
 
   return (
     <div
-      className="relative flex items-center justify-center min-h-screen bg-cover bg-center "
-      style={{ backgroundImage: `url(${backgroundImage})` }}
+      className="relative flex items-center justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: `url('https://i.pinimg.com/564x/16/3e/1a/163e1a79ab7b45324fc5b4c134665ef7.jpg')` }}
     >
       <div
         className={`container ${isRegisterActive ? "active" : ""}`}
@@ -53,12 +52,12 @@ const Login = () => {
           <div className="toggle">
 
             <div className="toggle-panel toggle-left ">
-              <img className="w-40" src='src/assets/ronaldo.png' />
+              <img className="w-40" src="https://img.uefa.com/imgml/TP/players/3/2024/cutoff/63706.png" />
               <p className="py-5">Log in to access features</p>
               <button id="login">Sign In</button>
             </div>
             <div className="toggle-panel toggle-right">
-              <img src={ball} />
+              <img className="w-40" src="https://cdnmedia.webthethao.vn/thumb/720-405/uploads/media/images/files/thietke/lionel-messi-trong-mau-ao-doi-tuyen-argentina-hay-tam-thuong-de-tro-nen-vi-dai.PNG" />
               <p className="py-5">Sign up to access features</p>
               <button id="register">Sign Up</button>
             </div>

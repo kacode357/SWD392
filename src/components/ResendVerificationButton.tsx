@@ -1,103 +1,68 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Form,
-  Input,
-  Typography,
-  Card,
-  Space,
-  Row,
-  Col,
-  notification,
-} from "antd";
 import { resendVerificationApi } from "../util/api";
-
-const { Title, Text } = Typography;
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const ResendVerificationButton: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
-  const onFinish = async (values: { email: string }) => {
+  const onFinish = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const email = (event.target as HTMLFormElement).email.value;
     setLoading(true);
     try {
-      await resendVerificationApi(values.email);
-      notification.success({
-        message: "Email Sent",
-        description:
-          "A verification email has been sent to your registered email address.",
-      });
+      await resendVerificationApi(email);
+      alert("A verification email has been sent to your registered email address.");
     } catch (error) {
+      alert("Failed to send verification email.");
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Row
-      justify="center"
-      align="middle"
-      style={{ minHeight: "100vh", padding: "20px" }}
+    <div
+      className="flex items-center justify-center min-h-screen p-5"
+      style={{
+        backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5)), url('https://i.pinimg.com/564x/16/3e/1a/163e1a79ab7b45324fc5b4c134665ef7.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
-      <Col xs={24} sm={18} md={12} lg={8}>
-        <Card
-          bordered={false}
-          style={{ boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)" }}
-        >
-          <Space direction="vertical" size="large" style={{ width: "100%" }}>
-            <Title level={3} style={{ textAlign: "center" }}>
-              Resend Verification Email
-            </Title>
-            <Text type="secondary" style={{ textAlign: "center" }}>
-              Please enter your email address to resend the verification email.
-            </Text>
-            <Form
-              name="resend_verification_form"
-              onFinish={onFinish}
-              layout="vertical"
+      <div className="w-full max-w-md p-6 shadow-lg bg-white rounded-lg">
+        <div className="space-y-4 text-center">
+          <h3 className="text-2xl font-semibold">Resend Verification Email</h3>
+          <p className="text-gray-600">Please enter your email address to resend the verification email.</p>
+        </div>
+        <form onSubmit={onFinish} className="space-y-4 mt-6">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="Enter your email"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+          <div>
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full py-2 px-4 text-white bg-black rounded-md ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'}`}
             >
-              <Form.Item
-                name="email"
-                label="Email"
-                rules={[
-                  { required: true, message: "Please enter your email!" },
-                  {
-                    type: "email",
-                    message: "Please enter a valid email address!",
-                  },
-                ]}
-              >
-                <Input placeholder="Enter your email" size="large" />
-              </Form.Item>
-              <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  loading={loading}
-                  block
-                >
-                  Resend Verification Email
-                </Button>
-              </Form.Item>
-              <Text
-  style={{
-    color: "black",
-    position: "absolute",
-    bottom: 10,
-    right: 10,
-    cursor: "pointer",
-    textDecoration: "underline", // Thêm gạch dưới
-  }}
-  onClick={() => (window.location.href = "/login")}
-  onMouseEnter={(e) => (e.currentTarget.style.color = "blue")}
-  onMouseLeave={(e) => (e.currentTarget.style.color = "black")}
->
-  Back to Home Page
-</Text>
-
-            </Form>
-          </Space>
-        </Card>
-      </Col>
-    </Row>
+              {loading ? "Sending..." : "Resend Verification Email"}
+            </button>
+          </div>
+        </form>
+        <button
+          onClick={() => (window.location.href = "/login")}
+          className="mt-4 text-black underline hover:text-gray-500"
+        >
+          <ArrowLeftOutlined className="mr-2" />
+          Back to Home Page
+        </button>
+      </div>
+    </div>
   );
 };
 
