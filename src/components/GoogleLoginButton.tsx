@@ -49,9 +49,10 @@ const GoogleLoginButton: React.FC = () => {
         
         if (token) {
           localStorage.setItem('token', token);
+          navigate('/signup-email');
         }
 
-        navigate('/signup-email'); // Chuyển đến trang signup-email mà không thông báo
+       
 
       } catch (signupError) {
         console.error('Signup failed:', signupError);
@@ -74,7 +75,7 @@ const GoogleLoginButton: React.FC = () => {
 
   return (
     <>
-   <GoogleOAuthProvider clientId="976712067094-lv2i7i7ln5kul1tjejpti6a85rm3unt7.apps.googleusercontent.com">
+     <GoogleOAuthProvider clientId="976712067094-lv2i7i7ln5kul1tjejpti6a85rm3unt7.apps.googleusercontent.com">
         <GoogleLogin onSuccess={handleSuccess} onError={handleError} useOneTap />
       </GoogleOAuthProvider>
 
