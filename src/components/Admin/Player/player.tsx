@@ -23,7 +23,7 @@ interface Player {
 
 const PlayerComponent: React.FC = () => {
   const [players, setPlayers] = useState<Player[]>([]);
-  const [loading, setLoading] = useState(false);
+
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 5,
@@ -42,7 +42,7 @@ const PlayerComponent: React.FC = () => {
     keyword = "",
     isDeleted = false
   ) => {
-    setLoading(true);
+  
     const data = {
       pageNum: page,
       pageSize: pageSize,
@@ -57,7 +57,7 @@ const PlayerComponent: React.FC = () => {
       pageSize: response.pageInfo.size,
       total: response.pageInfo.totalItem,
     });
-    setLoading(false);
+ 
   };
 
   useEffect(() => {
@@ -218,7 +218,7 @@ const PlayerComponent: React.FC = () => {
               showSizeChanger: true,
               showQuickJumper: true,
             }}
-            loading={loading}
+          
             onChange={handleTableChange}
           />
         </TabPane>
@@ -254,7 +254,7 @@ const PlayerComponent: React.FC = () => {
               showSizeChanger: true,
               showQuickJumper: true,
             }}
-            loading={loading}
+        
             onChange={handleTableChange}
           />
         </TabPane>

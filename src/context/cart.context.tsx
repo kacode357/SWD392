@@ -17,7 +17,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Hàm để cập nhật số lượng giỏ hàng bằng cách gọi API
   const updateCart = async () => {
     try {
-      console.log("Updating cart...");
+  
       const token = localStorage.getItem("token");
       if (!token) {
         return;
