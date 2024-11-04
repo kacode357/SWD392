@@ -47,13 +47,10 @@ const GoogleLoginButton: React.FC = () => {
         if (token) {
           // Store token in localStorage
           localStorage.setItem('token', token);
-          navigate('/signup-email');
+         
         }
-
-        notification.success({
-          message: 'Google Signup Successful',
-          description: 'Please verify your email to activate your account.',
-        });
+        navigate('/signup-email');
+       
 
       } catch (signupError) {
         console.error('Signup failed:', signupError);
