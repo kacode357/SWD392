@@ -21,7 +21,7 @@ const AdminSidebar: React.FC = () => {
   const menuItems = [
     { key: '/admin/dashboard', icon: <SettingOutlined />, label: 'Dashboard' },
     { key: '/admin/manager-user', icon: <UserOutlined />, label: 'Account' },                 
-    { key: '/admin/manager-session', icon: <CalendarOutlined />, label: 'Session' },          
+    { key: '/admin/manager-session', icon: <CalendarOutlined />, label: 'Season' },          
     { key: '/admin/manager-club', icon: <TeamOutlined />, label: 'Club' },                   
     { key: '/admin/manager-size', icon: <AppstoreOutlined />, label: 'Size' },           
     { key: '/admin/manager-player', icon: <SolutionOutlined />, label: 'Player' },           

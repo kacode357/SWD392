@@ -39,7 +39,7 @@ const NavigationComponent: React.FC = () => {
                     <li>
                         <Dropdown overlay={<SessionComponent />} trigger={['hover']}>
                             <Button type="text" style={{ color: 'white' }}>
-                                SESSION <DownOutlined />
+                                SEASON <DownOutlined />
                             </Button>
                         </Dropdown>
                     </li>

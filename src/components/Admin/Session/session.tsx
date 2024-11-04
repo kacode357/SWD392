@@ -148,7 +148,7 @@ const SessionComponent: React.FC = () => {
   return (
     <div>
       <Tabs className="custom-tabs" defaultActiveKey="activeUsers" onChange={handleTabChange}>
-        <TabPane tab="Active Sessions" key="activeSessions">
+        <TabPane tab="Active Season" key="activeSessions">
           <Row justify="space-between" style={{ marginBottom: 16 }}>
             <Col>
             <Space className="custom-search">
@@ -182,7 +182,7 @@ const SessionComponent: React.FC = () => {
             onChange={handleTableChange}
           />
         </TabPane>
-        <TabPane tab="Deleted Sessions" key="deletedSessions">
+        <TabPane tab="Deleted Season" key="deletedSessions">
           <Row justify="space-between" style={{ marginBottom: 16 }}>
             <Col>
               <Space>
