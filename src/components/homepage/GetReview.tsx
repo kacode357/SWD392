@@ -124,7 +124,7 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({ shirtId }) => {
   return (
     <div className="review-container">
       {/* List of Reviews */}
-      <div className="reviews-list-container">
+      <div className="reviews-list-container py-4">
         <h2 className="text-xl font-semibold mb-4">Customer Reviews</h2>
         {reviews.length === 0 ? (
           <p className="text-gray-500">No reviews available</p>
