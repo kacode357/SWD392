@@ -40,6 +40,7 @@ import ForgotPasswordButton from "../components/ForgotPasswordButton";
 import DashboardUser from "../pages/User/DashboardUser";
 import DashboardStaff from "../pages/Staff/DashboardStaff";
 import DashboardAdmin from "../pages/Admin/DashboardAdmin";
+import SignUpEmailAccount from "../pages/User/signup-email";
 
 // Define routes with role-based access
 const router = createBrowserRouter([
@@ -90,6 +91,7 @@ const router = createBrowserRouter([
     ],
   },
   { path: "verifyemail/:id", element: <VerifyAccount /> },
+  { path: "signup-email", element: <SignUpEmailAccount /> },
   { path: "resend-verification", element: <ResendVerificationButton /> },
   { path: "forgot-password", element: <ForgotPasswordButton /> },
   { path: "/login", element: <Login /> },
