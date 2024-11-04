@@ -1,6 +1,6 @@
 import React from 'react';
 import { Menu } from 'antd';
-import { SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { SettingOutlined, UserOutlined, ShoppingCartOutlined, DollarOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const StaffSidebar: React.FC = () => {
@@ -8,10 +8,8 @@ const StaffSidebar: React.FC = () => {
   const location = useLocation();
 
   const menuItems = [
-   
-    { key: '/staff/manager-order', icon: <UserOutlined />, label: 'Manager Order' },
-    { key: '/staff/manager-payment', icon: <UserOutlined />, label: 'Manager Order' },
-
+    { key: '/staff/manager-order', icon: <ShoppingCartOutlined />, label: 'Order' },
+    { key: '/staff/manager-payment', icon: <DollarOutlined />, label: 'Payment' },
     { key: '/user/setting', icon: <SettingOutlined />, label: 'Setting' },
   ];
 

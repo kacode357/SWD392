@@ -39,7 +39,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
     {
       key: "1",
       icon: <UserOutlined />,
-      label: <Link to="/user/my-profile">My Profile</Link>,
+      label: <Link to="/user/order-history">History order</Link>,
     },
     {
       key: "2",
