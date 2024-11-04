@@ -157,8 +157,8 @@ const Payment = () => {
                 paymentDetails.amount
               )} was successful on ${formatPayDate(paymentDetails.payDate)}.`}
               extra={[
-                <Button type="primary" key="dashboard" href="/dashboard">
-                  Go to Dashboard
+                <Button type="primary" key="dashboard" href="/user/order-history">
+                  Go to order history
                 </Button>,
                 <Button key="home" href="/">
                   Back to Home

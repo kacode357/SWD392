@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getShirtByIdApi, addToCartApi } from "../../util/api";
 import { CartContext } from "../../context/cart.context";
 import BreadcrumbComponent from "../../layout/Breadcrumb";
+import ReviewComponent from "./Review";
 
 const { Panel } = Collapse;
 
@@ -107,6 +108,7 @@ const Shirtdetail: React.FC = () => {
               className="w-full h-full object-contain shadow-lg rounded-lg"
             />
           </div>
+          <ReviewComponent shirtId={Number(id)} />
         </div>
 
         {/* Shirt Information */}

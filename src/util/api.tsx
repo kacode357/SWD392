@@ -395,8 +395,20 @@ const searchPaymentApi = async (data: { pageNum: number; pageSize: number;keywor
   const response = await defaultAxiosInstance.post(URL_API, data);
   return response.data;
 };
+const createReviewApi = async (data: { orderId: string, orderDetailId: number, scoreRating: number, comment: string }) => {
+  const URL_API = '/api/review/create';
+  const response = await defaultAxiosInstance.post(URL_API, data);
+  return response.data;
+};
+const resendVerificationApi = async (email: string) => {
+  const URL_API = '/api/user/resend-verification';
+  const response = await defaultAxiosInstance.post(URL_API, email);
+  return response.data;
+};
 
 export {
+  resendVerificationApi,
+  createReviewApi,
   searchPaymentApi,
   getCartDetailApiWithoutLoading,
   searchOrderByCurrentUserApi,
