@@ -18,11 +18,12 @@ const ListShirtPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
     current: 1,
-    pageSize: 12,
+    pageSize: 20,
     total: 0,
   });
 
-  const fetchShirts = async (page = 1, pageSize = 12) => {
+  const fetchShirts = async (page = 1, pageSize = 20
+  ) => {
     try {
       setLoading(true);
       const data = {
