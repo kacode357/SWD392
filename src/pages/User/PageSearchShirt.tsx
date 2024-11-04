@@ -111,8 +111,15 @@ const ListShirtPage: React.FC = () => {
               ? Array.from({ length: pagination.pageSize }).map((_, index) => (
                 <Col key={index} xs={24} sm={12} md={8} lg={6}>
                   <Card hoverable style={{ width: "100%" }}>
-                    <Skeleton.Image style={{ width: "100%", height: "300px" }} />
-                    <Skeleton active paragraph={{ rows: 2 }} />
+                  <Skeleton.Image
+                        style={{
+                          width: "270px",
+                          height: "300px",
+                         marginBottom: "10px",
+                         marginLeft: "10px",
+                        }}
+                      />
+                      <Skeleton active paragraph={{ rows: 2 }} />
                   </Card>
                 </Col>
               ))
