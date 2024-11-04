@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { Card, Row, Col, Typography } from 'antd';
 import { ShoppingCartOutlined, DollarOutlined } from '@ant-design/icons';
 import { getDashboardUserApi } from '../../util/api';

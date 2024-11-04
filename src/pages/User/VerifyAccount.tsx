@@ -31,7 +31,7 @@ const VerifyAccount: React.FC = () => {
   const handleVerify = async (userId: number) => {
     setLoading(true);
     try {
-      const result = await verifyUserByIdApi(userId);
+     await verifyUserByIdApi(userId);
     
       notification.success({
         message: "Verification Successful!",
