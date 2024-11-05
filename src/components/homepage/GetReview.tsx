@@ -1,14 +1,22 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Rate, Button, Input, List, Skeleton, Avatar, notification } from "antd";
+import {
+  Rate,
+  Button,
+  Input,
+  List,
+  Skeleton,
+  Avatar,
+  notification,
+} from "antd";
 import {
   searchOrderByCurrentUserApi,
   createReviewApi,
   getReviewByShirtApi,
-  getUserByIdApi,
 } from "../../util/api";
 import { AuthContext } from "../../context/auth.context";
 import { SendOutlined, SmileOutlined } from "@ant-design/icons";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
+import classNames from "classnames";
 
 interface OrderDetail {
   orderId: string;
@@ -34,26 +42,11 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({ shirtId }) => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [reloadFlag, setReloadFlag] = useState<boolean>(false);
-  const [userImgUrl, setUserImgUrl] = useState<string>("");
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
+  const [isRatingInvalid, setIsRatingInvalid] = useState<boolean>(false);
 
   const { auth } = useContext(AuthContext);
   const token = localStorage.getItem("token");
-
-  useEffect(() => {
-    if (!auth || !auth.user.id) return;
-
-    const fetchUserData = async () => {
-      try {
-        const userData = await getUserByIdApi(auth.user.id);
-        setUserImgUrl(userData.imgUrl);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchUserData();
-  }, [auth]);
 
   useEffect(() => {
     if (!token) return;
@@ -102,12 +95,10 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({ shirtId }) => {
 
   const handleReviewSubmit = async () => {
     if (rating === 0) {
-      notification.warning({
-        message: "Rating Required",
-        description: "Please provide a rating before submitting your review.",
-      });
+      setIsRatingInvalid(true); // Tô đỏ Rating nếu chưa chọn
       return;
     }
+    setIsRatingInvalid(false); // Bỏ tô đỏ nếu đã chọn
 
     if (orderDetails.length === 0) {
       notification.error({
@@ -153,16 +144,24 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({ shirtId }) => {
         <div className="bg-gray-100 rounded-lg mb-6 p-5 shadow-sm">
           <h2 className="text-lg font-semibold mb-4">Submit Your Review</h2>
           <div className="flex items-start space-x-4">
-            <Avatar
-              size={40}
-              className="flex-shrink-0"
-              src={userImgUrl || "https://via.placeholder.com/150"}
-            />
             <div className="flex-1">
               <div className="flex items-center mb-3">
                 <span className="font-bold mr-3">Rating:</span>
-                <Rate value={rating} onChange={(value) => setRating(value)} />
+                <Rate
+                  value={rating}
+                  onChange={(value) => {
+                    setRating(value);
+                    setIsRatingInvalid(false); // Bỏ tô đỏ khi chọn Rating
+                  }}
+                  className={classNames({
+                    "border-2 border-red-500": isRatingInvalid,
+                  })}
+                />
+                {isRatingInvalid && (
+                  <span className="ml-2 text-red-500">Please select</span>
+                )}
               </div>
+
               <Input
                 placeholder="Add a comment..."
                 value={comment}
@@ -200,7 +199,7 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({ shirtId }) => {
         {reviews.length === 0 ? (
           <p className="text-gray-500">No reviews available</p>
         ) : (
-          <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+          <div style={{ maxHeight: "300px", overflowY: "auto" }}>
             <List
               itemLayout="horizontal"
               dataSource={reviews}
