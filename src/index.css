@@ -285,3 +285,7 @@ body {
 .zoom-card:hover {
   transform: scale(1.05); /* Slightly increase size on hover */
 }
+.emoji-picker-react {
+  position: absolute;
+  z-index: 1000;
+}
