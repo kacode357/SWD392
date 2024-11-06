@@ -45,7 +45,7 @@ const ReviewComponent: React.FC<ReviewComponentProps> = ({ shirtId }) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
   const [isRatingInvalid, setIsRatingInvalid] = useState<boolean>(false);
 
-  const { auth } = useContext(AuthContext);
+
   const token = localStorage.getItem("token");
 
   useEffect(() => {
