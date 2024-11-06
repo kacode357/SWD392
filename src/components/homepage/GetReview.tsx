@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Rate,
   Button,
@@ -13,7 +13,7 @@ import {
   createReviewApi,
   getReviewByShirtApi,
 } from "../../util/api";
-import { AuthContext } from "../../context/auth.context";
+
 import { SendOutlined, SmileOutlined } from "@ant-design/icons";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import classNames from "classnames";
