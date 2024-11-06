@@ -90,11 +90,13 @@ const PaymentComponent: React.FC = () => {
       render: (date: string) => moment(date, "YYYYMMDDHHmmss").format("YYYY-MM-DD HH:mm:ss"),
     },
     {
-      title: "Amount",
-      dataIndex: "amount",
-      key: "amount",
-      render: (amount: number) => new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(amount),
-    },
+      title: <div style={{ textAlign: "center" }}>Amount</div>, // Canh giữa tiêu đề
+      dataIndex: 'amount',
+      key: 'amount',
+      render: (amount: number) => (
+        <div style={{ textAlign: "right" }}>{`${amount.toLocaleString()} VND`}</div>
+      ), // Canh phải giá trị
+    },    
     {
       title: "Method",
       dataIndex: "method",

@@ -109,12 +109,12 @@ const SessionComponent: React.FC = () => {
     {
       title: "Start Date",
       dataIndex: "startDdate",
-      render: (startDdate: string) => moment(startDdate).format('YYYY-MM-DD'),
+      render: (startDdate: string) => moment(startDdate).format('DD-MM-YYYY'),
     },
     {
       title: "End Date",
       dataIndex: "endDdate",
-      render: (endDdate: string) => moment(endDdate).format('YYYY-MM-DD'),
+      render: (endDdate: string) => moment(endDdate).format('DD-MM-YYYY'),
     },
     {
       title: "Description",

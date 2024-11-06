@@ -96,10 +96,12 @@ const OrdersComponent: React.FC = () => {
         date !== "0001-01-01T00:00:00" ? moment(date).format("YYYY-MM-DD") : "N/A",
     },
     {
-      title: "Total Price",
+      title: <div style={{ textAlign: "center" }}>Total Price</div>, // Canh giữa tiêu đề
       dataIndex: "totalPrice",
       key: "totalPrice",
-      render: (totalPrice: number) => `${totalPrice.toLocaleString()} VNĐ`,
+      render: (totalPrice: number) => (
+        <div style={{ textAlign: "right" }}>{`${totalPrice.toLocaleString()} VNĐ`}</div>
+      ),
     },
     {
       title: "Order Status",

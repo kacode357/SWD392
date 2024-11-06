@@ -62,17 +62,16 @@ const HistoryPaymentUser = () => {
       title: 'Date',
       dataIndex: 'date',
       key: 'date',
-      render: (date: string) => {
-        // Format date từ chuỗi '20241026072817' thành 'DD/MM/YYYY HH:mm:ss'
-        return moment(date, 'YYYYMMDDHHmmss').format('DD/MM/YYYY HH:mm:ss');
-      },
+    
     },
     {
-      title: 'Amount',
+      title: <div style={{ textAlign: "center" }}>Amount</div>, // Canh giữa tiêu đề
       dataIndex: 'amount',
       key: 'amount',
-      render: (amount: number) => `${amount.toLocaleString()} VND`,
-    },
+      render: (amount: number) => (
+        <div style={{ textAlign: "right" }}>{`${amount.toLocaleString()} VND`}</div>
+      ), // Canh phải giá trị
+    },    
     {
       title: 'Method',
       dataIndex: 'method',

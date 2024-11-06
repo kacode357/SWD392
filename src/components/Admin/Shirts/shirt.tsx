@@ -127,10 +127,14 @@ const ShirtComponent: React.FC = () => {
       key: "fullName",
     },
     {
-      title: "Price",
+      title: <div style={{ textAlign: "center" }}>Price</div>, // Canh giữa tiêu đề
       dataIndex: "price",
       key: "price",
-    },
+      width: 150, // Đặt chiều rộng cố định cho cột
+      render: (price: number) => (
+        <div style={{ textAlign: "right" }}>{`${price.toLocaleString()} VND`}</div>
+      ), // Canh phải giá trị
+    },    
     {
       title: "Date",
       dataIndex: "date",
@@ -143,18 +147,8 @@ const ShirtComponent: React.FC = () => {
       key: "urlImg",
       render: (urlImg: string) => <Avatar src={urlImg} />, // Render image using Avatar component
     },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status: number, record: Shirt) => (
-        <SelectStatusButton
-          currentStatus={status}
-          shirtId={record.id}
-          refreshShirts={() => fetchShirts(pagination.current, pagination.pageSize, searchKeyword, activeTab === "deletedShirts" ? 0 : 1)}
-        />
-      ),
-    },
+  
+
     {
       title: "Action",
       key: "action",
