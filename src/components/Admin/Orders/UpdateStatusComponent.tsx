@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, message } from "antd";
+import { Button, message, Tag, Tooltip } from "antd";
 import { updateOrderApi } from "../../../util/api";
 
 interface UpdateStatusComponentProps {
@@ -24,11 +24,11 @@ const UpdateStatusComponent: React.FC<UpdateStatusComponentProps> = ({
   const getNextStatus = (currentStatus: number) => {
     switch (currentStatus) {
       case 2:
-        return { status: 3, label: "Confirm", color: "bg-yellow-500" };
+        return { status: 3, label: "Confirm", color: "#e1c743" };
       case 3:
-        return { status: 4, label: "Processing", color: "bg-green-500" };
+        return { status: 4, label: "Processing", color: "green" };
       case 4:
-        return { status: 5, label: "Shipped", color: "bg-purple-500" };
+        return { status: 5, label: "Shipped", color: "purple" };
       default:
         return null; // No next status
     }
@@ -60,29 +60,38 @@ const UpdateStatusComponent: React.FC<UpdateStatusComponentProps> = ({
     <div className="flex justify-center items-center space-x-4">
       {nextStatus ? (
         <>
-          <Button
-            type="primary"
-            onClick={() => handleStatusChange(nextStatus.status)}
-            className={`${nextStatus.color} border ${nextStatus.color}`}
-          >
-            {nextStatus.label}
-          </Button>
-          {order.status === 2 && (
+          <Tooltip title={`Change status to ${nextStatus.label}`}>
             <Button
-              danger
-              onClick={() => handleStatusChange(7)} // 7 is the status code for "Rejected"
+              type="primary"
+              onClick={() => handleStatusChange(nextStatus.status)}
+              style={{
+                backgroundColor: nextStatus.color,
+                borderColor: nextStatus.color,
+              }}
+              className="hover:scale-105 transition-transform duration-150"
             >
-              Reject
+              {nextStatus.label}
             </Button>
+          </Tooltip>
+          {order.status === 2 && (
+            <Tooltip title="Reject this order">
+              <Button
+                danger
+                onClick={() => handleStatusChange(7)} // 7 is the status code for "Rejected"
+                className="hover:scale-105 transition-transform duration-150"
+              >
+                Reject
+              </Button>
+            </Tooltip>
           )}
         </>
       ) : (
-        <span
-          className="inline-flex items-center justify-center bg-gray-300 text-gray-800 font-semibold py-1 px-4 rounded-md text-sm shadow-md"
-          style={{ marginTop: "8px", height: "32px" }}
+        <Tag
+          color={order.status === 7 ? "red" : "gray"}
+          style={{ fontSize: "14px", padding: "4px 12px", width: "80%" , textAlign: "center"}}
         >
           {order.status === 7 ? "Rejected" : "Order Completed"}
-        </span>
+        </Tag>
       )}
     </div>
   );
