@@ -18,6 +18,8 @@ const formatStatus = (status: number): string => {
       return "Shipped";
     case 6:
       return "Cancelled";
+    case 7:
+      return "Rejected";
     default:
       return "Unknown";
   }
@@ -35,6 +37,8 @@ const getStatusColor = (status: number): string => {
       return "purple";
     case 6:
       return "red";
+    case 7:
+      return "red"
     default:
       return "gray";
   }

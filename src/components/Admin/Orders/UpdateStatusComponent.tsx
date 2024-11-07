@@ -70,7 +70,7 @@ const UpdateStatusComponent: React.FC<UpdateStatusComponentProps> = ({
           {order.status === 2 && (
             <Button
               danger
-              onClick={() => handleStatusChange(6)} // Assuming 6 is the status code for "Rejected"
+              onClick={() => handleStatusChange(7)} // 7 is the status code for "Rejected"
             >
               Reject
             </Button>
@@ -81,7 +81,7 @@ const UpdateStatusComponent: React.FC<UpdateStatusComponentProps> = ({
           className="inline-flex items-center justify-center bg-gray-300 text-gray-800 font-semibold py-1 px-4 rounded-md text-sm shadow-md"
           style={{ marginTop: "8px", height: "32px" }}
         >
-          Order Completed
+          {order.status === 7 ? "Rejected" : "Order Completed"}
         </span>
       )}
     </div>
