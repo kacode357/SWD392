@@ -173,7 +173,7 @@ const getPlayerApi = async (data: { pageNum: number; pageSize: number; keyWord: 
   return response.data;
 };
 const changePlayerStatusApi = async (id: number, status: boolean) => {
-  const URL_API = `/api/session/player/${id}?status=${status}`;
+  const URL_API = `/api/player/${id}?status=${status}`;
   const response = await defaultAxiosInstance.delete(URL_API);
   return response.data;
 };

@@ -150,9 +150,9 @@ const PlayerComponent: React.FC = () => {
       key: "status",
       render: (status: boolean, record: Player) => (
         <ToggleStatusButton
-          isDelete={!status} // Trạng thái ban đầu: true nếu đang vô hiệu hóa
-          clubId={record.id} // Giả sử bạn đang áp dụng cho đối tượng Player
-          refreshClubs={() =>
+          isDelete={!status} // Initial status: true if deactivated
+          playerId={record.id} // Pass playerId instead of clubId
+          refreshPlayers={() =>
             fetchPlayers(
               pagination.current,
               pagination.pageSize,

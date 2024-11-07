@@ -1,28 +1,30 @@
-import React, { useState } from 'react';
-import { Switch, message } from 'antd';
-import { changeClubStatusApi } from '../../../util/api'; // Import the actual API
+import React, { useState } from "react";
+import { Switch, message } from "antd";
+import { changePlayerStatusApi } from "../../../util/api"; // Import the actual API
 
 interface ToggleStatusButtonProps {
-  isDelete: boolean; // Initial status: true means the club is deactivated
-  clubId: number;
-  refreshClubs: () => void;
+  isDelete: boolean; // Initial status: true means the player is deactivated
+  playerId: number; // Change this to playerId
+  refreshPlayers: () => void;
 }
 
-const ToggleStatusButton: React.FC<ToggleStatusButtonProps> = ({ isDelete, clubId, refreshClubs }) => {
+const ToggleStatusButton: React.FC<ToggleStatusButtonProps> = ({ isDelete, playerId, refreshPlayers }) => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(!isDelete); // Track the current status locally
 
-  // Function to toggle the club's status
+  // Function to toggle the player's status
   const toggleStatus = async (checked: boolean) => {
     setLoading(true);
     try {
-      await changeClubStatusApi(clubId, checked); // Call the API with the new status
-      message.success(`Club ${checked ? 'activated' : 'deactivated'} successfully!`);
+   
+      await changePlayerStatusApi(playerId, checked); // Call the API with the new status
+   
+      message.success(`Player ${checked ? "activated" : "deactivated"} successfully!`);
       setStatus(checked); // Update local status after successful change
-      refreshClubs(); // Refresh the list of clubs
+      refreshPlayers(); // Refresh the list of players
     } catch (error) {
-      message.error('Failed to change club status.');
-      console.error('Error changing club status:', error);
+      message.error("Failed to change player status.");
+      console.error("Error changing player status:", error);
     } finally {
       setLoading(false);
     }
