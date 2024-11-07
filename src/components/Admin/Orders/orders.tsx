@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Table, Input, Space, Row, Col, Modal, Button, List, Image } from "antd";
+import { Table, Input, Space, Row, Col, Modal, Button, List, Image, Tabs } from "antd";
 import { searchOrderApi } from "../../../util/api";
 import moment from "moment";
 import { ReloadOutlined } from "@ant-design/icons";
 import StatusTag from "../../../constants/StatusTag";
-import UpdateStatusComponent from "./UpdateStatusComponent"; // Import the new component
+import UpdateStatusComponent from "./UpdateStatusComponent";
 import StatusFlow from "../../StepsStatus/StepsOrderAdmin";
 const { Search } = Input;
+const { TabPane } = Tabs;
 
 const OrdersComponent: React.FC = () => {
   const [orders, setOrders] = useState([]);
@@ -19,14 +20,20 @@ const OrdersComponent: React.FC = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedOrderDetails, setSelectedOrderDetails] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState("all");
 
-  const fetchOrders = async (page = 1, pageSize = 10, keyword = "") => {
+  const fetchOrders = async (
+    page = 1,
+    pageSize = 10,
+    keyword = "",
+    status: number | null = null
+  ) => {
     setLoading(true);
     const data = {
       pageNum: page,
       pageSize: pageSize,
       orderId: keyword,
-      status: null,
+      status: activeTab === "rejected" ? 7 : status, // Ensure status is 7 for rejected tab
     };
     const response = await searchOrderApi(data);
     setOrders(response.pageData);
@@ -39,8 +46,8 @@ const OrdersComponent: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchOrders(pagination.current, pagination.pageSize);
-  }, []);
+    fetchOrders(pagination.current, pagination.pageSize, searchKeyword);
+  }, [activeTab]);
 
   const handleTableChange = (pagination: any) => {
     const { current, pageSize } = pagination;
@@ -71,7 +78,6 @@ const OrdersComponent: React.FC = () => {
     setIsModalVisible(false);
   };
 
-  // Table columns
   const columns = [
     {
       title: "Id",
@@ -91,13 +97,13 @@ const OrdersComponent: React.FC = () => {
         date !== "0001-01-01T00:00:00" ? moment(date).format("YYYY-MM-DD") : "N/A",
     },
     {
-      title: <div style={{ textAlign: "center" }}>Total Price</div>, // Canh giữa tiêu đề
+      title: <div style={{ textAlign: "center" }}>Total Price</div>,
       dataIndex: "totalPrice",
       key: "totalPrice",
       render: (totalPrice: number) => (
         <div style={{ textAlign: "right" }}>{`${totalPrice.toLocaleString()} VNĐ`}</div>
-      ), // Canh phải giá trị
-    },    
+      ),
+    },
     {
       title: "Order Status",
       dataIndex: "status",
@@ -118,47 +124,95 @@ const OrdersComponent: React.FC = () => {
       key: "changeStatus",
       render: (order: any) => (
         <UpdateStatusComponent
-          order={order} // Pass the entire order object
-          onStatusUpdated={() => fetchOrders(pagination.current, pagination.pageSize)} // Callback to reload the data
+          order={order}
+          onStatusUpdated={() => fetchOrders(pagination.current, pagination.pageSize)}
         />
       ),
     },
-   
   ];
+
+  const handleTabChange = (key: string) => {
+    setActiveTab(key);
+    setPagination((prev) => ({ ...prev, current: 1 })); // Reset pagination on tab change
+    fetchOrders(1, pagination.pageSize, searchKeyword, key === "rejected" ? 7 : null);
+  };
 
   return (
     <div>
       <StatusFlow />
-      <Row justify="space-between" style={{ marginBottom: 16 }}>
-        <Col>
-          <Space className="custom-search">
-            <Search
-              style={{ width: 400 }}
-              placeholder="Search by keyword"
-              onSearch={onSearch}
-              enterButton
-              allowClear
-              value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.target.value)}
-            />
-            <ReloadOutlined onClick={handleReset} style={{ fontSize: "24px", cursor: "pointer" }} />
-          </Space>
-        </Col>
-      </Row>
-      <Table
-        columns={columns}
-        dataSource={orders}
-        rowKey="id"
-        pagination={{
-          current: pagination.current,
-          pageSize: pagination.pageSize,
-          total: pagination.total,
-          showSizeChanger: true,
-          showQuickJumper: true,
-        }}
-        loading={loading}
-        onChange={handleTableChange}
-      />
+      <Tabs className="custom-tabs" defaultActiveKey="activeUsers" onChange={handleTabChange}>
+        <TabPane tab="All Orders" key="all">
+          <Row justify="space-between" style={{ marginBottom: 16 }}>
+            <Col>
+              <Space className="custom-search">
+                <Search
+                  style={{ width: 400 }}
+                  placeholder="Search by keyword"
+                  onSearch={onSearch}
+                  enterButton
+                  allowClear
+                  value={searchKeyword}
+                  onChange={(e) => setSearchKeyword(e.target.value)}
+                />
+                <ReloadOutlined
+                  onClick={handleReset}
+                  style={{ fontSize: "24px", cursor: "pointer" }}
+                />
+              </Space>
+            </Col>
+          </Row>
+          <Table
+            columns={columns}
+            dataSource={orders}
+            rowKey="id"
+            pagination={{
+              current: pagination.current,
+              pageSize: pagination.pageSize,
+              total: pagination.total,
+              showSizeChanger: true,
+              showQuickJumper: true,
+            }}
+            loading={loading}
+            onChange={handleTableChange}
+          />
+        </TabPane>
+        <TabPane tab="Rejected Orders" key="rejected">
+          <Row justify="space-between" style={{ marginBottom: 16 }}>
+            <Col>
+              <Space className="custom-search">
+                <Search
+                  style={{ width: 400 }}
+                  placeholder="Search by keyword"
+                  onSearch={onSearch}
+                  enterButton
+                  allowClear
+                  value={searchKeyword}
+                  onChange={(e) => setSearchKeyword(e.target.value)}
+                />
+                <ReloadOutlined
+                  onClick={handleReset}
+                  style={{ fontSize: "24px", cursor: "pointer" }}
+                />
+              </Space>
+            </Col>
+          </Row>
+          <Table
+            columns={columns}
+            dataSource={orders}
+            rowKey="id"
+            pagination={{
+              current: pagination.current,
+              pageSize: pagination.pageSize,
+              total: pagination.total,
+              showSizeChanger: true,
+              showQuickJumper: true,
+            }}
+            loading={loading}
+            onChange={handleTableChange}
+          />
+        </TabPane>
+      </Tabs>
+
       <Modal
         title="Order Details"
         visible={isModalVisible}
