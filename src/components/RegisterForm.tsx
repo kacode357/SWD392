@@ -53,9 +53,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onRegisterSuccess }) => {
         message: 'Error',
         description: 'User not created',
       });
-    } finally {
-      setLoading(false); // Tắt trạng thái loading sau khi API hoàn thành
-    }
+      setLoading(false);
+    } 
   };
 
   return (

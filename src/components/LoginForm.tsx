@@ -23,53 +23,58 @@ const LoginForm: React.FC = () => {
     setLoading(true); // Bật loading khi bắt đầu gọi API
     const { email, password } = values;
     const data = { email, password };
-
-    const resDataToken = await loginUserApi(data);
-    if (resDataToken) {
-      localStorage.setItem("token", resDataToken.token);
-
-      const resDataLogin = await getCurrentLogin();
-
-      setAuth({
-        isAuthenticated: true,
-        user: {
-          id: resDataLogin?.id,
-          imgUrl: resDataLogin?.imgUrl,
-          email: resDataLogin?.email,
-          name: resDataLogin?.name,
-          role: resDataLogin?.role,
-        },
-      });
-
-      // Redirect based on role
-      if (resDataLogin?.roleName === "Admin") {
-        notification.success({
-          message: "Successful",
-          description: "You have successfully logged in.",
+  
+    try {
+      const resDataToken = await loginUserApi(data);
+  
+      if (resDataToken) {
+        localStorage.setItem("token", resDataToken.token);
+  
+        const resDataLogin = await getCurrentLogin();
+  
+        setAuth({
+          isAuthenticated: true,
+          user: {
+            id: resDataLogin?.id,
+            imgUrl: resDataLogin?.imgUrl,
+            email: resDataLogin?.email,
+            name: resDataLogin?.name,
+            role: resDataLogin?.role,
+          },
         });
-        window.location.href = "/admin/dashboard";
-        return;
-      } else if (resDataLogin?.roleName === "Manager") {
-        // Hiển thị popup nếu role là Manager và không hiện thông báo thành công
-        setIsManagerModalVisible(true);
-        return;
+  
+        // Redirect based on role
+        if (resDataLogin?.roleName === "Admin") {
+          notification.success({
+            message: "Successful",
+            description: "You have successfully logged in.",
+          });
+          window.location.href = "/admin/dashboard";
+          return;
+        } else if (resDataLogin?.roleName === "Manager") {
+          // Hiển thị popup nếu role là Manager và không hiện thông báo thành công
+          setIsManagerModalVisible(true);
+          return;
+        } else {
+          notification.success({
+            message: "Successful",
+            description: "You have successfully logged in.",
+          });
+          navigate("/");
+          return;
+        }
       } else {
-        notification.success({
-          message: "Successful",
-          description: "You have successfully logged in.",
+        notification.error({
+          message: "Error",
+          description: resDataToken.EM || "Something went wrong!",
         });
-        navigate("/");
-        return;
       }
-    } else {
-      notification.error({
-        message: "Error",
-        description: resDataToken.EM || "Something went wrong!",
-      });
-    }
-
-    setLoading(false); // Tắt loading sau khi API hoàn thành
+    } catch (error) {
+      // Xử lý lỗi khi API gặp sự cố
+      setLoading(false)
+    } 
   };
+  
 
   return (
     <div className="form-container sign-in px-5">
