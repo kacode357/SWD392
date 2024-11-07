@@ -65,7 +65,7 @@ const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClose, ref
       ]}
     >
       <Form form={form} onFinish={handleSubmit} layout="vertical">
-        <Form.Item name="name" label="Session Name" rules={[{ required: true, message: 'Please input session name' }]}>
+        <Form.Item name="name" label="Session Name" rules={[{ required: true, message: 'Please input seasons name' }]}>
           <Input />
         </Form.Item>
 
@@ -85,7 +85,7 @@ const AddSessionModal: React.FC<AddSessionModalProps> = ({ visible, onClose, ref
           />
         </Form.Item>
 
-        <Form.Item name="description" label="Description" rules={[{ required: true, message: 'Please input session description' }]}>
+        <Form.Item name="description" label="Description" rules={[{ required: true, message: 'Please input seasons description' }]}>
           <Input.TextArea rows={4} />
         </Form.Item>
       </Form>

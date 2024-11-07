@@ -93,11 +93,11 @@ const AddTypeShirtModal: React.FC<AddTypeShirtModalProps> = ({ visible, onClose,
         <Form.Item
           name="sessionId"
           label="Select Session"
-          rules={[{ required: true, message: "Please select a session" }]}
+          rules={[{ required: true, message: "Please select a Seasons" }]}
         >
           <Select
             showSearch
-            placeholder="Search and select a session"
+            placeholder="Search and select a Seasons"
             onSearch={setSearchSessionKeyword}
             onChange={() => fetchSessions(searchSessionKeyword)} // Fetch sessions based on search keyword
             filterOption={false}

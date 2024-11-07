@@ -20,7 +20,7 @@ const ToggleStatusButton: React.FC<ToggleStatusButtonProps> = ({ sessionId, isDe
         message.success('Session status updated successfully');
         refreshSessions(); // Làm mới danh sách các session
       } else {
-        message.error('Failed to update session status');
+        message.error('Failed to update seasons status');
       }
     } catch (error) {
       message.error('An error occurred');

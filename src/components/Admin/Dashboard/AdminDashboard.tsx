@@ -73,7 +73,7 @@ const AdminDashboard = () => {
             className="zoom-card"
           >
             <CalendarOutlined style={{ fontSize: '40px', color: '#fff' }} />
-            <h3 style={{ color: '#fff', marginTop: '10px' }}>Sessions</h3>
+            <h3 style={{ color: '#fff', marginTop: '10px' }}>Seasons</h3>
             <Text strong style={{ fontSize: '28px', color: '#fff' }}>{dashboardData.sessionCount}</Text>
           </Card>
         </Col>

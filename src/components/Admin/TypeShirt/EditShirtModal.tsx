@@ -111,7 +111,7 @@ const EditShirtModal: React.FC<EditShirtModalProps> = ({ shirtId, visible, onClo
         >
           <Select
             showSearch
-            placeholder="Search and select a session"
+            placeholder="Search and select a seasons"
             onSearch={setSearchSessionKeyword}
             onChange={() => fetchSessions(searchSessionKeyword)} // Fetch sessions based on search keyword
             filterOption={false}

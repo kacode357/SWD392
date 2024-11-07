@@ -105,7 +105,7 @@ const Typeshirt: React.FC = () => {
       key: "description",
     },
     {
-      title: "Session Name",
+      title: "Seasons Name",
       dataIndex: "sessionName",
       key: "sessionId",
     },
